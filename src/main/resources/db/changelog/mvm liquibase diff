@@ -1,0 +1,1 @@
+mvn initialize liquibase:diff -f pom.xml

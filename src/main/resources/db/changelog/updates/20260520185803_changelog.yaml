@@ -1,0 +1,28 @@
+databaseChangeLog:
+- changeSet:
+    id: 1779303487471-1
+    author: fafik (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: usersPK
+            name: id
+            type: UUID
+        - column:
+            name: email
+            type: VARCHAR(255)
+        - column:
+            name: nick_name
+            type: VARCHAR(255)
+        - column:
+            name: password
+            type: VARCHAR(255)
+        - column:
+            name: register_date
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        tableName: users
+
