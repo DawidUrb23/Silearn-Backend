@@ -1,4 +1,4 @@
-package com.example.demo.services.bootstrap;
+package com.itsilesia.si_learn.services.bootstrap;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

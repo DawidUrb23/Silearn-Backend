@@ -1,0 +1,9 @@
+databaseChangeLog:
+- changeSet:
+    id: 1779898280996-1
+    author: fafik (generated)
+    changes:
+    - dropColumn:
+        columnName: nick_name
+        tableName: users
+

@@ -1,0 +1,57 @@
+databaseChangeLog:
+- changeSet:
+    id: 1779453371325-1
+    author: fafik (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: test_scenariosPK
+            name: id
+            type: UUID
+        - column:
+            constraints:
+              nullable: false
+            name: created_at
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            name: updated_at
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            constraints:
+              nullable: false
+            name: output
+            type: TEXT
+        - column:
+            constraints:
+              nullable: false
+            name: input
+            type: TEXT
+        - column:
+            constraints:
+              nullable: false
+            name: timeout_sec
+            type: FLOAT4
+        - column:
+            constraints:
+              nullable: false
+            name: task_id
+            type: UUID
+        tableName: test_scenarios
+- changeSet:
+    id: 1779453371325-2
+    author: fafik (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: task_id
+        baseTableName: test_scenarios
+        constraintName: FKrbyn98pecp8s26wu803t2eoq9
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: tasks
+        validate: true
+

@@ -1,0 +1,262 @@
+databaseChangeLog:
+- changeSet:
+    id: 1779386889280-1
+    author: fafik (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: lessonsPK
+            name: id
+            type: UUID
+        - column:
+            constraints:
+              nullable: false
+            name: created_at
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            name: updated_at
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            constraints:
+              nullable: false
+            name: description_id
+            type: UUID
+        - column:
+            constraints:
+              nullable: false
+            name: module_id
+            type: UUID
+        - column:
+            constraints:
+              nullable: false
+            name: topic_id
+            type: UUID
+        tableName: lessons
+- changeSet:
+    id: 1779386889280-2
+    author: fafik (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: modulesPK
+            name: id
+            type: UUID
+        - column:
+            constraints:
+              nullable: false
+            name: created_at
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            name: updated_at
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            constraints:
+              nullable: false
+            name: index
+            type: INTEGER
+        - column:
+            constraints:
+              nullable: false
+            name: course_id
+            type: UUID
+        - column:
+            constraints:
+              nullable: false
+            name: title_id
+            type: UUID
+        tableName: modules
+- changeSet:
+    id: 1779386889280-3
+    author: fafik (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: task_contentPK
+            name: id
+            type: UUID
+        - column:
+            constraints:
+              nullable: false
+            name: created_at
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            name: updated_at
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            constraints:
+              nullable: false
+            name: index
+            type: INTEGER
+        - column:
+            constraints:
+              nullable: false
+            name: type
+            type: VARCHAR(5)
+        - column:
+            constraints:
+              nullable: false
+            name: content_id
+            type: UUID
+        - column:
+            constraints:
+              nullable: false
+            name: task_id
+            type: UUID
+        tableName: task_content
+- changeSet:
+    id: 1779386889280-4
+    author: fafik (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: tasksPK
+            name: id
+            type: UUID
+        - column:
+            constraints:
+              nullable: false
+            name: created_at
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            name: updated_at
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            constraints:
+              nullable: false
+            name: index
+            type: INTEGER
+        - column:
+            constraints:
+              nullable: false
+            name: passing_score
+            type: FLOAT4
+        - column:
+            name: starting_code
+            type: TEXT
+        - column:
+            constraints:
+              nullable: false
+            name: lesson_id
+            type: UUID
+        tableName: tasks
+- changeSet:
+    id: 1779386889280-5
+    author: fafik (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: title_id
+        baseTableName: modules
+        constraintName: FK57vw80fw6frkcm802sfqys8j3
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: translation_dictionary
+        validate: true
+- changeSet:
+    id: 1779386889280-6
+    author: fafik (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: description_id
+        baseTableName: lessons
+        constraintName: FK7fimx1nvoyl3i9quanhh0mn6b
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: translation_dictionary
+        validate: true
+- changeSet:
+    id: 1779386889280-7
+    author: fafik (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: course_id
+        baseTableName: modules
+        constraintName: FK8qnnp812q1jd38fx7mxrhpw9
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: courses
+        validate: true
+- changeSet:
+    id: 1779386889280-8
+    author: fafik (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: content_id
+        baseTableName: task_content
+        constraintName: FK9a9sgakhylcjdtstn7kt0ssvm
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: translation_dictionary
+        validate: true
+- changeSet:
+    id: 1779386889280-9
+    author: fafik (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: lesson_id
+        baseTableName: tasks
+        constraintName: FKij2nuclq3hx0l5tanobfknbpw
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: lessons
+        validate: true
+- changeSet:
+    id: 1779386889280-10
+    author: fafik (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: task_id
+        baseTableName: task_content
+        constraintName: FKns8sn3cxle5k2ugu9hyn4qee6
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: tasks
+        validate: true
+- changeSet:
+    id: 1779386889280-11
+    author: fafik (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: topic_id
+        baseTableName: lessons
+        constraintName: FKqc4yiw10t8ehlvb07xg35s4tk
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: translation_dictionary
+        validate: true
+- changeSet:
+    id: 1779386889280-12
+    author: fafik (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: module_id
+        baseTableName: lessons
+        constraintName: FKt9yjhjbd9y3w6fxs66ny1wu02
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: modules
+        validate: true
+

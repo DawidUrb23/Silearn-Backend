@@ -1,0 +1,98 @@
+databaseChangeLog:
+- changeSet:
+    id: 1779383542233-1
+    author: fafik (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: coursesPK
+            name: id
+            type: UUID
+        - column:
+            constraints:
+              nullable: false
+            name: created_at
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            name: updated_at
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            constraints:
+              nullable: false
+            name: difficulty
+            type: VARCHAR(20)
+        - column:
+            constraints:
+              nullable: false
+            name: force_sequential_tasks
+            type: BOOLEAN
+        - column:
+            constraints:
+              nullable: false
+            name: programing_language
+            type: VARCHAR(40)
+        - column:
+            constraints:
+              nullable: false
+            name: status
+            type: VARCHAR(20)
+        - column:
+            constraints:
+              nullable: false
+            name: author_id
+            type: UUID
+        - column:
+            constraints:
+              nullable: false
+            name: description_id
+            type: UUID
+        - column:
+            constraints:
+              nullable: false
+            name: title_id
+            type: UUID
+        tableName: courses
+- changeSet:
+    id: 1779383542233-2
+    author: fafik (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: author_id
+        baseTableName: courses
+        constraintName: FKhbo41uaq9qyi5ora71hq2oyah
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+- changeSet:
+    id: 1779383542233-3
+    author: fafik (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: title_id
+        baseTableName: courses
+        constraintName: FKjiu34hutsauci9vtdjx3kxl1c
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: translation_dictionary
+        validate: true
+- changeSet:
+    id: 1779383542233-4
+    author: fafik (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: description_id
+        baseTableName: courses
+        constraintName: FKojd4ar8xiepi6k8y8pcksjswo
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: translation_dictionary
+        validate: true
+

@@ -1,0 +1,122 @@
+databaseChangeLog:
+- changeSet:
+    id: 1779380961349-2
+    author: fafik (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: dictionary_itemsPK
+            name: id
+            type: UUID
+        - column:
+            constraints:
+              nullable: false
+            name: created_at
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            name: updated_at
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            constraints:
+              nullable: false
+            name: value
+            type: TEXT
+        - column:
+            constraints:
+              nullable: false
+            name: language_code
+            type: VARCHAR(10)
+        - column:
+            constraints:
+              nullable: false
+            name: dictionary_id
+            type: UUID
+        tableName: dictionary_items
+- changeSet:
+    id: 1779380961349-3
+    author: fafik (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: translation_dictionaryPK
+            name: id
+            type: UUID
+        - column:
+            constraints:
+              nullable: false
+            name: created_at
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            name: updated_at
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            constraints:
+              nullable: false
+            name: language_code
+            type: VARCHAR(10)
+        tableName: translation_dictionary
+- changeSet:
+    id: 1779380961349-4
+    author: fafik (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: dictionary_id, language_code
+        constraintName: uk_dict_item_lang
+        tableName: dictionary_items
+- changeSet:
+    id: 1779380961349-5
+    author: fafik (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: language_code
+        baseTableName: translation_dictionary
+        constraintName: FKbldbjev30hmuu2yu8snvo0jfp
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: code
+        referencedTableName: languages
+        validate: true
+- changeSet:
+    id: 1779380961349-6
+    author: fafik (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: language_code
+        baseTableName: dictionary_items
+        constraintName: FKe30ybn757dy2i4vwq8u712n7k
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: code
+        referencedTableName: languages
+        validate: true
+- changeSet:
+    id: 1779380961349-7
+    author: fafik (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: dictionary_id
+        baseTableName: dictionary_items
+        constraintName: FKsxgc1k3t0q560i0275u78as6k
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: translation_dictionary
+        validate: true
+- changeSet:
+    id: 1779380961349-1
+    author: fafik (generated)
+    changes:
+    - addNotNullConstraint:
+        columnDataType: timestamp(6)
+        columnName: created_at
+        tableName: users
+        validate: true
+

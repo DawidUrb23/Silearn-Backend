@@ -1,0 +1,50 @@
+databaseChangeLog:
+- changeSet:
+    id: 1779454921044-1
+    author: fafik (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: description_id
+        constraintName: UC_COURSESDESCRIPTION_ID_COL
+        tableName: courses
+- changeSet:
+    id: 1779454921044-2
+    author: fafik (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: title_id
+        constraintName: UC_COURSESTITLE_ID_COL
+        tableName: courses
+- changeSet:
+    id: 1779454921044-3
+    author: fafik (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: description_id
+        constraintName: UC_LESSONSDESCRIPTION_ID_COL
+        tableName: lessons
+- changeSet:
+    id: 1779454921044-4
+    author: fafik (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: topic_id
+        constraintName: UC_LESSONSTOPIC_ID_COL
+        tableName: lessons
+- changeSet:
+    id: 1779454921044-5
+    author: fafik (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: title_id
+        constraintName: UC_MODULESTITLE_ID_COL
+        tableName: modules
+- changeSet:
+    id: 1779454921044-6
+    author: fafik (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: content_id
+        constraintName: UC_TASK_CONTENTCONTENT_ID_COL
+        tableName: task_content
+

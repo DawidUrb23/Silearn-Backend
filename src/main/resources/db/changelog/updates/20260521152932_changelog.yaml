@@ -1,0 +1,101 @@
+databaseChangeLog:
+- changeSet:
+    id: 1779377376740-1
+    author: fafik (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: languagesPK
+            name: code
+            type: VARCHAR(10)
+        tableName: languages
+- changeSet:
+    id: 1779377376740-2
+    author: fafik (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: user_rolesPK
+            name: role
+            type: VARCHAR(30)
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: user_rolesPK
+            name: user_id
+            type: UUID
+        tableName: user_roles
+- changeSet:
+      id: 1779377376740-3-rename
+      author: fafik (manual)
+      changes:
+          - renameColumn:
+                tableName: users
+                oldColumnName: register_date
+                newColumnName: created_at
+                columnDataType: TIMESTAMP(6) WITHOUT TIME ZONE
+- changeSet:
+    id: 1779377376740-4
+    author: fafik (generated)
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            name: language_code
+            type: VARCHAR(10)
+        tableName: users
+- changeSet:
+    id: 1779377376740-5
+    author: fafik (generated)
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            name: updated_at
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        tableName: users
+- changeSet:
+    id: 1779377376740-6
+    author: fafik (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: code
+        constraintName: UC_LANGUAGESCODE_COL
+        tableName: languages
+- changeSet:
+    id: 1779377376740-7
+    author: fafik (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: user_id
+        baseTableName: user_roles
+        constraintName: FKhfh9dx7w3ubf1co1vdev94g3f
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+- changeSet:
+    id: 1779377376740-8
+    author: fafik (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: language_code
+        baseTableName: users
+        constraintName: FKj3s54pq91gsrxs4g2bg7fjrdi
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: code
+        referencedTableName: languages
+        validate: true
+
+
