@@ -1,4 +1,4 @@
-package com.example.demo.dtos.response.exceptions;
+package com.itsilesia.si_learn.dtos.response.exceptions;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

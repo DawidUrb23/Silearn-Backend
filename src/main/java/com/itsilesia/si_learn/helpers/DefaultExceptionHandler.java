@@ -1,9 +1,10 @@
-package com.example.demo.helpers;
+package com.itsilesia.si_learn.helpers;
 
-import com.example.demo.dtos.response.exceptions.ErrorDetailsDto;
-import com.example.demo.exceptions.InvalidParametersException;
-import com.example.demo.exceptions.ItemNotFoundException;
-import com.example.demo.exceptions.NoContentFoundException;
+import com.itsilesia.si_learn.dtos.response.exceptions.ErrorDetailsDto;
+import com.itsilesia.si_learn.exceptions.InvalidParametersException;
+import com.itsilesia.si_learn.exceptions.ItemAlreadyExistsException;
+import com.itsilesia.si_learn.exceptions.ItemNotFoundException;
+import com.itsilesia.si_learn.exceptions.NoContentFoundException;
 import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -31,6 +32,12 @@ public class DefaultExceptionHandler {
 	/// Invalid Parameters (400)
 	@ExceptionHandler(InvalidParametersException.class)
 	public ResponseEntity<@NotNull ErrorDetailsDto> handleInvalidParameters(InvalidParametersException ex) {
+		return new ResponseEntity<@NotNull ErrorDetailsDto>(new ErrorDetailsDto(ex.getMessage()), HttpStatus.BAD_REQUEST);
+	}
+
+	/// already exists, Conflict (409)
+	@ExceptionHandler(ItemAlreadyExistsException.class)
+	public ResponseEntity<@NotNull ErrorDetailsDto> handleInvalidParameters(ItemAlreadyExistsException ex) {
 		return new ResponseEntity<@NotNull ErrorDetailsDto>(new ErrorDetailsDto(ex.getMessage()), HttpStatus.BAD_REQUEST);
 	}
 

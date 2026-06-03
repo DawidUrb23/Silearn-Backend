@@ -1,4 +1,4 @@
-package com.example.demo.exceptions;
+package com.itsilesia.si_learn.exceptions;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
