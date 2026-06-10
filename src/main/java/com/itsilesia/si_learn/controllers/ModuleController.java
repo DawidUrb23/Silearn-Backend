@@ -1,6 +1,7 @@
 package com.itsilesia.si_learn.controllers;
 
 import com.itsilesia.si_learn.dtos.request.courses.CreateModuleRequest;
+import com.itsilesia.si_learn.dtos.response.courses.ModuleResponse;
 import com.itsilesia.si_learn.entities.courses.Module;
 import com.itsilesia.si_learn.services.ModuleService;
 import jakarta.validation.Valid;
@@ -16,10 +17,11 @@ public class ModuleController {
 	private final ModuleService moduleService;
 
 	@PostMapping("/courses/{courseId}")
-	public Module createModule(
+	public ModuleResponse createModule(
 		@PathVariable UUID courseId,
 		@Valid @RequestBody CreateModuleRequest request
 	) {
-		return moduleService.createModule(courseId, request);
+		Module module = moduleService.createModule(courseId, request);
+		return ModuleResponse.fromEntity(module);
 	}
 }
