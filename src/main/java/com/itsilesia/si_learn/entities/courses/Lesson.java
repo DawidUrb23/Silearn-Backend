@@ -2,12 +2,15 @@ package com.itsilesia.si_learn.entities.courses;
 
 import com.itsilesia.si_learn.entities.BaseEntity;
 import com.itsilesia.si_learn.entities.TranslationDictionary;
+import com.itsilesia.si_learn.entities.user_progress.UserLesson;
+import com.itsilesia.si_learn.entities.user_progress.UserLesson_;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name = "lessons")
@@ -27,11 +30,14 @@ public class Lesson extends BaseEntity {
 	private TranslationDictionary description;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name =  "module_id", nullable = false)
+	@JoinColumn(name = "module_id", nullable = false)
 	private Module module;
 
 
 	@OneToMany(mappedBy = Task_.LESSON, cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Task> tasks;
-}
 
+
+	@OneToMany(mappedBy = UserLesson_.LESSON, cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<UserLesson> userLessons = new ArrayList<>();
+}
