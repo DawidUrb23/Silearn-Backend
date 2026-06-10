@@ -19,12 +19,10 @@ public class UserRole {
 	@ManyToOne
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
-	static public final String user_ = "user";
 
 	@Id // Part of the composite key
 	@Enumerated(EnumType.STRING)
 	@Column(name = "role", length = 30, nullable = false)
 	private Role role;
-	static public final String role_ = "role";
 }
 

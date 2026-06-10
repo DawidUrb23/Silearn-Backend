@@ -2,6 +2,8 @@ package com.itsilesia.si_learn.entities.courses;
 
 import com.itsilesia.si_learn.entities.BaseEntity;
 import com.itsilesia.si_learn.entities.TranslationDictionary;
+import com.itsilesia.si_learn.entities.user_progress.UserCourse;
+import com.itsilesia.si_learn.entities.user_progress.UserCourse_;
 import com.itsilesia.si_learn.entities.users.User;
 import com.itsilesia.si_learn.entities.enums.DifficultyLevel;
 import com.itsilesia.si_learn.entities.enums.ProgramingLanguage;
@@ -53,4 +55,8 @@ public class Course extends BaseEntity {
 
 	@OneToMany(mappedBy = Module_.COURSE, cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Module> modules = new ArrayList<>();
+
+
+	@OneToMany(mappedBy = UserCourse_.COURSE, cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<UserCourse> userCourses = new ArrayList<>();
 }

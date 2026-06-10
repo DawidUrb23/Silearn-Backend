@@ -2,6 +2,8 @@ package com.itsilesia.si_learn.entities.courses;
 
 import com.itsilesia.si_learn.entities.BaseEntity;
 import com.itsilesia.si_learn.entities.TranslationDictionary;
+import com.itsilesia.si_learn.entities.user_progress.UserModule;
+import com.itsilesia.si_learn.entities.user_progress.UserModule_;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,4 +34,8 @@ public class Module extends BaseEntity {
 
 	@OneToMany(mappedBy = Lesson_.MODULE, cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Lesson> lessons = new ArrayList<>();
+
+
+	@OneToMany(mappedBy = UserModule_.MODULE, cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<UserModule> userModules = new ArrayList<>();
 }
