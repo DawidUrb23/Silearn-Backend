@@ -1,7 +1,14 @@
 package com.itsilesia.si_learn.dtos.response.auth;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-public record JwtDto(
-	String token
-) {
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class JwtDto {
+	private String token;
 }

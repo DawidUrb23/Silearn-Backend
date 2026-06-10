@@ -12,6 +12,8 @@ public class RoleService {
 
 	public void addRoleToUser(User user, Role role) {
 		var roles = user.getRoles();
+		if (roles == null)
+			roles = new java.util.ArrayList<>();
 		if (roles.stream()
 			.anyMatch(r -> r.getRole().equals(role)))
 			return;

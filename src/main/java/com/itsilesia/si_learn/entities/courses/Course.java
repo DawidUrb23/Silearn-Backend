@@ -2,12 +2,12 @@ package com.itsilesia.si_learn.entities.courses;
 
 import com.itsilesia.si_learn.entities.BaseEntity;
 import com.itsilesia.si_learn.entities.TranslationDictionary;
-import com.itsilesia.si_learn.entities.user_progress.UserCourse;
-import com.itsilesia.si_learn.entities.user_progress.UserCourse_;
-import com.itsilesia.si_learn.entities.users.User;
 import com.itsilesia.si_learn.entities.enums.DifficultyLevel;
 import com.itsilesia.si_learn.entities.enums.ProgramingLanguage;
 import com.itsilesia.si_learn.entities.enums.VisibilityStatus;
+import com.itsilesia.si_learn.entities.user_progress.UserCourse;
+import com.itsilesia.si_learn.entities.user_progress.UserCourse_;
+import com.itsilesia.si_learn.entities.users.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
