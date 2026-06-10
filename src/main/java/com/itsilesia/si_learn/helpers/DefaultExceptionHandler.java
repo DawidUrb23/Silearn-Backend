@@ -9,6 +9,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -35,10 +36,16 @@ public class DefaultExceptionHandler {
 		return new ResponseEntity<@NotNull ErrorDetailsDto>(new ErrorDetailsDto(ex.getMessage()), HttpStatus.BAD_REQUEST);
 	}
 
+	/// Authentication Exception (400)
+	@ExceptionHandler(AuthenticationException.class)
+	public ResponseEntity<@NotNull ErrorDetailsDto> handleInvalidParameters(AuthenticationException ex) {
+		return new ResponseEntity<@NotNull ErrorDetailsDto>(new ErrorDetailsDto(ex.getMessage()), HttpStatus.BAD_REQUEST);
+	}
+
 	/// already exists, Conflict (409)
 	@ExceptionHandler(ItemAlreadyExistsException.class)
 	public ResponseEntity<@NotNull ErrorDetailsDto> handleInvalidParameters(ItemAlreadyExistsException ex) {
-		return new ResponseEntity<@NotNull ErrorDetailsDto>(new ErrorDetailsDto(ex.getMessage()), HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<@NotNull ErrorDetailsDto>(new ErrorDetailsDto(ex.getMessage()), HttpStatus.CONFLICT);
 	}
 
 	/// No Content (204)

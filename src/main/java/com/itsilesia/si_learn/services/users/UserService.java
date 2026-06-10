@@ -2,42 +2,87 @@ package com.itsilesia.si_learn.services.users;
 
 
 import com.itsilesia.si_learn.dtos.request.users.ChangePasswordRequest;
+import com.itsilesia.si_learn.dtos.request.users.RegisterRequest;
 import com.itsilesia.si_learn.dtos.request.users.UpdateUserRequest;
 import com.itsilesia.si_learn.entities.Language;
 import com.itsilesia.si_learn.entities.enums.Role;
 import com.itsilesia.si_learn.entities.users.User;
-import com.itsilesia.si_learn.exceptions.InvalidParametersException;
 import com.itsilesia.si_learn.exceptions.ItemAlreadyExistsException;
 import com.itsilesia.si_learn.exceptions.ItemNotFoundException;
+import com.itsilesia.si_learn.exceptions.UserAlreadyExistsException;
 import com.itsilesia.si_learn.repositories.users.UserRepository;
+import com.itsilesia.si_learn.services.LanguageService;
 import io.micrometer.common.util.StringUtils;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
 	private final UserRepository userRepository;
+	private final LanguageService languageService;
 	private final RoleService roleService;
 	private final LangService langService;
 	private final PasswordEncoder passwordEncoder;
+
+	public List<User> getAll() {
+		return userRepository.findAll();
+	}
+
+	public User getById(UUID userId) {
+		return userRepository.findById(userId)
+			.orElseThrow(() -> new ItemNotFoundException(User.class, userId));
+	}
+
+	public Optional<User> getByEmail(String email) {
+		return userRepository.findByEmail(email);
+	}
 
 	public User changePassword(@NonNull ChangePasswordRequest request, UUID userId) {
 		var user = userRepository.findById(userId).
 			orElseThrow(() -> new ItemNotFoundException(User.class, userId));
 
-		if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
-			throw new InvalidParametersException("Incorrect Password.");
+		//if there was no password then set it
+		if (!user.getPassword().isEmpty() && !passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
+			throw new BadCredentialsException("Incorrect Password.");
 		}
 		user.setPassword(passwordEncoder.encode(request.getNewPassword()));
 		return userRepository.save(user);
 	}
 
+
+	@Transactional
+	public User register(@NotNull RegisterRequest registerRequest) {
+		userRepository.findByEmail(registerRequest.getEmail()).ifPresent(user ->
+		{
+			throw new UserAlreadyExistsException(registerRequest.getEmail());
+		});
+		User user = new User();
+		user.setEmail(registerRequest.getEmail());
+		user.setPassword(registerRequest.getPassword());
+
+		roleService.addRoleToUser(user, Role.STUDENT);
+		if (registerRequest.isTeacherRole())
+			roleService.addRoleToUser(user, Role.TEACHER);
+
+		languageService.getLanguage(registerRequest.getLanguageCode())
+			.ifPresent(user::setLanguage);
+
+		user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+		return userRepository.save(user);
+	}
+
+	@Transactional
 	public User updateUser(@Valid UpdateUserRequest request, UUID userId) {
 		var user = userRepository.findById(userId).
 			orElseThrow(() -> new ItemNotFoundException(User.class, userId));
@@ -60,8 +105,4 @@ public class UserService {
 		return userRepository.save(user);
 	}
 
-	public User getUser(UUID userId) {
-		return userRepository.findById(userId)
-			.orElseThrow(() -> new ItemNotFoundException(User.class, userId));
-	}
 }
