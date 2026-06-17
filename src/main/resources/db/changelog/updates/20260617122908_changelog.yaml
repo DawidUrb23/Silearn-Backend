@@ -1,0 +1,22 @@
+databaseChangeLog:
+- changeSet:
+    id: 1781699366101-1
+    author: fafik (generated)
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: users
+- changeSet:
+    id: 1781699366101-2
+    author: fafik (generated)
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            name: surname
+            type: VARCHAR(255)
+        tableName: users
+

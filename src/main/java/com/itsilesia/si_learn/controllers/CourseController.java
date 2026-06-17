@@ -4,6 +4,7 @@ import com.itsilesia.si_learn.dtos.request.courses.CreateCourseRequest;
 import com.itsilesia.si_learn.dtos.response.IdOnlyDto;
 import com.itsilesia.si_learn.dtos.response.exceptions.ErrorDetailsDto;
 import com.itsilesia.si_learn.services.CourseService;
+import com.itsilesia.si_learn.services.UserCourseService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -22,6 +23,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CourseController {
 	private final CourseService courseService;
+	private final UserCourseService userCourseService;
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
@@ -37,5 +39,14 @@ public class CourseController {
 		return IdOnlyDto.fromEntity(
 			courseService.createCourse(request, userId)
 		);
+	}
+
+	@PostMapping("/{id}/enroll")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void enrollToCourse(
+		@PathVariable UUID id,
+		@Parameter(hidden = true) @AuthenticationPrincipal UUID userId
+	) {
+		userCourseService.enroll(id, userId);
 	}
 }

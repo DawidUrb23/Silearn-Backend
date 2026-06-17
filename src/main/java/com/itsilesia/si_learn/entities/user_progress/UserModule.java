@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ import java.util.List;
 @Setter
 public class UserModule {
 
+	@CreationTimestamp
 	@Column(name = "start_date", nullable = false, columnDefinition = "Date")
 	private LocalDateTime startDate;
 
@@ -50,9 +52,9 @@ public class UserModule {
 
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumns({
-		@JoinColumn(name = "user_id", insertable = false, updatable = false), //this part already exists (do not make it)
-		@JoinColumn(name = "course_id", insertable = false, updatable = false)
+	@JoinColumns({  //important order matters, otherwise those 2 columns are swapped (you have to check in DB the order)
+		@JoinColumn(name = "course_id", insertable = false, updatable = false), //this part already exists (do not make it)
+		@JoinColumn(name = "user_id", insertable = false, updatable = false)
 	})
 	private UserCourse userCourse;
 
