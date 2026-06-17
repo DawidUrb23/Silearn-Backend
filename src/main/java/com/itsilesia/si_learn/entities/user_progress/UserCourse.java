@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ import java.util.List;
 @Setter
 public class UserCourse {
 
+	@CreationTimestamp
 	@Column(name = "start_date", nullable = false, columnDefinition = "Date")
 	private LocalDateTime startDate;
 
@@ -33,13 +35,13 @@ public class UserCourse {
 
 	@Id
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "course_id", nullable = false)
-	private Course course;
+	@JoinColumn(name = "user_id", nullable = false)
+	private User user;
 
 	@Id
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id", nullable = false)
-	private User user;
+	@JoinColumn(name = "course_id", nullable = false)
+	private Course course;
 
 	@OneToMany(mappedBy = UserModule_.USER_COURSE, cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<UserModule> userModules = new ArrayList<>();

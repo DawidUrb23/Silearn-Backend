@@ -1,0 +1,62 @@
+databaseChangeLog:
+- changeSet:
+    id: 1781699004601-4
+    author: fafik (generated)
+    changes:
+    - dropForeignKeyConstraint:
+        baseTableName: user_modules
+        constraintName: FK434v6wtskyvlor25lewp9mcmn
+- changeSet:
+    id: 1781699004601-5
+    author: fafik (generated)
+    changes:
+    - dropForeignKeyConstraint:
+        baseTableName: user_lessons
+        constraintName: FK8k0i18i6d8prgmptqhdyt3k1j
+- changeSet:
+    id: 1781699004601-6
+    author: fafik (generated)
+    changes:
+    - dropForeignKeyConstraint:
+        baseTableName: user_tasks
+        constraintName: FKtmxyil7sfva61emj6rrew0kwv
+- changeSet:
+    id: 1781699004601-1
+    author: fafik (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: course_id,user_id
+        baseTableName: user_modules
+        constraintName: FK434v6wtskyvlor25lewp9mcmn
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: course_id,user_id
+        referencedTableName: user_courses
+        validate: true
+- changeSet:
+    id: 1781699004601-2
+    author: fafik (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: module_id,user_id
+        baseTableName: user_lessons
+        constraintName: FK8k0i18i6d8prgmptqhdyt3k1j
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: module_id,user_id
+        referencedTableName: user_modules
+        validate: true
+- changeSet:
+    id: 1781699004601-3
+    author: fafik (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: lesson_id,user_id
+        baseTableName: user_tasks
+        constraintName: FKtmxyil7sfva61emj6rrew0kwv
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: lesson_id,user_id
+        referencedTableName: user_lessons
+        validate: true
+
