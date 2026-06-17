@@ -1,75 +1,78 @@
 package com.itsilesia.si_learn.controllers.users;
 
-import com.itsilesia.si_learn.dtos.request.users.ChangePasswordRequest;
-import com.itsilesia.si_learn.dtos.request.users.UpdateUserRequest;
+import com.itsilesia.si_learn.dtos.request.users.SetPasswordRequest;
 import com.itsilesia.si_learn.dtos.response.exceptions.ErrorDetailsDto;
 import com.itsilesia.si_learn.dtos.response.users.UserDto;
+import com.itsilesia.si_learn.entities.enums.Role;
 import com.itsilesia.si_learn.services.users.UserService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 @Validated
-@Tag(name = "Users", description = "Endpoints for managing user information")
+@Tag(name = "Users", description = "Endpoints for managing user information (Admin)")
 @SecurityRequirement(name = "bearerAuth")
 public class UserController {
 	private final UserService userService;
 
-	@PatchMapping("/password")
-	@ResponseStatus(value = HttpStatus.NO_CONTENT)
-	@Operation(summary = "Change current user's password (Owner)")
-	@ApiResponse(responseCode = "204", description = "Password changed successfully")
-	@ApiResponse(responseCode = "400", description = "Invalid request body",
-		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
-	@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content())
-	public void ChangePassword(
-		@RequestBody @Valid ChangePasswordRequest request,
-		@Parameter(hidden = true) @AuthenticationPrincipal UUID userId
-	) {
-		userService.changePassword(request, userId);
-	}
-
-	@PatchMapping
-	@ResponseStatus(value = HttpStatus.NO_CONTENT)
-	@Operation(summary = "Update current user's information (Owner")
-	@ApiResponse(responseCode = "204", description = "User updated successfully")
-	@ApiResponse(responseCode = "400", description = "Invalid request body",
-		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
-	@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content())
-	public void UpdateUser(
-		@RequestBody @Valid UpdateUserRequest request,
-		@Parameter(hidden = true) @AuthenticationPrincipal UUID userId
-	) {
-		userService.updateUser(request, userId);
-	}
-
 	@GetMapping
-	@ResponseStatus(value = HttpStatus.OK)
-	@Operation(summary = "Get current user's information (Owner")
-	@ApiResponse(responseCode = "200", description = "User information returned successfully")
-	@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content())
-	@ApiResponse(responseCode = "404", description = "User not found",
-		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
-	public UserDto getUser(
-		@Parameter(hidden = true) @AuthenticationPrincipal UUID userId
+	@ResponseStatus(HttpStatus.OK)
+	@Operation(summary = "Get all users with matching role (Admin)")
+	public ResponseEntity<List<UserDto>> getAllUsers(
+		@RequestParam(required = false) Role role
 	) {
-		return UserDto.fromEntity(
-			userService.getById(userId)
+		return ResponseEntity.ok(
+			userService.getAll(role)
+				.stream().map(UserDto::fromEntity).toList()
 		);
+	}
+
+	@GetMapping("{id}")
+	@ResponseStatus(HttpStatus.OK)
+	@Operation(summary = "Get user by id (Admin)")
+	@ApiResponse(responseCode = "404", description = "User not found", content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
+	public ResponseEntity<UserDto> getUser(@PathVariable UUID id) {
+		return ResponseEntity.ok(
+			UserDto.fromEntity(
+				userService.getById(id)
+			)
+		);
+	}
+
+	@DeleteMapping("{id}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@Operation(summary = "Delete user by id (Admin)")
+	@ApiResponse(responseCode = "404", description = "User not found", content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
+	public ResponseEntity<Void> deleteUser(@PathVariable UUID id) {
+		userService.deleteUser(id);
+		return ResponseEntity.noContent().build();
+	}
+
+	@PatchMapping("{id}/password")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@Operation(summary = "Force set user's password (Admin)")
+	@ApiResponse(responseCode = "400", description = "Invalid request body",
+		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
+	@ApiResponse(responseCode = "404", description = "User not found", content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
+	public ResponseEntity<Void> setPassword(
+		@PathVariable UUID id,
+		@RequestBody SetPasswordRequest request
+	) {
+		userService.setPassword(request, id);
+		return ResponseEntity.noContent().build();
 	}
 }

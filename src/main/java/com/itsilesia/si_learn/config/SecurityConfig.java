@@ -34,15 +34,26 @@ public class SecurityConfig {
 			.authorizeHttpRequests(authorize -> authorize
 				.requestMatchers("/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
 
-				// `api/courses` can be accessed by anyone, byt only Teacher can make changes to it
+				// `api/courses` can be accessed by anyone, but only Teacher can make changes to it
 				.requestMatchers(HttpMethod.GET, "/api/courses/**").permitAll()
 				.requestMatchers("/api/courses/**").hasRole(Role.TEACHER.name())
+
+				// `api/modules` can be accessed by anyone, but only Teacher can make changes to it
+				.requestMatchers(HttpMethod.GET, "/api/modules/**").permitAll()
+				.requestMatchers("/api/modules/**").hasRole(Role.TEACHER.name())
+
+				// `api/translations` can be accessed by anyone, but only Translator/Administrator can make changes to it
+				.requestMatchers(HttpMethod.GET, "/api/translations/**").permitAll()
+				.requestMatchers("/api/translations/**").hasAnyRole(Role.TRANSLATOR.name(), Role.ADMINISTRATOR.name())
 
 				// Admin has access to admin panel
 				.requestMatchers("/api/admin/**").hasRole(Role.ADMINISTRATOR.name())
 
-				// any user can get and change their info
-				.requestMatchers("/api/users/**").authenticated()
+				// Admin has access to users panel
+				.requestMatchers("/api/users/**").hasRole(Role.ADMINISTRATOR.name())
+
+				// any user can get and change their account info
+				.requestMatchers("/api/account/**").authenticated()
 
 				.anyRequest().permitAll()   //defaults to anyone can access (might want to change that to `authenticated()`)
 			)
