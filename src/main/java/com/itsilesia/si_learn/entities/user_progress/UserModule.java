@@ -1,7 +1,9 @@
 package com.itsilesia.si_learn.entities.user_progress;
 
 
+import com.itsilesia.si_learn.dtos.response.TwoIntsProgress;
 import com.itsilesia.si_learn.entities.compositeIds.UserModuleId;
+import com.itsilesia.si_learn.entities.courses.Course;
 import com.itsilesia.si_learn.entities.courses.Module;
 import com.itsilesia.si_learn.entities.enums.ProgressStatus;
 import com.itsilesia.si_learn.entities.enums.ProgressStatusHelper;
@@ -13,6 +15,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity(name = "user_modules")
 @IdClass(UserModuleId.class)
@@ -39,7 +43,32 @@ public class UserModule {
 	private Module module;
 
 
+	//  Handles the actual writing/inserting of the course_id column
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "course_id", nullable = false)
+	private Course course;
+
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumns({
+		@JoinColumn(name = "user_id", insertable = false, updatable = false), //this part already exists (do not make it)
+		@JoinColumn(name = "course_id", insertable = false, updatable = false)
+	})
+	private UserCourse userCourse;
+
+	@OneToMany(mappedBy = UserLesson_.USER_MODULE, cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<UserLesson> userLessons = new ArrayList<>();
+
 	public ProgressStatus progressStatus() {
 		return ProgressStatusHelper.getStatus(startDate, endDate);
+	}
+
+	public TwoIntsProgress progress() {
+		return new TwoIntsProgress(
+			module.getLessons().size(),
+			(int) userLessons.stream().filter(
+				it -> it.progressStatus() == ProgressStatus.FINISHED
+			).count()
+		);
 	}
 }

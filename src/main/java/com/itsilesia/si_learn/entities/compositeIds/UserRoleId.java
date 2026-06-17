@@ -13,5 +13,6 @@ import java.util.UUID;
 @AllArgsConstructor
 public class UserRoleId implements Serializable {
 	private UUID user;
+	//this is an Enum (not a class)
 	private Role role;
 }

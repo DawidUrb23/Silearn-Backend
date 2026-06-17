@@ -1,6 +1,7 @@
 package com.itsilesia.si_learn.entities.user_progress;
 
 
+import com.itsilesia.si_learn.dtos.response.TwoIntsProgress;
 import com.itsilesia.si_learn.entities.compositeIds.UserCourseId;
 import com.itsilesia.si_learn.entities.courses.Course;
 import com.itsilesia.si_learn.entities.enums.ProgressStatus;
@@ -13,6 +14,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity(name = "user_courses")
 @IdClass(UserCourseId.class)
@@ -38,16 +41,20 @@ public class UserCourse {
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 
+	@OneToMany(mappedBy = UserModule_.USER_COURSE, cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<UserModule> userModules = new ArrayList<>();
 
 	public ProgressStatus progressStatus() {
 		return ProgressStatusHelper.getStatus(startDate, endDate);
 	}
 
-	public float progress() {
-		if (!course.getModules().isEmpty()) {
-			return (float) 1 / course.getModules().size();
-		}
-		return 0;
+	public TwoIntsProgress progress() {
+		return new TwoIntsProgress(
+			course.getModules().size(),
+			(int) userModules.stream().filter(
+				it -> it.progressStatus() == ProgressStatus.FINISHED
+			).count()
+		);
 	}
 
 }
