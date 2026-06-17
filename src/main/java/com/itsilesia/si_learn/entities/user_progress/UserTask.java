@@ -2,7 +2,9 @@ package com.itsilesia.si_learn.entities.user_progress;
 
 
 import com.itsilesia.si_learn.entities.compositeIds.UserTaskId;
+import com.itsilesia.si_learn.entities.courses.Lesson;
 import com.itsilesia.si_learn.entities.courses.Task;
+import com.itsilesia.si_learn.entities.enums.ProgressStatus;
 import com.itsilesia.si_learn.entities.users.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -32,4 +34,29 @@ public class UserTask {
 	private float taskScore;
 
 	private boolean passed;
+
+	@Column(name = "user_solution", nullable = true, columnDefinition = "TEXT")
+	private String userSolution;
+
+
+	// Handles the actual writing/inserting of the lesson_id column
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "lesson_id", nullable = false)
+	private Lesson lesson;
+
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumns({
+		@JoinColumn(name = "user_id", insertable = false, updatable = false), //this part already exists (do not make it)
+		@JoinColumn(name = "lesson_id", insertable = false, updatable = false)
+	})
+	private UserLesson userLesson;
+
+
+	public ProgressStatus progressStatus() {
+		if (passed) {
+			return ProgressStatus.FINISHED;
+		}
+		return ProgressStatus.IN_PROGRESS;
+	}
 }

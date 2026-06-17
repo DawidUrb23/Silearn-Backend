@@ -23,6 +23,11 @@ public class User extends BaseEntity {
 	@Column(nullable = false, unique = true)
 	private String email;
 
+	/// forces all emails to be LowerCase
+	public void setEmail(String email) {
+		this.email = email.toLowerCase();
+	}
+
 	@Column(nullable = false)
 	private String password;
 

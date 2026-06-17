@@ -29,5 +29,5 @@ public class TaskContent extends BaseEntity {
 
 	@Column(nullable = false, length = 5)
 	@Enumerated(EnumType.STRING)
-	private ContentType type;
+	private ContentType type = ContentType.TXT;
 }
