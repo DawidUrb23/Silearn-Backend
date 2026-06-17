@@ -29,6 +29,7 @@ public class LessonService {
 		lesson.setDescription(translationService.createDictionary(request.description(), request.languageCode()));
 		lesson.setModule(module);
 		lesson.setTasks(new ArrayList<>());
+		lesson.setIndex(request.index());
 
 		return lessonRepository.save(lesson);
 	}

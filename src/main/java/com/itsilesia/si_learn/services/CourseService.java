@@ -10,6 +10,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class CourseService {
@@ -19,9 +21,9 @@ public class CourseService {
 	private final TranslationService translationService;
 
 	@Transactional
-	public Course createCourse(CreateCourseRequest request) {
-		User author = userRepository.findById(request.authorId())
-			.orElseThrow(() -> new ItemNotFoundException(User.class, request.authorId()));
+	public Course createCourse(CreateCourseRequest request, UUID authorId) {
+		User author = userRepository.findById(authorId)
+			.orElseThrow(() -> new ItemNotFoundException(User.class, authorId));
 
 		Course course = new Course();
 		course.setTitle(translationService.createDictionary(request.title(), request.languageCode()));

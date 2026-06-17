@@ -1,0 +1,15 @@
+databaseChangeLog:
+- changeSet:
+    id: 1781691304402-1
+    author: fafik (generated)
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: index
+            type: INTEGER
+            defaultValueNumeric: 1
+        tableName: lessons
+

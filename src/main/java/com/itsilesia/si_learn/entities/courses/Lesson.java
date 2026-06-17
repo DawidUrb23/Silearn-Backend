@@ -33,6 +33,8 @@ public class Lesson extends BaseEntity {
 	@JoinColumn(name = "module_id", nullable = false)
 	private Module module;
 
+	@Column(nullable = false)
+	private int index;
 
 	@OneToMany(mappedBy = Task_.LESSON, cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Task> tasks;
