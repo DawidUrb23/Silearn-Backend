@@ -23,14 +23,14 @@ import java.util.Locale;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/dictionary")
+@RequestMapping("/api/translations")
 @RequiredArgsConstructor
 @Validated
-@Tag(name = "Dictionary", description = "Endpoints for internationalization")
-public class DictionaryController {
+@Tag(name = "Translations", description = "Endpoints for internationalization")
+public class TranslationsController {
 	private final TranslationService translationService;
 
-	@GetMapping
+	@GetMapping("languages")
 	@ResponseStatus(value = HttpStatus.OK)
 	@Operation(summary = "Get all languages")
 	public List<LanguageDto> getLanguages() {
@@ -40,7 +40,7 @@ public class DictionaryController {
 			.toList();
 	}
 
-	@PostMapping
+	@PostMapping("languages")
 	@ResponseStatus(value = HttpStatus.CREATED)
 	@Operation(summary = "Add a language (Admin)", description = "Adds a new language to the dictionary")
 	@ApiResponse(responseCode = "400", description = "Invalid input, invalid language code",
@@ -53,7 +53,7 @@ public class DictionaryController {
 		translationService.addLocale(request.getLanguageCode());
 	}
 
-	@DeleteMapping
+	@DeleteMapping("languages")
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
 	@Operation(summary = "Remove a language (Admin)", description = "Removes a language from the dictionary (only if it is not used)")
 	@ApiResponse(responseCode = "400", description = "Invalid input, invalid language code",
@@ -64,7 +64,7 @@ public class DictionaryController {
 		translationService.removeLocale(request.getLanguageCode());
 	}
 
-	@GetMapping("/translation/{id}")
+	@GetMapping("/{id}")
 	@ResponseStatus(value = HttpStatus.OK)
 	@Operation(summary = "Get translation dictionary", description = "Lists all translations of a dictionary")
 	public TranslationDictDto getTranslationDictionary(
@@ -75,7 +75,7 @@ public class DictionaryController {
 		);
 	}
 
-	@PutMapping("/translation/{id}")
+	@PutMapping("/{id}")
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
 	@Operation(summary = "Update translation dictionary (Translator)", description = "Add or update a translation of a dictionary")
 	@ApiResponse(responseCode = "404", description = "requested item does not exist",

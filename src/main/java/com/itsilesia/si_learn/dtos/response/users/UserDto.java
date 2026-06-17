@@ -10,18 +10,21 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDto {
+	private UUID id;
 	private String email;
 	private String languageCode;
 	private List<Role> roles;
 
 	static public UserDto fromEntity(@NotNull User user) {
 		return new UserDto(
+			user.getId(),
 			user.getEmail(),
 			user.getLanguage() == null ? null : user.getLanguage().getCode(),
 			user.getRoles().stream().map(UserRole::getRole).toList()

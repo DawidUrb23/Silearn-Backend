@@ -3,6 +3,7 @@ package com.itsilesia.si_learn.services.users;
 
 import com.itsilesia.si_learn.dtos.request.users.ChangePasswordRequest;
 import com.itsilesia.si_learn.dtos.request.users.RegisterRequest;
+import com.itsilesia.si_learn.dtos.request.users.SetPasswordRequest;
 import com.itsilesia.si_learn.dtos.request.users.UpdateUserRequest;
 import com.itsilesia.si_learn.entities.Language;
 import com.itsilesia.si_learn.entities.enums.Role;
@@ -12,6 +13,7 @@ import com.itsilesia.si_learn.exceptions.ItemNotFoundException;
 import com.itsilesia.si_learn.exceptions.UserAlreadyExistsException;
 import com.itsilesia.si_learn.repositories.users.UserRepository;
 import com.itsilesia.si_learn.services.LanguageService;
+import com.itsilesia.si_learn.specyfications.UserSpecification;
 import io.micrometer.common.util.StringUtils;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -35,8 +37,8 @@ public class UserService {
 	private final LangService langService;
 	private final PasswordEncoder passwordEncoder;
 
-	public List<User> getAll() {
-		return userRepository.findAll();
+	public List<User> getAll(Role role) {
+		return userRepository.findAll(UserSpecification.hasRole(role));
 	}
 
 	public User getById(UUID userId) {
@@ -105,4 +107,16 @@ public class UserService {
 		return userRepository.save(user);
 	}
 
+	public void deleteUser(UUID id) {
+		var user = userRepository.findById(id)
+			.orElseThrow(() -> new ItemNotFoundException(User.class, id));
+		userRepository.delete(user);
+	}
+
+	public void setPassword(@NonNull SetPasswordRequest request, UUID id) {
+		var user = userRepository.findById(id).
+			orElseThrow(() -> new ItemNotFoundException(User.class, id));
+		user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+		userRepository.save(user);
+	}
 }
