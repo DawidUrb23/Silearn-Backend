@@ -8,10 +8,12 @@ import com.itsilesia.si_learn.entities.courses.Course;
 import com.itsilesia.si_learn.entities.courses.Course_;
 import com.itsilesia.si_learn.entities.enums.DifficultyLevel;
 import com.itsilesia.si_learn.entities.enums.ProgramingLanguage;
+import com.itsilesia.si_learn.entities.enums.VisibilityStatus;
 import com.itsilesia.si_learn.entities.users.User_;
 import jakarta.persistence.criteria.Join;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.util.Arrays;
 import java.util.UUID;
 
 public class CourseSpecification {
@@ -42,8 +44,18 @@ public class CourseSpecification {
 		};
 	}
 
+	public static Specification<Course> hasStatus(VisibilityStatus... statuses) {
+		return (root, query, criteriaBuilder) -> {
+			if (statuses == null || statuses.length == 0) {
+				return criteriaBuilder.conjunction();
+			}
+			return root.get(Course_.STATUS).in(Arrays.asList(statuses));
+		};
+	}
+
 	/**
 	 * Checks if title in ANY language contains the sequence
+	 *
 	 * @param name - part of title to match
 	 */
 	public static Specification<Course> anyTitleContains(String name) {

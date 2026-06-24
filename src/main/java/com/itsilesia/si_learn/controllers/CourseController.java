@@ -9,6 +9,7 @@ import com.itsilesia.si_learn.dtos.response.exceptions.ErrorDetailsDto;
 import com.itsilesia.si_learn.entities.courses.Course;
 import com.itsilesia.si_learn.entities.enums.DifficultyLevel;
 import com.itsilesia.si_learn.entities.enums.ProgramingLanguage;
+import com.itsilesia.si_learn.entities.enums.VisibilityStatus;
 import com.itsilesia.si_learn.entities.user_progress.UserCourse;
 import com.itsilesia.si_learn.services.CourseService;
 import com.itsilesia.si_learn.services.ModuleService;
@@ -108,6 +109,7 @@ public class CourseController {
 	@ResponseStatus(HttpStatus.OK)
 	@Operation(summary = "Get courses with filters (Public)")
 	public List<CourseResponse> getCourses(
+		@RequestParam(required = false) VisibilityStatus status,
 		@RequestParam(required = false) DifficultyLevel difficulty,
 		@RequestParam(required = false) ProgramingLanguage programingLanguage,
 		@RequestParam(required = false) String name,
@@ -115,7 +117,7 @@ public class CourseController {
 		@RequestHeader(value = HttpHeaders.ACCEPT_LANGUAGE, required = false) String languageCode,
 		@Parameter(hidden = true) @AuthenticationPrincipal UUID userId
 	) {
-		return courseService.getCourses(difficulty, programingLanguage, name, authorId)
+		return courseService.getCourses(status, difficulty, programingLanguage, name, authorId)
 			.stream()
 			.map(course -> CourseResponse.fromEntity(
 				course,

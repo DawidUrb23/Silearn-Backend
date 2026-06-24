@@ -4,6 +4,7 @@ import com.itsilesia.si_learn.dtos.request.courses.CreateCourseRequest;
 import com.itsilesia.si_learn.entities.courses.Course;
 import com.itsilesia.si_learn.entities.enums.DifficultyLevel;
 import com.itsilesia.si_learn.entities.enums.ProgramingLanguage;
+import com.itsilesia.si_learn.entities.enums.VisibilityStatus;
 import com.itsilesia.si_learn.entities.users.User;
 import com.itsilesia.si_learn.exceptions.ItemNotFoundException;
 import com.itsilesia.si_learn.repositories.CourseRepository;
@@ -56,13 +57,15 @@ public class CourseService {
 	}
 
 	public List<Course> getCourses(
+		VisibilityStatus status,
 		DifficultyLevel difficulty,
 		ProgramingLanguage programingLanguage,
 		String name,
 		UUID authorId
 	) {
 		Specification<Course> specification = Specification
-			.where(CourseSpecification.hasDifficulty(difficulty))
+			.where(CourseSpecification.hasStatus(status))  //static "ACTIVE"?, dynamic status
+			.and(CourseSpecification.hasDifficulty(difficulty))
 			.and(CourseSpecification.hasProgramingLanguage(programingLanguage))
 			.and(CourseSpecification.anyTitleContains(name))
 			.and(CourseSpecification.hasAuthor(authorId));
