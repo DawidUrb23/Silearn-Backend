@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpHeaders;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.UUID;
 import java.util.List;
@@ -16,6 +17,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/modules")
 @RequiredArgsConstructor
+@Tag(
+	name = "Modules",
+	description = "Endpoints for: managing modules and module lessons"
+)
 public class ModuleController {
 	private final ModuleService moduleService;
 
