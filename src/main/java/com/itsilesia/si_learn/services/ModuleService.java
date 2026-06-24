@@ -32,4 +32,8 @@ public class ModuleService {
 
 		return moduleRepository.save(module);
 	}
+	public Module getModuleWithLessons(UUID moduleId) {
+		return moduleRepository.findById(moduleId)
+			.orElseThrow(() -> new ItemNotFoundException(Module.class, moduleId));
+	}
 }

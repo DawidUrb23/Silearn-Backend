@@ -7,12 +7,17 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/lessons")
 @RequiredArgsConstructor
+@Tag(
+	name = "Lessons",
+	description = "Endpoints for: managing lessons"
+)
 public class LessonController {
 	private final LessonService lessonService;
 
