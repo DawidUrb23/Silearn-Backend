@@ -13,7 +13,7 @@ import com.itsilesia.si_learn.exceptions.ItemNotFoundException;
 import com.itsilesia.si_learn.exceptions.UserAlreadyExistsException;
 import com.itsilesia.si_learn.repositories.users.UserRepository;
 import com.itsilesia.si_learn.services.LanguageService;
-import com.itsilesia.si_learn.specyfications.UserSpecification;
+import com.itsilesia.si_learn.specifications.UserSpecification;
 import io.micrometer.common.util.StringUtils;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
