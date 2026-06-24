@@ -95,7 +95,7 @@ public class UserService {
 			user.setEmail(request.getEmail());
 		}
 
-		if (request.isBecomeTeacher())
+		if (request.getBecomeTeacher() != null && request.getBecomeTeacher())
 			roleService.addRoleToUser(user, Role.TEACHER);
 
 		if (!StringUtils.isBlank(request.getLanguageCode())) {

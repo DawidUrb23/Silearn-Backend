@@ -16,5 +16,5 @@ public class UpdateUserRequest {
 	@Size(max = 30)
 	private String languageCode;
 
-	private boolean becomeTeacher = false;
+	private Boolean becomeTeacher = false;
 }
