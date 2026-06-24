@@ -19,5 +19,13 @@ public class RegisterRequest {
 	@Size(max = 30)
 	private String languageCode;
 
+	@NotBlank
+	@Size(max = 100)
+	private String name;
+
+	@NotBlank
+	@Size(max = 100)
+	private String surname;
+
 	private boolean teacherRole = false;
 }

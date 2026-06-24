@@ -21,13 +21,17 @@ public class UserWithPersonalDataDto {
 	private String email;
 	private String languageCode;
 	private List<Role> roles;
+	private String name;
+	private String surname;
 
 	static public UserWithPersonalDataDto fromEntity(@NotNull User user) {
 		return new UserWithPersonalDataDto(
 			user.getId(),
 			user.getEmail(),
 			user.getLanguage() == null ? null : user.getLanguage().getCode(),
-			user.getRoles().stream().map(UserRole::getRole).toList()
+			user.getRoles().stream().map(UserRole::getRole).toList(),
+			user.getName(),
+			user.getSurname()
 		);
 	}
 }
