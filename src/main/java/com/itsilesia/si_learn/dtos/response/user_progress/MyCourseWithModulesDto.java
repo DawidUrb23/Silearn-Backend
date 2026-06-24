@@ -25,7 +25,7 @@ public class MyCourseWithModulesDto {
 
 	private List<MyModuleDetailsDto> modules;
 
-	static public MyCourseWithModulesDto fromEntity(UserCourse course) {
+	static public MyCourseWithModulesDto fromEntity(UserCourse course, String languageCode) {
 		var modules = course.getCourse().getModules();
 		return new MyCourseWithModulesDto(
 			course.getCourse().getId(),
@@ -33,7 +33,7 @@ public class MyCourseWithModulesDto {
 			course.getEndDate(),
 			course.progressStatus(),
 			modules.size(),
-			course.getUserModules().stream().map(MyModuleDetailsDto::fromEntity).toList()
+			course.getUserModules().stream().map(userModule -> MyModuleDetailsDto.fromEntity(userModule, languageCode)).toList()
 		);
 	}
 }

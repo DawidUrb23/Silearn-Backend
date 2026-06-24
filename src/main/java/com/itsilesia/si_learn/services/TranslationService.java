@@ -4,8 +4,13 @@ import com.itsilesia.si_learn.dtos.request.dictionary.UpdateTranslationDictionar
 import com.itsilesia.si_learn.entities.DictionaryItem;
 import com.itsilesia.si_learn.entities.Language;
 import com.itsilesia.si_learn.entities.TranslationDictionary;
+import com.itsilesia.si_learn.entities.courses.Course;
+import com.itsilesia.si_learn.entities.courses.Lesson;
+import com.itsilesia.si_learn.entities.courses.Module;
+import com.itsilesia.si_learn.entities.courses.TaskContent;
 import com.itsilesia.si_learn.exceptions.ItemAlreadyExistsException;
 import com.itsilesia.si_learn.exceptions.ItemNotFoundException;
+import com.itsilesia.si_learn.repositories.CourseRepository;
 import com.itsilesia.si_learn.repositories.LanguageRepository;
 import com.itsilesia.si_learn.repositories.TranslationDictionaryRepository;
 import jakarta.transaction.Transactional;
@@ -14,6 +19,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,6 +28,7 @@ import java.util.UUID;
 public class TranslationService {
 	private final LanguageRepository languageRepository;
 	private final TranslationDictionaryRepository translationDictionaryRepository;
+	private final CourseRepository courseRepository;
 
 	@Transactional
 	public TranslationDictionary createDictionary(String value, String languageCode) {
@@ -87,7 +94,24 @@ public class TranslationService {
 		return translationDictionaryRepository.save(translationDict);
 	}
 
+	@Transactional
 	public void removeLocale(@NotBlank String languageCode) {
 		languageRepository.deleteById(languageCode);
+	}
+
+	public List<TranslationDictionary> getCourseDictionaries(UUID courseId) {
+		var course = courseRepository.findById(courseId)
+			.orElseThrow(() -> new ItemNotFoundException(Course.class, courseId));
+		List<TranslationDictionary> items = new ArrayList<>();
+		items.add(course.getTitle());
+		items.add(course.getDescription());
+		items.addAll(course.getModules().stream().map(Module::getTitle).toList());
+		var lessons = course.getModules().stream().flatMap(module -> module.getLessons().stream()).toList();
+		items.addAll(lessons.stream().map(Lesson::getTopic).toList());
+		items.addAll(lessons.stream().map(Lesson::getDescription).toList());
+		var tasks = lessons.stream().flatMap(lesson -> lesson.getTasks().stream()).toList();
+		items.addAll(tasks.stream().flatMap(task -> task.getTaskContents().stream()).map(TaskContent::getContent).toList());
+
+		return items;
 	}
 }

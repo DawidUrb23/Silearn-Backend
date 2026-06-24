@@ -6,6 +6,7 @@ import com.itsilesia.si_learn.dtos.response.IdOnlyDto;
 import com.itsilesia.si_learn.dtos.response.courses.CourseResponse;
 import com.itsilesia.si_learn.dtos.response.exceptions.ErrorDetailsDto;
 import com.itsilesia.si_learn.entities.courses.Course;
+import com.itsilesia.si_learn.entities.user_progress.UserCourse;
 import com.itsilesia.si_learn.services.CourseService;
 import com.itsilesia.si_learn.services.ModuleService;
 import com.itsilesia.si_learn.services.UserCourseService;
@@ -17,6 +18,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -28,7 +30,7 @@ import java.util.UUID;
 @RequestMapping("/api/courses")
 @RequiredArgsConstructor
 @Validated
-@Tag(name = "Course", description = "Endpoints for: managing courses (Teacher), getting course info (Public)")
+@Tag(name = "Courses", description = "Endpoints for: managing courses (Teacher), getting course info (Public)")
 public class CourseController {
 	private final CourseService courseService;
 	private final UserCourseService userCourseService;
@@ -85,17 +87,22 @@ public class CourseController {
 
 	@GetMapping("/{courseId}")
 	@ResponseStatus(HttpStatus.OK)
-	@Operation(summary = "Get specific course details with enrolment status (Public)")
+	@Operation(summary = "Get specific course details with enrolment status")
 	@ApiResponse(responseCode = "404",
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
 	public CourseResponse getCourse(
 		@PathVariable UUID courseId,
-		@Parameter(hidden = true) @AuthenticationPrincipal UUID userId
+		@Parameter(hidden = true) @AuthenticationPrincipal UUID userId,
+		@RequestHeader(value = HttpHeaders.ACCEPT_LANGUAGE, required = false) String languageCode
 	) {
 		Course course = courseService.getCourse(courseId);
-		//TODO: get user progress
-		//TODO: include languageCode for response
-		return CourseResponse.fromEntity(course, null, null);
+		UserCourse userCourse = null;
+		try {
+			//we use try catch to not crash the flow when user is not registered into the course
+			userCourse = userCourseService.getUserCourse(userId, courseId);
+		} catch (Exception _) {
+		}
+		return CourseResponse.fromEntity(course, languageCode, userCourse);
 	}
 
 //	@GetMapping("/{courseId}/modules") //gets a list of modules in course (Teacher)
