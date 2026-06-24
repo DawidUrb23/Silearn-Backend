@@ -1,30 +1,28 @@
 package com.itsilesia.si_learn.dtos.response.courses;
 
-import com.itsilesia.si_learn.entities.DictionaryItem;
-import com.itsilesia.si_learn.entities.TranslationDictionary;
+import com.itsilesia.si_learn.dtos.response.dictonary.TranslationDto;
+import com.itsilesia.si_learn.dtos.response.helper.DictionaryHelper;
 import com.itsilesia.si_learn.entities.courses.Module;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.UUID;
 
 public record ModuleResponse(
 	UUID id,
-	String title,
+	TranslationDto title,
 	Integer index
 ) {
-	public static ModuleResponse fromEntity(Module module) {
+	public static ModuleResponse fromEntity(
+		@NotNull Module module,
+		String languageCode
+	) {
 		return new ModuleResponse(
 			module.getId(),
-			getOriginalValue(module.getTitle()),
+			TranslationDto.fromEntity(
+				DictionaryHelper.getTranslationWithCode(module.getTitle(), languageCode)
+			),
 			module.getIndex()
 		);
-	}
-
-	private static String getOriginalValue(TranslationDictionary dictionary) {
-		return dictionary.getItems().stream()
-			.filter(item -> item.getLanguage().getCode().equals(dictionary.getOriginalLanguage().getCode()))
-			.findFirst()
-			.map(DictionaryItem::getValue)
-			.orElse(null);
 	}
 }
 

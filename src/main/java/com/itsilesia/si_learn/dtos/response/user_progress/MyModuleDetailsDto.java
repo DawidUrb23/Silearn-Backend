@@ -24,7 +24,8 @@ public class MyModuleDetailsDto {
 
 	static public MyModuleDetailsDto fromEntity(UserModule userModule) {
 		return new MyModuleDetailsDto(
-			ModuleResponse.fromEntity(userModule.getModule()),
+			//TODO: get languageCode for response
+			ModuleResponse.fromEntity(userModule.getModule(), null),
 			userModule.getStartDate(),
 			userModule.getEndDate(),
 			userModule.progressStatus(),

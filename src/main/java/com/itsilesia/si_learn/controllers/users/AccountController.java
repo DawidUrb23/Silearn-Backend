@@ -3,7 +3,7 @@ package com.itsilesia.si_learn.controllers.users;
 import com.itsilesia.si_learn.dtos.request.users.ChangePasswordRequest;
 import com.itsilesia.si_learn.dtos.request.users.UpdateUserRequest;
 import com.itsilesia.si_learn.dtos.response.exceptions.ErrorDetailsDto;
-import com.itsilesia.si_learn.dtos.response.users.UserDto;
+import com.itsilesia.si_learn.dtos.response.users.UserWithPersonalDataDto;
 import com.itsilesia.si_learn.services.users.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -65,10 +65,10 @@ public class AccountController {
 	@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content())
 	@ApiResponse(responseCode = "404", description = "User not found",
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
-	public UserDto getUser(
+	public UserWithPersonalDataDto getUser(
 		@Parameter(hidden = true) @AuthenticationPrincipal UUID userId
 	) {
-		return UserDto.fromEntity(
+		return UserWithPersonalDataDto.fromEntity(
 			userService.getById(userId)
 		);
 	}
