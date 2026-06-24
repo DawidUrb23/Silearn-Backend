@@ -72,6 +72,8 @@ public class UserService {
 		User user = new User();
 		user.setEmail(registerRequest.getEmail());
 		user.setPassword(registerRequest.getPassword());
+		user.setName(registerRequest.getName());
+		user.setSurname(registerRequest.getSurname());
 
 		roleService.addRoleToUser(user, Role.STUDENT);
 		if (registerRequest.isTeacherRole())
@@ -98,11 +100,16 @@ public class UserService {
 		if (request.getBecomeTeacher() != null && request.getBecomeTeacher())
 			roleService.addRoleToUser(user, Role.TEACHER);
 
-		if (!StringUtils.isBlank(request.getLanguageCode())) {
+		if (StringUtils.isNotBlank(request.getLanguageCode())) {
 			var lang = langService.getLangByCode(request.getLanguageCode())
 				.orElseThrow(() -> new ItemNotFoundException(Language.class, request.getLanguageCode()));
 			user.setLanguage(lang);
 		}
+
+		if (StringUtils.isNotBlank(request.getName()))
+			user.setName(request.getName());
+		if (StringUtils.isNotBlank(request.getSurname()))
+			user.setSurname(request.getSurname());
 
 		return userRepository.save(user);
 	}
