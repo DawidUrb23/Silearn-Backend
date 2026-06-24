@@ -1,11 +1,11 @@
 package com.itsilesia.si_learn.controllers;
 
 import com.itsilesia.si_learn.dtos.request.courses.CreateModuleRequest;
-import com.itsilesia.si_learn.dtos.response.courses.ModuleResponse;
-import com.itsilesia.si_learn.entities.courses.Module;
+import com.itsilesia.si_learn.dtos.response.IdOnlyDto;
 import com.itsilesia.si_learn.services.ModuleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -17,11 +17,13 @@ public class ModuleController {
 	private final ModuleService moduleService;
 
 	@PostMapping("/courses/{courseId}")
-	public ModuleResponse createModule(
+	@ResponseStatus(HttpStatus.CREATED)
+	public IdOnlyDto createModule(
 		@PathVariable UUID courseId,
 		@Valid @RequestBody CreateModuleRequest request
 	) {
-		Module module = moduleService.createModule(courseId, request);
-		return ModuleResponse.fromEntity(module);
+		return IdOnlyDto.fromEntity(
+			moduleService.createModule(courseId, request)
+		);
 	}
 }

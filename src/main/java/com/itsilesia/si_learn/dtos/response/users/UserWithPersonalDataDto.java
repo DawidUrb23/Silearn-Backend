@@ -16,14 +16,14 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDto {
+public class UserWithPersonalDataDto {
 	private UUID id;
 	private String email;
 	private String languageCode;
 	private List<Role> roles;
 
-	static public UserDto fromEntity(@NotNull User user) {
-		return new UserDto(
+	static public UserWithPersonalDataDto fromEntity(@NotNull User user) {
+		return new UserWithPersonalDataDto(
 			user.getId(),
 			user.getEmail(),
 			user.getLanguage() == null ? null : user.getLanguage().getCode(),

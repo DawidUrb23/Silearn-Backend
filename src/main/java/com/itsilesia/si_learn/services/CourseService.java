@@ -9,7 +9,6 @@ import com.itsilesia.si_learn.repositories.users.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.UUID;
 
 @Service
@@ -35,5 +34,10 @@ public class CourseService {
 		course.setForceSequentialTasks(request.forceSequentialTasks());
 
 		return courseRepository.save(course);
+	}
+
+	public Course getCourse(UUID courseId) {
+		return courseRepository.findById(courseId)
+			.orElseThrow(() -> new ItemNotFoundException(Course.class, courseId));
 	}
 }

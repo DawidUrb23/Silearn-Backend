@@ -2,7 +2,7 @@ package com.itsilesia.si_learn.controllers.users;
 
 import com.itsilesia.si_learn.dtos.request.users.SetPasswordRequest;
 import com.itsilesia.si_learn.dtos.response.exceptions.ErrorDetailsDto;
-import com.itsilesia.si_learn.dtos.response.users.UserDto;
+import com.itsilesia.si_learn.dtos.response.users.UserWithPersonalDataDto;
 import com.itsilesia.si_learn.entities.enums.Role;
 import com.itsilesia.si_learn.services.users.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,12 +32,12 @@ public class UserController {
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
 	@Operation(summary = "Get all users with matching role (Admin)")
-	public ResponseEntity<List<UserDto>> getAllUsers(
+	public ResponseEntity<List<UserWithPersonalDataDto>> getAllUsers(
 		@RequestParam(required = false) Role role
 	) {
 		return ResponseEntity.ok(
 			userService.getAll(role)
-				.stream().map(UserDto::fromEntity).toList()
+				.stream().map(UserWithPersonalDataDto::fromEntity).toList()
 		);
 	}
 
@@ -45,9 +45,9 @@ public class UserController {
 	@ResponseStatus(HttpStatus.OK)
 	@Operation(summary = "Get user by id (Admin)")
 	@ApiResponse(responseCode = "404", description = "User not found", content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
-	public ResponseEntity<UserDto> getUser(@PathVariable UUID id) {
+	public ResponseEntity<UserWithPersonalDataDto> getUser(@PathVariable UUID id) {
 		return ResponseEntity.ok(
-			UserDto.fromEntity(
+			UserWithPersonalDataDto.fromEntity(
 				userService.getById(id)
 			)
 		);
