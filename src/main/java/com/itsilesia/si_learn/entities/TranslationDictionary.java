@@ -20,6 +20,6 @@ public class TranslationDictionary extends BaseEntity {
 	@JoinColumn(name = "language_code", nullable = false)
 	private Language originalLanguage;
 
-	@OneToMany(mappedBy = DictionaryItem_.TRANSLATION_DICTIONARY, cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = DictionaryItem_.TRANSLATION_DICTIONARY, cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	private List<DictionaryItem> items = new ArrayList<>();
 }

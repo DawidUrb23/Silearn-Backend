@@ -2,6 +2,7 @@ package com.itsilesia.si_learn.controllers;
 
 import com.itsilesia.si_learn.dtos.request.dictionary.AddLocaleRequest;
 import com.itsilesia.si_learn.dtos.request.dictionary.UpdateTranslationDictionaryRequest;
+import com.itsilesia.si_learn.dtos.response.IdOnlyDto;
 import com.itsilesia.si_learn.dtos.response.dictonary.LanguageDto;
 import com.itsilesia.si_learn.dtos.response.dictonary.TranslationDictDto;
 import com.itsilesia.si_learn.dtos.response.exceptions.ErrorDetailsDto;
@@ -73,6 +74,16 @@ public class TranslationsController {
 		return TranslationDictDto.fromEntity(
 			translationService.getTranslationDictionary(id)
 		);
+	}
+
+	@GetMapping("/courses/{id}")
+	@ResponseStatus(value = HttpStatus.OK)
+	@Operation(summary = "Get all dictionaries used in course")
+	public List<IdOnlyDto> getCourseDictionaries(
+		@PathVariable UUID id
+	) {
+		return translationService.getCourseDictionaries(id)
+			.stream().map(IdOnlyDto::fromEntity).toList();
 	}
 
 	@PutMapping("/{id}")

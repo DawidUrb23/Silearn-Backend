@@ -35,7 +35,8 @@ public class SecurityConfig {
 				.requestMatchers("/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
 
 				// `api/courses` can be accessed by anyone, only Teacher can make changes to it, only singed in users can enroll
-				.requestMatchers(HttpMethod.GET, "/api/courses/**").permitAll()
+				.requestMatchers(HttpMethod.GET, "/api/courses").permitAll()
+				.requestMatchers(HttpMethod.GET, "/api/courses/*").permitAll()
 				.requestMatchers( "/api/courses/*/enroll").authenticated()
 				.requestMatchers("/api/courses/**").hasRole(Role.TEACHER.name())
 
