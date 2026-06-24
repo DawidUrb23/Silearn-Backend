@@ -77,4 +77,12 @@ public class UserCourseService {
 
 		return userCourseRepository.save(userCourse);
 	}
+	public UserCourse getUserCourseOrNull(UUID userId, UUID courseId) {
+		if (userId == null) {
+			return null;
+		}
+
+		return userCourseRepository.findById(new UserCourseId(userId, courseId))
+			.orElse(null);
+	}
 }

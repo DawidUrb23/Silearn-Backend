@@ -4,8 +4,11 @@ import com.itsilesia.si_learn.dtos.request.courses.CreateCourseRequest;
 import com.itsilesia.si_learn.dtos.request.courses.CreateModuleRequest;
 import com.itsilesia.si_learn.dtos.response.IdOnlyDto;
 import com.itsilesia.si_learn.dtos.response.courses.CourseResponse;
+import com.itsilesia.si_learn.dtos.response.courses.ModuleResponse;
 import com.itsilesia.si_learn.dtos.response.exceptions.ErrorDetailsDto;
 import com.itsilesia.si_learn.entities.courses.Course;
+import com.itsilesia.si_learn.entities.enums.DifficultyLevel;
+import com.itsilesia.si_learn.entities.enums.ProgramingLanguage;
 import com.itsilesia.si_learn.entities.user_progress.UserCourse;
 import com.itsilesia.si_learn.services.CourseService;
 import com.itsilesia.si_learn.services.ModuleService;
@@ -24,6 +27,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -96,15 +100,45 @@ public class CourseController {
 		@RequestHeader(value = HttpHeaders.ACCEPT_LANGUAGE, required = false) String languageCode
 	) {
 		Course course = courseService.getCourse(courseId);
-		UserCourse userCourse = null;
-		try {
-			//we use try catch to not crash the flow when user is not registered into the course
-			userCourse = userCourseService.getUserCourse(userId, courseId);
-		} catch (Exception _) {
-		}
+		UserCourse userCourse = userCourseService.getUserCourseOrNull(userId, courseId);
 		return CourseResponse.fromEntity(course, languageCode, userCourse);
 	}
 
-//	@GetMapping("/{courseId}/modules") //gets a list of modules in course (Teacher)
+	@GetMapping
+	@ResponseStatus(HttpStatus.OK)
+	@Operation(summary = "Get courses with filters (Public)")
+	public List<CourseResponse> getCourses(
+		@RequestParam(required = false) DifficultyLevel difficulty,
+		@RequestParam(required = false) ProgramingLanguage programingLanguage,
+		@RequestParam(required = false) String name,
+		@RequestParam(required = false) UUID authorId,
+		@RequestHeader(value = HttpHeaders.ACCEPT_LANGUAGE, required = false) String languageCode,
+		@Parameter(hidden = true) @AuthenticationPrincipal UUID userId
+	) {
+		return courseService.getCourses(difficulty, programingLanguage, name, authorId)
+			.stream()
+			.map(course -> CourseResponse.fromEntity(
+				course,
+				languageCode,
+				userCourseService.getUserCourseOrNull(userId, course.getId())
+			))
+			.toList();
+	}
+
+	@GetMapping("/{courseId}/modules")
+	@ResponseStatus(HttpStatus.OK)
+	@Operation(summary = "Get course modules (Owner)")
+	@ApiResponse(responseCode = "403",
+		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
+	@ApiResponse(responseCode = "404",
+		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
+	public List<ModuleResponse> getCourseModules(
+		@PathVariable UUID courseId,
+		@RequestHeader(value = HttpHeaders.ACCEPT_LANGUAGE, required = false) String languageCode,
+		@Parameter(hidden = true) @AuthenticationPrincipal UUID userId
+	) {
+		return courseService.getCourseWithModules(courseId, userId).getModules()
+			.stream().map(module -> ModuleResponse.fromEntity(module, languageCode)).toList();
+	}
 
 }
