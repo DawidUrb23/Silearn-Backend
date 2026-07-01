@@ -22,6 +22,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -108,22 +111,21 @@ public class CourseController {
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
 	@Operation(summary = "Get courses with filters (Public)")
-	public List<CourseResponse> getCourses(
+	public Slice<CourseResponse> getCourses(
 		@RequestParam(required = false) VisibilityStatus status,
 		@RequestParam(required = false) DifficultyLevel difficulty,
 		@RequestParam(required = false) ProgramingLanguage programingLanguage,
 		@RequestParam(required = false) String name,
 		@RequestParam(required = false) UUID authorId,
-		@RequestHeader(value = HttpHeaders.ACCEPT_LANGUAGE, required = false) String languageCode,  //exposes the header for LocaleContextHolder
-		@Parameter(hidden = true) @AuthenticationPrincipal UUID userId
+		@RequestHeader(value = HttpHeaders.ACCEPT_LANGUAGE, required = false) String languageCode,
+		@Parameter(hidden = true) @AuthenticationPrincipal UUID userId,
+		@PageableDefault(size = 20) Pageable pageable
 	) {
-		return courseService.getCourses(status, difficulty, programingLanguage, name, authorId)
-			.stream()
+		return courseService.getCourses(status, difficulty, programingLanguage, name, authorId, pageable)
 			.map(course -> CourseResponse.fromEntity(
 				course,
 				userCourseService.getUserCourseOrNull(userId, course.getId())
-			))
-			.toList();
+			));
 	}
 
 	@GetMapping("/{courseId}/modules")

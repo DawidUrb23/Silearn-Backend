@@ -1,5 +1,7 @@
 package com.itsilesia.si_learn.repositories;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -15,4 +17,6 @@ public interface SpecificationJpaRepository<T, ID extends Serializable>
 	// Inherits:
 	// - List<T> findAll() (from JpaRepository)
 	// - List<T> findAll(Specification<T> spec) (from JpaSpecificationExecutor)
+
+	Slice<T> findAllBy(Specification<T> spec, Pageable pageable);
 }
