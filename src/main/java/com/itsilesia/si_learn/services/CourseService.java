@@ -12,10 +12,11 @@ import com.itsilesia.si_learn.repositories.users.UserRepository;
 import com.itsilesia.si_learn.specifications.CourseSpecification;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -57,12 +58,13 @@ public class CourseService {
 		return course;
 	}
 
-	public List<Course> getCourses(
+	public Slice<Course> getCourses(
 		VisibilityStatus status,
 		DifficultyLevel difficulty,
 		ProgramingLanguage programingLanguage,
 		String name,
-		UUID authorId
+		UUID authorId,
+		Pageable pageable
 	) {
 		Specification<Course> specification = Specification
 			.where(CourseSpecification.hasStatus(status))  //static "ACTIVE"?, dynamic status
@@ -71,6 +73,6 @@ public class CourseService {
 			.and(CourseSpecification.anyTitleContains(name))
 			.and(CourseSpecification.hasAuthor(authorId));
 
-		return courseRepository.findAll(specification);
+		return courseRepository.findAllBy(specification, pageable);
 	}
 }
