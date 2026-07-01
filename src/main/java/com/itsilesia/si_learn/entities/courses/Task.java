@@ -27,7 +27,7 @@ public class Task extends BaseEntity {
 	@Column(name = "starting_code", nullable = true, columnDefinition = "TEXT")
 	private String startingCode;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "lesson_id", nullable = false)
 	private Lesson lesson;
 

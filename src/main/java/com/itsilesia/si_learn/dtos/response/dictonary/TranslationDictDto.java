@@ -1,5 +1,6 @@
 package com.itsilesia.si_learn.dtos.response.dictonary;
 
+import com.itsilesia.si_learn.entities.DictionaryItem;
 import com.itsilesia.si_learn.entities.TranslationDictionary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,7 +24,7 @@ public class TranslationDictDto {
 			dictionary.getItems().stream()
 				.collect(Collectors.toMap(
 					item -> item.getLanguage().getCode(),
-					item -> item.getValue()
+					DictionaryItem::getValue
 				))
 		);
 	}

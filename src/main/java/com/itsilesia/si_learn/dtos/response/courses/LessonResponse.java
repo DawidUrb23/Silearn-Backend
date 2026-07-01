@@ -12,17 +12,14 @@ public record LessonResponse(
 	TranslationDto topic,
 	TranslationDto description
 ) {
-	public static LessonResponse fromEntity(
-		@NotNull Lesson lesson,
-		String languageCode
-	) {
+	public static LessonResponse fromEntity(@NotNull Lesson lesson) {
 		return new LessonResponse(
 			lesson.getId(),
 			TranslationDto.fromEntity(
-				DictionaryHelper.getTranslationWithCode(lesson.getTopic(), languageCode)
+				DictionaryHelper.getTranslationWithCode(lesson.getTopic())
 			),
 			TranslationDto.fromEntity(
-				DictionaryHelper.getTranslationWithCode(lesson.getDescription(), languageCode)
+				DictionaryHelper.getTranslationWithCode(lesson.getDescription())
 			)
 		);
 	}

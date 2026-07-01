@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotNull;
 
 public record CreateModuleRequest(
 	@NotBlank String title,
-	@NotBlank String languageCode,
 	@NotNull Integer index
 ) {
 }

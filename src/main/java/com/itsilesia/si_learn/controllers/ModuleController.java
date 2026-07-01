@@ -1,49 +1,73 @@
 package com.itsilesia.si_learn.controllers;
 
-import com.itsilesia.si_learn.dtos.request.courses.CreateModuleRequest;
+import com.itsilesia.si_learn.dtos.request.courses.CreateLessonRequest;
 import com.itsilesia.si_learn.dtos.response.IdOnlyDto;
-import com.itsilesia.si_learn.services.ModuleService;
 import com.itsilesia.si_learn.dtos.response.courses.LessonResponse;
+import com.itsilesia.si_learn.dtos.response.courses.ModuleResponse;
+import com.itsilesia.si_learn.services.CourseHelperService;
+import com.itsilesia.si_learn.services.LessonService;
+import com.itsilesia.si_learn.services.ModuleService;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpHeaders;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/modules")
 @RequiredArgsConstructor
 @Tag(
 	name = "Modules",
-	description = "Endpoints for: managing modules and module lessons"
+	description = "Endpoints for: managing modules and module lessons (Owner Teacher)"
 )
 public class ModuleController {
 	private final ModuleService moduleService;
+	private final LessonService lessonService;
+	private final CourseHelperService courseHelperService;
 
-	@PostMapping("/courses/{courseId}")
-	@ResponseStatus(HttpStatus.CREATED)
-	public IdOnlyDto createModule(
-		@PathVariable UUID courseId,
-		@Valid @RequestBody CreateModuleRequest request
-	) {
-		return IdOnlyDto.fromEntity(
-			moduleService.createModule(courseId, request)
-		);
-	}
 	@GetMapping("/{moduleId}/lessons")
 	@ResponseStatus(HttpStatus.OK)
 	public List<LessonResponse> getModuleLessons(
 		@PathVariable UUID moduleId,
-		@RequestHeader(value = HttpHeaders.ACCEPT_LANGUAGE, required = false) String languageCode
+		@RequestHeader(value = HttpHeaders.ACCEPT_LANGUAGE, required = false) String languageCode,  //exposes the header for LocaleContextHolder
+		@Parameter(hidden = true) @AuthenticationPrincipal UUID userId
 	) {
 		return moduleService.getModuleWithLessons(moduleId)
 			.getLessons()
 			.stream()
-			.map(lesson -> LessonResponse.fromEntity(lesson, languageCode))
+			.map(LessonResponse::fromEntity)
 			.toList();
 	}
+
+	@PostMapping("/{moduleId}/lessons")
+	@ResponseStatus(HttpStatus.CREATED)
+	public IdOnlyDto createLesson(
+		@PathVariable UUID moduleId,
+		@Valid @RequestBody CreateLessonRequest request,
+		@Parameter(hidden = true) @AuthenticationPrincipal UUID userId
+	) {
+		return IdOnlyDto.fromEntity(
+			lessonService.createLesson(moduleId, request, userId)
+		);
+	}
+
+
+	@GetMapping("/{moduleId}")
+	@ResponseStatus(HttpStatus.OK)
+	public ModuleResponse getModule(
+		@PathVariable UUID moduleId,
+		@RequestHeader(value = HttpHeaders.ACCEPT_LANGUAGE, required = false) String languageCode,  //exposes the header for LocaleContextHolder
+		@Parameter(hidden = true) @AuthenticationPrincipal UUID userId
+	) {
+		var module = moduleService.getModuleWithLessons(moduleId);
+		courseHelperService.isAuthorOrThrow(module, userId);
+		return ModuleResponse.fromEntity(module);
+	}
+
 }

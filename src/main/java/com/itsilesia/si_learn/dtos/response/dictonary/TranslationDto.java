@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -13,11 +15,13 @@ import lombok.Setter;
 public class TranslationDto {
 	private String languageCode;
 	private String content;
+	private UUID dictId;
 
 	static public TranslationDto fromEntity(DictionaryItem item) {
 		return new TranslationDto(
 			item.getLanguage().getCode(),
-			item.getValue()
+			item.getValue(),
+			item.getTranslationDictionary().getId()
 		);
 	}
 }

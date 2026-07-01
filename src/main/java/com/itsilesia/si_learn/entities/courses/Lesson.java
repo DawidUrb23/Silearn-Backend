@@ -29,7 +29,7 @@ public class Lesson extends BaseEntity {
 	@JoinColumn(name = "description_id", nullable = false)
 	private TranslationDictionary description;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "module_id", nullable = false)
 	private Module module;
 

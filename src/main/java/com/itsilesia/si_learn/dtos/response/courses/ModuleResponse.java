@@ -12,14 +12,11 @@ public record ModuleResponse(
 	TranslationDto title,
 	Integer index
 ) {
-	public static ModuleResponse fromEntity(
-		@NotNull Module module,
-		String languageCode
-	) {
+	public static ModuleResponse fromEntity(@NotNull Module module) {
 		return new ModuleResponse(
 			module.getId(),
 			TranslationDto.fromEntity(
-				DictionaryHelper.getTranslationWithCode(module.getTitle(), languageCode)
+				DictionaryHelper.getTranslationWithCode(module.getTitle())
 			),
 			module.getIndex()
 		);

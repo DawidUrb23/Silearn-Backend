@@ -1,5 +1,6 @@
 package com.itsilesia.si_learn.dtos.response.courses;
 
+import com.itsilesia.si_learn.dtos.response.dictonary.LanguageDto;
 import com.itsilesia.si_learn.dtos.response.dictonary.TranslationDto;
 import com.itsilesia.si_learn.dtos.response.helper.DictionaryHelper;
 import com.itsilesia.si_learn.dtos.response.users.UserGeneralDataDto;
@@ -21,22 +22,24 @@ public record CourseResponse(
 	ProgramingLanguage programingLanguage,
 	boolean forceSequentialTasks,
 	UserGeneralDataDto author,
+	LanguageDto courseLanguage,
 	boolean enrolled
 ) {
-	public static CourseResponse fromEntity(@NotNull Course course, String languageCode, UserCourse userCourse) {
+	public static CourseResponse fromEntity(@NotNull Course course, UserCourse userCourse) {
 		return new CourseResponse(
 			course.getId(),
 			TranslationDto.fromEntity(
-				DictionaryHelper.getTranslationWithCode(course.getTitle(), languageCode)
+				DictionaryHelper.getTranslationWithCode(course.getTitle())
 			),
 			TranslationDto.fromEntity(
-				DictionaryHelper.getTranslationWithCode(course.getDescription(), languageCode)
+				DictionaryHelper.getTranslationWithCode(course.getDescription())
 			),
 			course.getStatus(),
 			course.getDifficulty(),
 			course.getProgramingLanguage(),
 			course.isForceSequentialTasks(),
 			UserGeneralDataDto.fromEntity(course.getAuthor()),
+			LanguageDto.fromEntity(course.getTitle().getOriginalLanguage()),
 			userCourse != null
 		);
 	}

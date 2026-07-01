@@ -36,7 +36,7 @@ public class UserCourseService {
 
 	public UserCourse getUserCourse(UUID userId, UUID courseId) {
 		var userCourse = userCourseRepository.findById(new UserCourseId(userId, courseId))
-			.orElseThrow(() -> new ItemNotFoundException(UserCourse.class, "(user=" + userId + ", course=" + courseId + ")"));
+			.orElseThrow(() -> new ItemNotFoundException(UserCourse.class, new UserCourseId(userId, courseId)));
 		// Check if there are missing module tracking entries
 		if (userCourse.getCourse().getModules().size() != userCourse.getUserModules().size()) {
 			var userModules = userCourse.getUserModules();

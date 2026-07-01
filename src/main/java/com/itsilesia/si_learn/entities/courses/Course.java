@@ -23,7 +23,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Course extends BaseEntity {
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	//Dictionary is Unique for each instance
 	@JoinColumn(name = "title_id", nullable = false)
 	private TranslationDictionary title;
@@ -33,7 +33,7 @@ public class Course extends BaseEntity {
 	@JoinColumn(name = "description_id", nullable = false)
 	private TranslationDictionary description;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "author_id", nullable = false)
 	private User author;
 

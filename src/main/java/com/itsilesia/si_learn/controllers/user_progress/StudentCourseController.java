@@ -35,7 +35,7 @@ public class StudentCourseController {
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
 	public MyCoursesDto myCourses(
 		@Parameter(hidden = true) @AuthenticationPrincipal UUID userId,
-		@RequestHeader(value = HttpHeaders.ACCEPT_LANGUAGE, required = false) String languageCode
+		@RequestHeader(value = HttpHeaders.ACCEPT_LANGUAGE, required = false) String languageCode   //exposes the header for LocaleContextHolder
 	) {
 		return MyCoursesDto.fromEntities(
 			userCourseService.getUserCourses(userId)
@@ -50,11 +50,10 @@ public class StudentCourseController {
 	public MyCourseWithModulesDto myCourse(
 		@PathVariable UUID id,
 		@Parameter(hidden = true) @AuthenticationPrincipal UUID userId,
-		@RequestHeader(value = HttpHeaders.ACCEPT_LANGUAGE, required = false) String languageCode
+		@RequestHeader(value = HttpHeaders.ACCEPT_LANGUAGE, required = false) String languageCode   //exposes the header for LocaleContextHolder
 	) {
 		return MyCourseWithModulesDto.fromEntity(
-			userCourseService.getUserCourse(userId, id),
-			languageCode
+			userCourseService.getUserCourse(userId, id)
 		);
 	}
 

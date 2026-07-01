@@ -27,7 +27,7 @@ public class Module extends BaseEntity {
 	@Column(nullable = false)
 	private int index;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "course_id", nullable = false)
 	private Course course;
 

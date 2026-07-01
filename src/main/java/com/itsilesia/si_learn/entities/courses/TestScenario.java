@@ -23,7 +23,7 @@ public class TestScenario extends BaseEntity {
 	private float timeoutSec = 5;
 
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "task_id", nullable = false)
 	private Task task;
 }
