@@ -1,10 +1,7 @@
 package com.itsilesia.si_learn.helpers;
 
 import com.itsilesia.si_learn.dtos.response.exceptions.ErrorDetailsDto;
-import com.itsilesia.si_learn.exceptions.InvalidParametersException;
-import com.itsilesia.si_learn.exceptions.ItemAlreadyExistsException;
-import com.itsilesia.si_learn.exceptions.ItemNotFoundException;
-import com.itsilesia.si_learn.exceptions.NoContentFoundException;
+import com.itsilesia.si_learn.exceptions.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -40,6 +37,12 @@ public class DefaultExceptionHandler {
 	@ExceptionHandler(AuthenticationException.class)
 	public ResponseEntity<@NotNull ErrorDetailsDto> handleInvalidParameters(AuthenticationException ex) {
 		return new ResponseEntity<@NotNull ErrorDetailsDto>(new ErrorDetailsDto(ex.getMessage()), HttpStatus.BAD_REQUEST);
+	}
+
+	/// NotOwnerException Forbidden Exception (403)
+	@ExceptionHandler(NotOwnerException.class)
+	public ResponseEntity<@NotNull ErrorDetailsDto> handleInvalidParameters(NotOwnerException ex) {
+		return new ResponseEntity<@NotNull ErrorDetailsDto>(new ErrorDetailsDto(ex.getMessage()), HttpStatus.FORBIDDEN);
 	}
 
 	/// already exists, Conflict (409)

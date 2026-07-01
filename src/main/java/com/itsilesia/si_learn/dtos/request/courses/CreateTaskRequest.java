@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.UUID;
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
@@ -15,8 +13,6 @@ import java.util.UUID;
 public class CreateTaskRequest {
 	private Integer index;
 	private Float passingScore;
-	@Size(max = 4 * 1024)
+	@Size(max = 4 << 10)
 	private String startingCode;
-	//fixme: pass it from url path
-	private UUID lessonId;
 }

@@ -22,10 +22,9 @@ public class MyModuleDetailsDto {
 	private ProgressStatus progressStatus;
 	private TwoIntsProgress progress;
 
-	static public MyModuleDetailsDto fromEntity(UserModule userModule, String languageCode) {
+	static public MyModuleDetailsDto fromEntity(UserModule userModule) {
 		return new MyModuleDetailsDto(
-			//TODO: get languageCode for response
-			ModuleResponse.fromEntity(userModule.getModule(), languageCode),
+			ModuleResponse.fromEntity(userModule.getModule()),
 			userModule.getStartDate(),
 			userModule.getEndDate(),
 			userModule.progressStatus(),

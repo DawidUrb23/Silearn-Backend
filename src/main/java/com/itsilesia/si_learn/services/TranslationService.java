@@ -16,6 +16,7 @@ import com.itsilesia.si_learn.repositories.TranslationDictionaryRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -31,10 +32,7 @@ public class TranslationService {
 	private final CourseRepository courseRepository;
 
 	@Transactional
-	public TranslationDictionary createDictionary(String value, String languageCode) {
-		Language language = languageRepository.findById(languageCode)
-			.orElseThrow(() -> new ItemNotFoundException(Language.class, languageCode));
-
+	public TranslationDictionary createDictionary(@NotNull String value, @NotNull Language language) {
 		TranslationDictionary dictionary = new TranslationDictionary();
 		dictionary.setOriginalLanguage(language);
 
@@ -46,6 +44,13 @@ public class TranslationService {
 		dictionary.getItems().add(item);
 
 		return dictionary;
+	}
+
+	@Transactional
+	public TranslationDictionary createDictionary(@NotNull String value, @NotNull String languageCode) {
+		Language language = languageRepository.findById(languageCode)
+			.orElseThrow(() -> new ItemNotFoundException(Language.class, languageCode));
+		return createDictionary(value, language);
 	}
 
 	public List<Language> getLanguages() {

@@ -13,8 +13,9 @@ import java.util.List;
 @Setter
 @Getter
 public class UpdateTaskRequest {
-	@Size(max = 4 * 1024)
-	private String startingCode;
+	private Integer index;
 	private Float passingScore;
-	private List<UpdateTaskContentRequest> taskContent;
+	@Size(max = 4 << 10)
+	private String startingCode;
+	private List<TaskContentRequest> taskContents;
 }

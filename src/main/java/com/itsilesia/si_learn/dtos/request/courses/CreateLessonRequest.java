@@ -6,7 +6,6 @@ import jakarta.validation.constraints.NotNull;
 public record CreateLessonRequest(
 	@NotBlank String topic,
 	@NotBlank String description,
-	@NotBlank String languageCode,
 	@NotNull Integer index
 ) {
 }

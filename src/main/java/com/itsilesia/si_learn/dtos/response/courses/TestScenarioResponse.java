@@ -23,7 +23,7 @@ public class TestScenarioResponse {
 
 	private Float timeoutSec;
 
-	public static TestScenarioResponse mapTestScenarioDto(TestScenario testScenario) {
+	public static TestScenarioResponse fromEntity(TestScenario testScenario) {
 		if (testScenario == null) {
 			return null;
 		}

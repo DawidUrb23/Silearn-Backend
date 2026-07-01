@@ -25,6 +25,7 @@ public class CourseService {
 	private final CourseRepository courseRepository;
 	private final UserRepository userRepository;
 	private final TranslationService translationService;
+	private final CourseHelperService courseHelperService;
 
 	@Transactional
 	public Course createCourse(CreateCourseRequest request, UUID authorId) {
@@ -51,8 +52,8 @@ public class CourseService {
 	public Course getCourseWithModules(UUID courseId, UUID userId) {
 		var course = courseRepository.findById(courseId)
 			.orElseThrow(() -> new ItemNotFoundException(Course.class, courseId));
-//		if(course.getAuthor().getId() != userId)
-		//TODO: throw when user is not the author
+		courseHelperService.isAuthorOrThrow(course, userId);
+
 		return course;
 	}
 

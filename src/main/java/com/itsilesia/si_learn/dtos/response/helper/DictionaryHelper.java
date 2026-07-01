@@ -2,7 +2,9 @@ package com.itsilesia.si_learn.dtos.response.helper;
 
 import com.itsilesia.si_learn.entities.DictionaryItem;
 import com.itsilesia.si_learn.entities.TranslationDictionary;
-import io.micrometer.common.util.StringUtils;
+import org.springframework.context.i18n.LocaleContextHolder;
+
+import java.util.Locale;
 
 public final class DictionaryHelper {
 	private DictionaryHelper() {
@@ -18,14 +20,12 @@ public final class DictionaryHelper {
 	}
 
 	public static DictionaryItem getTranslationWithCode(
-		TranslationDictionary dictionary,
-		String languageCode
+		TranslationDictionary dictionary
 	) {
-		if (StringUtils.isBlank(languageCode))
-			return getOriginalTranslation(dictionary);
+		Locale currentLocale = LocaleContextHolder.getLocale(); //the Locale in which to display the `name` field populated automagically by providing HttpHeaders.ACCEPT_LANGUAGE
 		return dictionary.getItems().stream()
 			.filter(item ->
-				item.getLanguage().getCode().equals(languageCode)
+				item.getLanguage().getCode().equals(currentLocale.getLanguage())
 			)
 			.findFirst()
 			.orElseGet(() -> getOriginalTranslation(dictionary));

@@ -46,7 +46,7 @@ public class CourseSpecification {
 
 	public static Specification<Course> hasStatus(VisibilityStatus... statuses) {
 		return (root, query, criteriaBuilder) -> {
-			if (statuses == null || statuses.length == 0) {
+			if (statuses == null || statuses.length == 0 || Arrays.stream(statuses).toList().contains(null)) {
 				return criteriaBuilder.conjunction();
 			}
 			return root.get(Course_.STATUS).in(Arrays.asList(statuses));

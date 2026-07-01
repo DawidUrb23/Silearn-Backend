@@ -35,7 +35,7 @@ import java.util.UUID;
 @RequestMapping("/api/courses")
 @RequiredArgsConstructor
 @Validated
-@Tag(name = "Courses", description = "Endpoints for: managing courses (Teacher), getting course info (Public)")
+@Tag(name = "Courses", description = "Endpoints for: managing courses (Owner Teacher), getting course info")
 public class CourseController {
 	private final CourseService courseService;
 	private final UserCourseService userCourseService;
@@ -44,7 +44,7 @@ public class CourseController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	@Operation(summary = "Create a new course (Teacher)", description = "Creates a new Course, ")
+	@Operation(summary = "Create a new course (Teacher)", description = "Creates a new Course")
 	@ApiResponse(responseCode = "400", description = "Invalid input",
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
 	@ApiResponse(responseCode = "404", description = "Something does not exist",
@@ -75,7 +75,7 @@ public class CourseController {
 
 	@PostMapping("/{courseId}/modules")
 	@ResponseStatus(HttpStatus.CREATED)
-	@Operation(summary = "Create a new module for course (Teacher)")
+	@Operation(summary = "Create a new module for course (Owner)")
 	@ApiResponse(responseCode = "400", description = "Invalid input",
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
 	@ApiResponse(responseCode = "404",
@@ -86,7 +86,7 @@ public class CourseController {
 		@Parameter(hidden = true) @AuthenticationPrincipal UUID userId
 	) {
 		return IdOnlyDto.fromEntity(
-			moduleService.createModule(courseId, request)
+			moduleService.createModule(courseId, request, userId)
 		);
 	}
 
@@ -98,11 +98,11 @@ public class CourseController {
 	public CourseResponse getCourse(
 		@PathVariable UUID courseId,
 		@Parameter(hidden = true) @AuthenticationPrincipal UUID userId,
-		@RequestHeader(value = HttpHeaders.ACCEPT_LANGUAGE, required = false) String languageCode
+		@RequestHeader(value = HttpHeaders.ACCEPT_LANGUAGE, required = false) String languageCode //exposes the header for LocaleContextHolder
 	) {
 		Course course = courseService.getCourse(courseId);
 		UserCourse userCourse = userCourseService.getUserCourseOrNull(userId, courseId);
-		return CourseResponse.fromEntity(course, languageCode, userCourse);
+		return CourseResponse.fromEntity(course, userCourse);
 	}
 
 	@GetMapping
@@ -114,14 +114,13 @@ public class CourseController {
 		@RequestParam(required = false) ProgramingLanguage programingLanguage,
 		@RequestParam(required = false) String name,
 		@RequestParam(required = false) UUID authorId,
-		@RequestHeader(value = HttpHeaders.ACCEPT_LANGUAGE, required = false) String languageCode,
+		@RequestHeader(value = HttpHeaders.ACCEPT_LANGUAGE, required = false) String languageCode,  //exposes the header for LocaleContextHolder
 		@Parameter(hidden = true) @AuthenticationPrincipal UUID userId
 	) {
 		return courseService.getCourses(status, difficulty, programingLanguage, name, authorId)
 			.stream()
 			.map(course -> CourseResponse.fromEntity(
 				course,
-				languageCode,
 				userCourseService.getUserCourseOrNull(userId, course.getId())
 			))
 			.toList();
@@ -130,17 +129,17 @@ public class CourseController {
 	@GetMapping("/{courseId}/modules")
 	@ResponseStatus(HttpStatus.OK)
 	@Operation(summary = "Get course modules (Owner)")
-	@ApiResponse(responseCode = "403",
+	@ApiResponse(responseCode = "403", description = "Not the owner!",
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
 	@ApiResponse(responseCode = "404",
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
 	public List<ModuleResponse> getCourseModules(
 		@PathVariable UUID courseId,
-		@RequestHeader(value = HttpHeaders.ACCEPT_LANGUAGE, required = false) String languageCode,
+		@RequestHeader(value = HttpHeaders.ACCEPT_LANGUAGE, required = false) String languageCode,  //exposes the header for LocaleContextHolder
 		@Parameter(hidden = true) @AuthenticationPrincipal UUID userId
 	) {
 		return courseService.getCourseWithModules(courseId, userId).getModules()
-			.stream().map(module -> ModuleResponse.fromEntity(module, languageCode)).toList();
+			.stream().map(ModuleResponse::fromEntity).toList();
 	}
 
 }

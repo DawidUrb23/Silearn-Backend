@@ -14,13 +14,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.UUID;
 
 @RestController
@@ -34,10 +33,11 @@ public class TranslationsController {
 	@GetMapping("languages")
 	@ResponseStatus(value = HttpStatus.OK)
 	@Operation(summary = "Get all languages")
-	public List<LanguageDto> getLanguages() {
-		Locale currentLocale = LocaleContextHolder.getLocale(); //the Locale in which to display the `name` field
+	public List<LanguageDto> getLanguages(
+		@RequestHeader(value = HttpHeaders.ACCEPT_LANGUAGE, required = false) String languageCode  //exposes the header for LocaleContextHolder
+	) {
 		return translationService.getLanguages()
-			.stream().map(language -> LanguageDto.fromEntity(language, currentLocale))
+			.stream().map(LanguageDto::fromEntity)
 			.toList();
 	}
 
