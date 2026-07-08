@@ -43,4 +43,10 @@ public class LessonService {
 		return lessonRepository.findById(lessonId)
 			.orElseThrow(() -> new ItemNotFoundException(Lesson.class, lessonId));
 	}
+	public void deleteLesson(UUID lessonId) {
+		Lesson lesson = lessonRepository.findById(lessonId)
+			.orElseThrow(() -> new ItemNotFoundException(Lesson.class, lessonId));
+
+		lessonRepository.delete(lesson);
+	}
 }

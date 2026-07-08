@@ -75,4 +75,13 @@ public class CourseService {
 
 		return courseRepository.findAllBy(specification, pageable);
 	}
+	@Transactional
+	public Course changeStatus(UUID courseId, VisibilityStatus status) {
+		Course course = courseRepository.findById(courseId)
+			.orElseThrow(() -> new ItemNotFoundException(Course.class, courseId));
+
+		course.setStatus(status);
+
+		return courseRepository.save(course);
+	}
 }
