@@ -31,7 +31,7 @@ public class UserTask {
 	private Task task;
 
 	@Column(name = "task_score")
-	private float taskScore;
+	private Float taskScore;
 
 	private boolean passed;
 
