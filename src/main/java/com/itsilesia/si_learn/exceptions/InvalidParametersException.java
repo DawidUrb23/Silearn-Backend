@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 ///Bad Request (400)
 @Getter
-@ResponseStatus(HttpStatus.NOT_FOUND)
+@ResponseStatus(HttpStatus.BAD_REQUEST)
 public class InvalidParametersException extends RuntimeException {
 	public InvalidParametersException(String msg) {
 		super(msg);

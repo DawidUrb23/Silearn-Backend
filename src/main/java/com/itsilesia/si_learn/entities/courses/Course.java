@@ -18,6 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name = "courses")
+@Table(indexes = {
+	@Index(name = "idx_created_at", columnList = "created_at")
+})
 @Getter
 @Setter
 @NoArgsConstructor

@@ -7,13 +7,17 @@ import com.itsilesia.si_learn.entities.enums.ProgramingLanguage;
 import com.itsilesia.si_learn.entities.enums.VisibilityStatus;
 import com.itsilesia.si_learn.entities.users.User;
 import com.itsilesia.si_learn.exceptions.ItemNotFoundException;
+import com.itsilesia.si_learn.helpers.CourseCursor;
+import com.itsilesia.si_learn.helpers.CursorUtil;
 import com.itsilesia.si_learn.repositories.CourseRepository;
 import com.itsilesia.si_learn.repositories.users.UserRepository;
 import com.itsilesia.si_learn.specifications.CourseSpecification;
 import jakarta.transaction.Transactional;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +31,7 @@ public class CourseService {
 	private final UserRepository userRepository;
 	private final TranslationService translationService;
 	private final CourseHelperService courseHelperService;
+	private final int maxSize = 100;
 
 	@Transactional
 	public Course createCourse(CreateCourseRequest request, UUID authorId) {
@@ -58,22 +63,31 @@ public class CourseService {
 		return course;
 	}
 
-	public Slice<Course> getCourses(
+	public Slice<@NonNull Course> getCourses(
 		VisibilityStatus status,
 		DifficultyLevel difficulty,
 		ProgramingLanguage programingLanguage,
 		String name,
 		UUID authorId,
-		Pageable pageable
+		String cursor,
+		int size
 	) {
-		Specification<Course> specification = Specification
+		if (size > maxSize) size = maxSize;
+		if (size < 1) size = 1;
+		Specification<@NonNull Course> specification = Specification
 			.where(CourseSpecification.hasStatus(status))  //static "ACTIVE"?, dynamic status
 			.and(CourseSpecification.hasDifficulty(difficulty))
 			.and(CourseSpecification.hasProgramingLanguage(programingLanguage))
 			.and(CourseSpecification.anyTitleContains(name))
-			.and(CourseSpecification.hasAuthor(authorId));
+			.and(CourseSpecification.hasAuthor(authorId))
+			.and(CourseSpecification.orderBy(Sort.Direction.DESC));
 
-		return courseRepository.findAllBy(specification, pageable);
+		if (cursor != null && !cursor.isBlank()) {
+			CourseCursor decoded = CursorUtil.decode(cursor);
+			specification = specification.and(CourseSpecification.isBefore(decoded.createdAt(), decoded.id()));
+		}
+
+		return courseRepository.findAllSliced(specification, PageRequest.of(0, size));
 	}
 	@Transactional
 	public Course changeStatus(UUID courseId, VisibilityStatus status) {
