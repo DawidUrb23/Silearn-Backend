@@ -1,5 +1,6 @@
 package com.itsilesia.si_learn.controllers.courses;
 
+import com.itsilesia.si_learn.dtos.request.courses.ContentsOrderUpdateRequest;
 import com.itsilesia.si_learn.dtos.request.courses.TaskContentRequest;
 import com.itsilesia.si_learn.dtos.request.courses.TestScenarioRequest;
 import com.itsilesia.si_learn.dtos.request.courses.UpdateTaskRequest;
@@ -101,25 +102,45 @@ public class TaskController {
 	}
 
 	@PostMapping("/{taskId}/contents")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@ResponseStatus(HttpStatus.CREATED)
 	@Operation(summary = "Add content to task (Owner)")
+	@ApiResponse(responseCode = "201", description = "returns id of created TaskContent")
 	@ApiResponse(responseCode = "400", description = "Invalid input",
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
 	@ApiResponse(responseCode = "403", description = "Not the owner!",
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
 	@ApiResponse(responseCode = "404",
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
-	public void addContentToTask(
+	public IdOnlyDto addContentToTask(
 		@PathVariable("taskId") UUID taskId,
 		@RequestBody @Valid TaskContentRequest request,
 		@Parameter(hidden = true) @AuthenticationPrincipal UUID userId
 	) {
-		taskService.addContentToTask(taskId, request, userId);
+		return IdOnlyDto.fromEntity(
+			taskService.addTaskContent(taskId, request, userId));
+	}
+
+	@PutMapping("/{taskId}/contents")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@Operation(summary = "Update task content order in task (Owner)")
+	@ApiResponse(responseCode = "400", description = "Invalid input, contents size mismatch",
+		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
+	@ApiResponse(responseCode = "403", description = "Not the owner!",
+		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
+	@ApiResponse(responseCode = "404",
+		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
+	public void UpdateTaskContentOrderInTask(
+		@PathVariable("taskId") UUID taskId,
+		@RequestBody @Valid ContentsOrderUpdateRequest request,
+		@Parameter(hidden = true) @AuthenticationPrincipal UUID userId
+	) {
+		taskService.updateTaskContentsOrder(taskId, request, userId);
 	}
 
 	@PostMapping("/{taskId}/test-scenarios")
 	@ResponseStatus(HttpStatus.CREATED)
 	@Operation(summary = "Add test scenario to task (Owner)")
+	@ApiResponse(responseCode = "201", description = "returns id of created TestScenario")
 	@ApiResponse(responseCode = "400", description = "Invalid input",
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
 	@ApiResponse(responseCode = "403", description = "Not the owner!",

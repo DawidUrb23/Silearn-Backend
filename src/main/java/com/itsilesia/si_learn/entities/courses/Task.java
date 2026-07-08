@@ -1,6 +1,7 @@
 package com.itsilesia.si_learn.entities.courses;
 
 import com.itsilesia.si_learn.entities.BaseEntity;
+import com.itsilesia.si_learn.entities.abstractions.IndexedEntity;
 import com.itsilesia.si_learn.entities.user_progress.UserTask;
 import com.itsilesia.si_learn.entities.user_progress.UserTask_;
 import jakarta.persistence.*;
@@ -17,7 +18,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Task extends BaseEntity {
+public class Task extends BaseEntity implements IndexedEntity {
 	@Column(nullable = false)
 	private int index;
 
@@ -27,7 +28,7 @@ public class Task extends BaseEntity {
 	@Column(name = "starting_code", nullable = true, columnDefinition = "TEXT")
 	private String startingCode;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "lesson_id", nullable = false)
 	private Lesson lesson;
 

@@ -1,6 +1,7 @@
 package com.itsilesia.si_learn.services;
 
 import com.itsilesia.si_learn.dtos.request.courses.CreateModuleRequest;
+import com.itsilesia.si_learn.entities.abstractions.EntityWithOrderedChildren;
 import com.itsilesia.si_learn.entities.courses.Course;
 import com.itsilesia.si_learn.entities.courses.Module;
 import com.itsilesia.si_learn.exceptions.ItemNotFoundException;
@@ -26,11 +27,11 @@ public class ModuleService {
 		Course course = courseRepository.findById(courseId)
 			.orElseThrow(() -> new ItemNotFoundException(Course.class, courseId));
 		courseHelperService.isAuthorOrThrow(course, userId);
-		var courseLanguage = courseHelperService.getCourseLanguage(course);
+		var courseLanguage = courseHelperService.getOriginalLanguage(course);
 
 		Module module = new Module();
 		module.setTitle(translationService.createDictionary(request.title(), courseLanguage));
-		module.setIndex(request.index());
+		module.setIndex(EntityWithOrderedChildren.getNextIndex(course.getModules()));
 		module.setCourse(course);
 
 		return moduleRepository.save(module);

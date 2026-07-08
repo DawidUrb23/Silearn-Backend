@@ -33,7 +33,7 @@ public class Course extends BaseEntity {
 	@JoinColumn(name = "description_id", nullable = false)
 	private TranslationDictionary description;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "author_id", nullable = false)
 	private User author;
 

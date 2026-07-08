@@ -4,6 +4,7 @@ import com.itsilesia.si_learn.entities.Language;
 import com.itsilesia.si_learn.entities.courses.*;
 import com.itsilesia.si_learn.entities.courses.Module;
 import com.itsilesia.si_learn.exceptions.NotOwnerException;
+import lombok.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,8 +15,8 @@ import java.util.UUID;
 @Transactional(readOnly = true) // Keeps the Hibernate session alive to safely traverse lazy relations!
 public class CourseHelperService {
 
-	public void isAuthorOrThrow(Course course, UUID userId) {
-		if (!Objects.equals(course.getAuthor().getId(), userId))
+	public void isAuthorOrThrow(@NonNull Course course, UUID userId) {
+		if (userId == null || !Objects.equals(course.getAuthor().getId(), userId))
 			throw new NotOwnerException(userId, course.getId());
 	}
 
@@ -39,23 +40,23 @@ public class CourseHelperService {
 		isAuthorOrThrow(testScenario.getTask(), userId);
 	}
 
-	public Language getCourseLanguage(Course course) {
+	public Language getOriginalLanguage(Course course) {
 		return course.getTitle().getOriginalLanguage();
 	}
 
-	public Language getCourseLanguage(Module module) {
-		return getCourseLanguage(module.getCourse());
+	public Language getOriginalLanguage(Module module) {
+		return module.getTitle().getOriginalLanguage();
 	}
 
-	public Language getCourseLanguage(Lesson lesson) {
-		return getCourseLanguage(lesson.getModule());
+	public Language getOriginalLanguage(Lesson lesson) {
+		return lesson.getTopic().getOriginalLanguage();
 	}
 
-	public Language getCourseLanguage(Task task) {
-		return getCourseLanguage(task.getLesson());
+	public Language getOriginalLanguage(Task task) {
+		return getOriginalLanguage(task.getLesson());
 	}
 
-	public Language getCourseLanguage(TaskContent taskContent) {
-		return getCourseLanguage(taskContent.getTask());
+	public Language getOriginalLanguage(TaskContent taskContent) {
+		return taskContent.getContent().getOriginalLanguage();
 	}
 }

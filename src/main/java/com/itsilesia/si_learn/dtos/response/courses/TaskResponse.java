@@ -14,7 +14,6 @@ import java.util.*;
 @Builder
 public class TaskResponse {
 	private UUID id;
-	private Integer index;
 	private Float passingScore;
 	private String startingCode;
 	private UUID lessonId;
@@ -31,7 +30,6 @@ public class TaskResponse {
 
 		return TaskResponse.builder()
 			.id(task.getId())
-			.index(task.getIndex())
 			.startingCode(task.getStartingCode())
 			.passingScore(task.getPassingScore())
 			.lessonId(task.getLesson() != null ? task.getLesson().getId() : null)
