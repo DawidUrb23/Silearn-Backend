@@ -33,7 +33,7 @@ public class UserTaskController {
 		return userTaskService.getTaskUser(taskId, userId);
 	}
 
-	@PostMapping("submit/{taskId}")
+	@PostMapping("{taskId}/submissions")
 	@ResponseStatus(HttpStatus.CREATED)
 	@Operation(summary = "Sends exercise to be checked")
 	public TaskUserResponse submitTask(@PathVariable UUID taskId,

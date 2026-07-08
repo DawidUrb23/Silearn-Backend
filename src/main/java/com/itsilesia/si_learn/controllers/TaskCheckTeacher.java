@@ -26,7 +26,7 @@ public class TaskCheckTeacher {
 
 	private final TaskCheckService taskCheckService;
 
-	@GetMapping("/get-solutions/{taskId}")
+	@GetMapping("/tasks/{taskId}/solutions")
 	@ResponseStatus(HttpStatus.OK)
 	@Operation(summary = "Gets all solutions to specific task")
 	public List<TaskSubmissionResponse> getAllSolutions(
@@ -37,7 +37,7 @@ public class TaskCheckTeacher {
 	}
 
 
-	@PostMapping("/students/{studentId}/tasks/{taskId}")
+	@PostMapping("tasks/{taskId}/students/{studentId}")
 	@ResponseStatus(HttpStatus.OK)
 	@Operation(summary = "Grades students exercise")
 	public void gradeStudentSolution(
@@ -50,7 +50,7 @@ public class TaskCheckTeacher {
 	}
 
 	@Transactional
-	@DeleteMapping("/students/{studentId}/tasks/{taskId}")
+	@DeleteMapping("/tasks/{taskId}/students/{studentId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@Operation(summary = "Delete students solution")
 	public void deleteStudentSolution(
