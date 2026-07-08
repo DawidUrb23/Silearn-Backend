@@ -19,13 +19,15 @@ public class TaskContentDto {
 	private ContentType type;
 	private TranslationDto content;
 
+	public TaskContentDto(TaskContent content) {
+		this.id = content.getId();
+		this.type = content.getType();
+		this.content = TranslationDto.fromEntity(
+			DictionaryHelper.getTranslationWithCode(content.getContent())
+		);
+	}
+
 	public static TaskContentDto fromEntity(TaskContent content) {
-		return TaskContentDto.builder()
-			.id(content.getId())
-			.type(content.getType())
-			.content(TranslationDto.fromEntity(
-				DictionaryHelper.getTranslationWithCode(content.getContent())
-			))
-			.build();
+		return content == null ? null : new TaskContentDto(content);
 	}
 }

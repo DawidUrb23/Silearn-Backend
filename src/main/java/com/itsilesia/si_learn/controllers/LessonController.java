@@ -2,7 +2,7 @@ package com.itsilesia.si_learn.controllers;
 
 import com.itsilesia.si_learn.dtos.request.courses.CreateTaskRequest;
 import com.itsilesia.si_learn.dtos.response.IdOnlyDto;
-import com.itsilesia.si_learn.dtos.response.courses.LessonWithContentResponse;
+import com.itsilesia.si_learn.dtos.response.courses.LessonWithTasksResponse;
 import com.itsilesia.si_learn.services.CourseHelperService;
 import com.itsilesia.si_learn.services.LessonService;
 import com.itsilesia.si_learn.services.TaskService;
@@ -51,14 +51,14 @@ public class LessonController {
 	}
 
 	@GetMapping("/{id}")
-	public LessonWithContentResponse getLessonWithContent(
+	public LessonWithTasksResponse getLessonWithContent(
 		@PathVariable UUID id,
 		@RequestHeader(value = HttpHeaders.ACCEPT_LANGUAGE, required = false) String languageCode,  //exposes the header for LocaleContextHolder
 		@Parameter(hidden = true) @AuthenticationPrincipal UUID userId
 	) {
 		var lesson = lessonService.getLessonWithContent(id);
 		courseHelperService.isAuthorOrThrow(lesson, userId);
-		return LessonWithContentResponse.fromEntity(lesson);
+		return LessonWithTasksResponse.fromEntity(lesson);
 	}
 	@DeleteMapping("/{lessonId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
