@@ -6,16 +6,13 @@ import com.itsilesia.si_learn.entities.compositeIds.UserModuleId;
 import com.itsilesia.si_learn.entities.courses.Course;
 import com.itsilesia.si_learn.entities.courses.Module;
 import com.itsilesia.si_learn.entities.enums.ProgressStatus;
-import com.itsilesia.si_learn.entities.enums.ProgressStatusHelper;
 import com.itsilesia.si_learn.entities.users.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,14 +22,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class UserModule {
-
-	@CreationTimestamp
-	@Column(name = "start_date", nullable = false, columnDefinition = "Date")
-	private LocalDateTime startDate;
-
-	@Column(name = "end_date", nullable = true, columnDefinition = "Date")
-	private LocalDateTime endDate;
+public class UserModule extends StartFinishForUserProgress {
 
 	@Id
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -61,9 +51,6 @@ public class UserModule {
 	@OneToMany(mappedBy = UserLesson_.USER_MODULE, cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<UserLesson> userLessons = new ArrayList<>();
 
-	public ProgressStatus progressStatus() {
-		return ProgressStatusHelper.getStatus(startDate, endDate);
-	}
 
 	public TwoIntsProgress progress() {
 		return new TwoIntsProgress(
