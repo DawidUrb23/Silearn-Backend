@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1782986594203-1
+      author: fafik (generated)
+      changes:
+        - createIndex:
+            columns:
+              - column:
+                  name: created_at
+            indexName: idx_created_at
+            tableName: courses
+

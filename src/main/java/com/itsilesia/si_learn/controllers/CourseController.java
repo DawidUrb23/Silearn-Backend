@@ -4,6 +4,7 @@ import com.itsilesia.si_learn.dtos.request.courses.CreateCourseRequest;
 import com.itsilesia.si_learn.dtos.request.courses.CreateModuleRequest;
 import com.itsilesia.si_learn.dtos.response.IdOnlyDto;
 import com.itsilesia.si_learn.dtos.response.courses.CourseResponse;
+import com.itsilesia.si_learn.dtos.response.courses.KeysetCourseResponse;
 import com.itsilesia.si_learn.dtos.response.courses.ModuleResponse;
 import com.itsilesia.si_learn.dtos.response.exceptions.ErrorDetailsDto;
 import com.itsilesia.si_learn.entities.courses.Course;
@@ -11,6 +12,8 @@ import com.itsilesia.si_learn.entities.enums.DifficultyLevel;
 import com.itsilesia.si_learn.entities.enums.ProgramingLanguage;
 import com.itsilesia.si_learn.entities.enums.VisibilityStatus;
 import com.itsilesia.si_learn.entities.user_progress.UserCourse;
+import com.itsilesia.si_learn.helpers.CourseCursor;
+import com.itsilesia.si_learn.helpers.CursorUtil;
 import com.itsilesia.si_learn.services.CourseService;
 import com.itsilesia.si_learn.services.ModuleService;
 import com.itsilesia.si_learn.services.UserCourseService;
@@ -21,12 +24,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -111,21 +113,33 @@ public class CourseController {
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
 	@Operation(summary = "Get courses with filters (Public)")
-	public Slice<CourseResponse> getCourses(
+	public ResponseEntity<@NonNull KeysetCourseResponse> getCourses(
 		@RequestParam(required = false) VisibilityStatus status,
 		@RequestParam(required = false) DifficultyLevel difficulty,
 		@RequestParam(required = false) ProgramingLanguage programingLanguage,
 		@RequestParam(required = false) String name,
 		@RequestParam(required = false) UUID authorId,
+		@RequestParam(required = false) String cursor,
+		@RequestParam(defaultValue = "20") int size,
 		@RequestHeader(value = HttpHeaders.ACCEPT_LANGUAGE, required = false) String languageCode,
-		@Parameter(hidden = true) @AuthenticationPrincipal UUID userId,
-		@PageableDefault(size = 20) Pageable pageable
+		@Parameter(hidden = true) @AuthenticationPrincipal UUID userId
 	) {
-		return courseService.getCourses(status, difficulty, programingLanguage, name, authorId, pageable)
+		var courseSlice = courseService.getCourses(status, difficulty, programingLanguage, name, authorId, cursor, size);
+
+		String nextCursor = null;
+		if (courseSlice.hasNext() && !courseSlice.getContent().isEmpty()) {
+			Course lastCourse = courseSlice.getContent().getLast();
+			nextCursor = CursorUtil.encode(new CourseCursor(lastCourse.getCreatedAt(), lastCourse.getId()));
+		}
+
+		List<CourseResponse> data = courseSlice.getContent().stream()
 			.map(course -> CourseResponse.fromEntity(
 				course,
 				userCourseService.getUserCourseOrNull(userId, course.getId())
-			));
+			))
+			.toList();
+
+		return ResponseEntity.ok(new KeysetCourseResponse(data, nextCursor));
 	}
 
 	@GetMapping("/{courseId}/modules")
