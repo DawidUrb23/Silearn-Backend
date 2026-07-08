@@ -9,16 +9,14 @@ import java.util.UUID;
 
 public record ModuleResponse(
 	UUID id,
-	TranslationDto title,
-	Integer index
+	TranslationDto title
 ) {
 	public static ModuleResponse fromEntity(@NotNull Module module) {
 		return new ModuleResponse(
 			module.getId(),
 			TranslationDto.fromEntity(
 				DictionaryHelper.getTranslationWithCode(module.getTitle())
-			),
-			module.getIndex()
+			)
 		);
 	}
 }

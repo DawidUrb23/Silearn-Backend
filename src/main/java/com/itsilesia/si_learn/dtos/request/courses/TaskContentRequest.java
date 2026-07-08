@@ -13,7 +13,6 @@ import lombok.Setter;
 @Setter
 @Getter
 public class TaskContentRequest {
-	private Integer index;
 	@NotNull
 	private ContentType type;
 	@NotBlank
