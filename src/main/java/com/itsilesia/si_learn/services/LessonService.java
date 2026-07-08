@@ -1,6 +1,7 @@
 package com.itsilesia.si_learn.services;
 
 import com.itsilesia.si_learn.dtos.request.courses.CreateLessonRequest;
+import com.itsilesia.si_learn.entities.abstractions.EntityWithOrderedChildren;
 import com.itsilesia.si_learn.entities.courses.Lesson;
 import com.itsilesia.si_learn.entities.courses.Module;
 import com.itsilesia.si_learn.exceptions.ItemNotFoundException;
@@ -27,14 +28,14 @@ public class LessonService {
 		Module module = moduleRepository.findById(moduleId)
 			.orElseThrow(() -> new ItemNotFoundException(Module.class, moduleId));
 		courseHelperService.isAuthorOrThrow(module, userId);
-		var courseLang = courseHelperService.getCourseLanguage(module);
+		var courseLang = courseHelperService.getOriginalLanguage(module);
 
 		Lesson lesson = new Lesson();
 		lesson.setTopic(translationService.createDictionary(request.topic(), courseLang));
 		lesson.setDescription(translationService.createDictionary(request.description(), courseLang));
 		lesson.setModule(module);
 		lesson.setTasks(new ArrayList<>());
-		lesson.setIndex(request.index());
+		lesson.setIndex(EntityWithOrderedChildren.getNextIndex(module.getLessons()));
 
 		return lessonRepository.save(lesson);
 	}
@@ -42,5 +43,11 @@ public class LessonService {
 	public @NotNull Lesson getLessonWithContent(UUID lessonId) {
 		return lessonRepository.findById(lessonId)
 			.orElseThrow(() -> new ItemNotFoundException(Lesson.class, lessonId));
+	}
+	public void deleteLesson(UUID lessonId) {
+		Lesson lesson = lessonRepository.findById(lessonId)
+			.orElseThrow(() -> new ItemNotFoundException(Lesson.class, lessonId));
+
+		lessonRepository.delete(lesson);
 	}
 }

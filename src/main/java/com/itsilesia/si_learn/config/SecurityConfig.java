@@ -104,7 +104,8 @@ public class SecurityConfig {
 		/// `api/translations` can be accessed by anyone, but only Translator/Administrator can make changes to it
 		public ConfigureAuthority translationsApi() {
 			authorize
-				.requestMatchers(HttpMethod.GET, "/api/translations/**").permitAll()
+				.requestMatchers(HttpMethod.GET, "/api/translations").permitAll()
+				.requestMatchers(HttpMethod.GET, "/api/translations/*").permitAll()
 				.requestMatchers("/api/translations/**").hasAnyAuthority(Role.TRANSLATOR.name(), Role.ADMINISTRATOR.name());
 			return this;
 		}

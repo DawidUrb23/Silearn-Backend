@@ -5,7 +5,6 @@ import lombok.*;
 
 import java.util.UUID;
 
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
@@ -23,18 +22,15 @@ public class TestScenarioResponse {
 
 	private Float timeoutSec;
 
+	public TestScenarioResponse(TestScenario testScenario) {
+		this.id = testScenario.getId();
+		this.taskId = testScenario.getTask() != null ? testScenario.getTask().getId() : null;
+		this.input = testScenario.getInput();
+		this.expectedOutput = testScenario.getExpectedOutput();
+		this.timeoutSec = testScenario.getTimeoutSec();
+	}
+
 	public static TestScenarioResponse fromEntity(TestScenario testScenario) {
-		if (testScenario == null) {
-			return null;
-		}
-
-		return TestScenarioResponse.builder()
-			.input(testScenario.getInput())
-			.expectedOutput(testScenario.getExpectedOutput())
-			.timeoutSec(testScenario.getTimeoutSec())
-			.id(testScenario.getId())
-			.taskId(testScenario.getTask() != null ? testScenario.getTask().getId() : null)
-			.build();
-
+		return testScenario == null ? null : new TestScenarioResponse(testScenario);
 	}
 }
