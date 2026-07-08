@@ -4,14 +4,12 @@ import com.itsilesia.si_learn.entities.enums.ProgressStatus;
 import com.itsilesia.si_learn.entities.user_progress.UserCourse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
 public class MyCoursesDto {
 	List<MyCourseOverviewDto> courses;
@@ -24,7 +22,7 @@ public class MyCoursesDto {
 			myCoursesDto,
 			courses.size(),
 			(int) myCoursesDto.stream()
-				.filter(c -> c.getProgressStatus() == ProgressStatus.FINISHED)
+				.filter(c -> c.getUserProgress().getProgressStatus() == ProgressStatus.FINISHED)
 				.count()
 		);
 	}
