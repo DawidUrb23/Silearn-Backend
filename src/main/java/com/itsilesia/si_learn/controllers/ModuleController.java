@@ -4,6 +4,7 @@ import com.itsilesia.si_learn.dtos.request.courses.CreateLessonRequest;
 import com.itsilesia.si_learn.dtos.response.IdOnlyDto;
 import com.itsilesia.si_learn.dtos.response.courses.LessonResponse;
 import com.itsilesia.si_learn.dtos.response.courses.ModuleResponse;
+import com.itsilesia.si_learn.dtos.response.courses.ModuleWithLessonsResponse;
 import com.itsilesia.si_learn.services.CourseHelperService;
 import com.itsilesia.si_learn.services.LessonService;
 import com.itsilesia.si_learn.services.ModuleService;
@@ -31,20 +32,6 @@ public class ModuleController {
 	private final LessonService lessonService;
 	private final CourseHelperService courseHelperService;
 
-	@GetMapping("/{moduleId}/lessons")
-	@ResponseStatus(HttpStatus.OK)
-	public List<LessonResponse> getModuleLessons(
-		@PathVariable UUID moduleId,
-		@RequestHeader(value = HttpHeaders.ACCEPT_LANGUAGE, required = false) String languageCode,  //exposes the header for LocaleContextHolder
-		@Parameter(hidden = true) @AuthenticationPrincipal UUID userId
-	) {
-		return moduleService.getModuleWithLessons(moduleId)
-			.getLessons()
-			.stream()
-			.map(LessonResponse::fromEntity)
-			.toList();
-	}
-
 	@PostMapping("/{moduleId}/lessons")
 	@ResponseStatus(HttpStatus.CREATED)
 	public IdOnlyDto createLesson(
@@ -57,17 +44,16 @@ public class ModuleController {
 		);
 	}
 
-
 	@GetMapping("/{moduleId}")
 	@ResponseStatus(HttpStatus.OK)
-	public ModuleResponse getModule(
+	public ModuleWithLessonsResponse getModule(
 		@PathVariable UUID moduleId,
 		@RequestHeader(value = HttpHeaders.ACCEPT_LANGUAGE, required = false) String languageCode,  //exposes the header for LocaleContextHolder
 		@Parameter(hidden = true) @AuthenticationPrincipal UUID userId
 	) {
 		var module = moduleService.getModuleWithLessons(moduleId);
 		courseHelperService.isAuthorOrThrow(module, userId);
-		return ModuleResponse.fromEntity(module);
+		return ModuleWithLessonsResponse.fromEntity(module);
 	}
 
 }

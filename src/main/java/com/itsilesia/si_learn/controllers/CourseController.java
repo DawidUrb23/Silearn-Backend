@@ -4,8 +4,8 @@ import com.itsilesia.si_learn.dtos.request.courses.CreateCourseRequest;
 import com.itsilesia.si_learn.dtos.request.courses.CreateModuleRequest;
 import com.itsilesia.si_learn.dtos.response.IdOnlyDto;
 import com.itsilesia.si_learn.dtos.response.courses.CourseResponse;
+import com.itsilesia.si_learn.dtos.response.courses.CourseWithModulesResponse;
 import com.itsilesia.si_learn.dtos.response.courses.KeysetCourseResponse;
-import com.itsilesia.si_learn.dtos.response.courses.ModuleResponse;
 import com.itsilesia.si_learn.dtos.response.exceptions.ErrorDetailsDto;
 import com.itsilesia.si_learn.entities.courses.Course;
 import com.itsilesia.si_learn.entities.enums.DifficultyLevel;
@@ -28,7 +28,6 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -40,7 +39,7 @@ import java.util.UUID;
 @RequestMapping("/api/courses")
 @RequiredArgsConstructor
 @Validated
-@Tag(name = "Courses", description = "Endpoints for: managing courses (Owner Teacher), getting course info")
+@Tag(name = "Courses", description = "Endpoints for: managing courses (Owner Teacher), getting course info (Public)")
 public class CourseController {
 	private final CourseService courseService;
 	private final UserCourseService userCourseService;
@@ -100,20 +99,20 @@ public class CourseController {
 	@Operation(summary = "Get specific course details with enrolment status")
 	@ApiResponse(responseCode = "404",
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
-	public CourseResponse getCourse(
+	public CourseWithModulesResponse getCourse(
 		@PathVariable UUID courseId,
 		@Parameter(hidden = true) @AuthenticationPrincipal UUID userId,
 		@RequestHeader(value = HttpHeaders.ACCEPT_LANGUAGE, required = false) String languageCode //exposes the header for LocaleContextHolder
 	) {
 		Course course = courseService.getCourse(courseId);
 		UserCourse userCourse = userCourseService.getUserCourseOrNull(userId, courseId);
-		return CourseResponse.fromEntity(course, userCourse);
+		return CourseWithModulesResponse.fromEntity(course, userCourse);
 	}
 
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
 	@Operation(summary = "Get courses with filters (Public)")
-	public ResponseEntity<@NonNull KeysetCourseResponse> getCourses(
+	public @NonNull KeysetCourseResponse getCourses(
 		@RequestParam(required = false) VisibilityStatus status,
 		@RequestParam(required = false) DifficultyLevel difficulty,
 		@RequestParam(required = false) ProgramingLanguage programingLanguage,
@@ -136,26 +135,8 @@ public class CourseController {
 			.map(course -> CourseResponse.fromEntity(
 				course,
 				userCourseService.getUserCourseOrNull(userId, course.getId())
-			))
-			.toList();
-
-		return ResponseEntity.ok(new KeysetCourseResponse(data, nextCursor));
-	}
-
-	@GetMapping("/{courseId}/modules")
-	@ResponseStatus(HttpStatus.OK)
-	@Operation(summary = "Get course modules (Owner)")
-	@ApiResponse(responseCode = "403", description = "Not the owner!",
-		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
-	@ApiResponse(responseCode = "404",
-		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
-	public List<ModuleResponse> getCourseModules(
-		@PathVariable UUID courseId,
-		@RequestHeader(value = HttpHeaders.ACCEPT_LANGUAGE, required = false) String languageCode,  //exposes the header for LocaleContextHolder
-		@Parameter(hidden = true) @AuthenticationPrincipal UUID userId
-	) {
-		return courseService.getCourseWithModules(courseId, userId).getModules()
-			.stream().map(ModuleResponse::fromEntity).toList();
+			)).toList();
+		return new KeysetCourseResponse(data, nextCursor);
 	}
 
 }

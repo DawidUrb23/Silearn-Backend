@@ -1,39 +1,30 @@
 package com.itsilesia.si_learn.dtos.response.user_progress;
 
 
-import com.itsilesia.si_learn.entities.enums.ProgressStatus;
+import com.itsilesia.si_learn.dtos.response.courses.ModuleResponse;
 import com.itsilesia.si_learn.entities.user_progress.UserCourse;
-import lombok.AllArgsConstructor;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
-public class MyCourseWithModulesDto {
-	private UUID courseId;
-	private LocalDateTime startDate;
-	private LocalDateTime endDate;
-	private ProgressStatus progressStatus;
+public class MyCourseWithModulesDto extends MyCourseOverviewDto {
 	private int moduleCount;
+	private List<ModuleResponse> modules;
 
-	private List<MyModuleDetailsDto> modules;
+	public MyCourseWithModulesDto(@NotNull UserCourse userCourse) {
+		super(userCourse);
+		var modules = userCourse.getCourse().getModules();
+		this.moduleCount = modules.size();
+		this.modules = modules.stream().map(ModuleResponse::fromEntity).toList();
+	}
 
-	static public MyCourseWithModulesDto fromEntity(UserCourse course) {
-		var modules = course.getCourse().getModules();
-		return new MyCourseWithModulesDto(
-			course.getCourse().getId(),
-			course.getStartDate(),
-			course.getEndDate(),
-			course.progressStatus(),
-			modules.size(),
-			course.getUserModules().stream().map(MyModuleDetailsDto::fromEntity).toList()
-		);
+	static public MyCourseWithModulesDto fromEntity(@NotNull UserCourse userCourse) {
+		return new MyCourseWithModulesDto(userCourse);
 	}
 }
