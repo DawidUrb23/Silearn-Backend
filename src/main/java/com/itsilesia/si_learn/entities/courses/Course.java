@@ -18,6 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name = "courses")
+@Table(indexes = {
+	@Index(name = "idx_created_at", columnList = "created_at")
+})
 @Getter
 @Setter
 @NoArgsConstructor
@@ -33,7 +36,7 @@ public class Course extends BaseEntity {
 	@JoinColumn(name = "description_id", nullable = false)
 	private TranslationDictionary description;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "author_id", nullable = false)
 	private User author;
 

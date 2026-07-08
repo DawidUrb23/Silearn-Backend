@@ -13,7 +13,6 @@ import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,6 +24,15 @@ public class JwtProvider {
 	@Value("${jwt.secret}")
 	private String secret;
 
+	@Value("${jwt.expiration.days:0}")
+	private long expirationDays;
+
+	@Value("${jwt.expiration.hours:0}")
+	private long expirationHours;
+
+	@Value("${jwt.expiration.minutes:0}")
+	private long expirationMinutes;
+
 	private JwtParser jwtParser;
 
 	@PostConstruct
@@ -34,7 +42,13 @@ public class JwtProvider {
 
 	public String generateToken(User user) {
 		Instant now = Instant.now();
-		Instant expiration = now.plus(1, ChronoUnit.DAYS);
+		Instant expiration = now
+			.plus(expirationDays, ChronoUnit.DAYS)
+			.plus(expirationHours, ChronoUnit.HOURS)
+			.plus(expirationMinutes, ChronoUnit.MINUTES);
+		//it has to be at least 2 minutes
+		if (expiration.isBefore(now.plus(2, ChronoUnit.MINUTES)))
+			expiration = now.plus(2, ChronoUnit.MINUTES);
 
 		return Jwts.builder()
 			.subject(user.getId().toString())

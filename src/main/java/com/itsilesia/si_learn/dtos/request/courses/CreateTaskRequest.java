@@ -11,7 +11,6 @@ import lombok.Setter;
 @Setter
 @Getter
 public class CreateTaskRequest {
-	private Integer index;
 	private Float passingScore;
 	@Size(max = 4 << 10)
 	private String startingCode;

@@ -2,12 +2,17 @@ package com.itsilesia.si_learn.controllers;
 
 import com.itsilesia.si_learn.dtos.request.courses.CreateTaskRequest;
 import com.itsilesia.si_learn.dtos.response.IdOnlyDto;
-import com.itsilesia.si_learn.dtos.response.courses.LessonWithContentResponse;
+import com.itsilesia.si_learn.dtos.response.courses.LessonWithTasksResponse;
 import com.itsilesia.si_learn.services.CourseHelperService;
 import com.itsilesia.si_learn.services.LessonService;
 import com.itsilesia.si_learn.services.TaskService;
+import com.itsilesia.si_learn.dtos.response.exceptions.ErrorDetailsDto;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -16,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
 
 import java.util.UUID;
 
@@ -45,13 +51,22 @@ public class LessonController {
 	}
 
 	@GetMapping("/{id}")
-	public LessonWithContentResponse getLessonWithContent(
+	public LessonWithTasksResponse getLessonWithContent(
 		@PathVariable UUID id,
 		@RequestHeader(value = HttpHeaders.ACCEPT_LANGUAGE, required = false) String languageCode,  //exposes the header for LocaleContextHolder
 		@Parameter(hidden = true) @AuthenticationPrincipal UUID userId
 	) {
 		var lesson = lessonService.getLessonWithContent(id);
 		courseHelperService.isAuthorOrThrow(lesson, userId);
-		return LessonWithContentResponse.fromEntity(lesson);
+		return LessonWithTasksResponse.fromEntity(lesson);
+	}
+	@DeleteMapping("/{lessonId}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@Operation(summary = "Delete lesson (Teacher)")
+	@ApiResponse(responseCode = "404", description = "Lesson not found",
+		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
+	public ResponseEntity<Void> deleteLesson(@PathVariable UUID lessonId) {
+		lessonService.deleteLesson(lessonId);
+		return ResponseEntity.noContent().build();
 	}
 }

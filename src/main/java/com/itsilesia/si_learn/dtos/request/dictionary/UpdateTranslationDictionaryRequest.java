@@ -12,6 +12,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class UpdateTranslationDictionaryRequest {
 	private String languageCode;
+
+	//fixme: this could be very restrictive for TaskContent
 	@Size(max = 4 << 10)
 	private String content;
 }

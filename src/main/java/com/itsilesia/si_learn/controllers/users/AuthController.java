@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -38,7 +39,7 @@ public class AuthController {
 	@ApiResponse(responseCode = "409", description = "email already exists",
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
 	public void register(
-		@Validated @RequestBody RegisterRequest registerRequest
+		@Valid @RequestBody RegisterRequest registerRequest
 	) {
 		userService.register(registerRequest);
 	}
@@ -50,7 +51,7 @@ public class AuthController {
 	@ApiResponse(responseCode = "400", description = "Invalid credentials",
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
 	public JwtDto login(
-		@Validated @RequestBody LoginRequest loginRequest
+		@Valid @RequestBody LoginRequest loginRequest
 	) {
 		return new JwtDto(
 			jwtAuthService.login(loginRequest)

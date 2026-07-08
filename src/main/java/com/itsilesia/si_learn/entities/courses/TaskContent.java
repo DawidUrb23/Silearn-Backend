@@ -2,6 +2,7 @@ package com.itsilesia.si_learn.entities.courses;
 
 import com.itsilesia.si_learn.entities.BaseEntity;
 import com.itsilesia.si_learn.entities.TranslationDictionary;
+import com.itsilesia.si_learn.entities.abstractions.IndexedEntity;
 import com.itsilesia.si_learn.entities.enums.ContentType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -14,8 +15,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TaskContent extends BaseEntity {
-	@ManyToOne(fetch = FetchType.EAGER)
+public class TaskContent extends BaseEntity implements IndexedEntity {
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "task_id", nullable = false)
 	private Task task;
 

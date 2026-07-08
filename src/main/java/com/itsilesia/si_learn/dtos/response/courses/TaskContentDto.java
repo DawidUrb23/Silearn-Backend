@@ -16,18 +16,18 @@ import java.util.UUID;
 @Builder
 public class TaskContentDto {
 	private UUID id;
-	private int index;
 	private ContentType type;
 	private TranslationDto content;
 
+	public TaskContentDto(TaskContent content) {
+		this.id = content.getId();
+		this.type = content.getType();
+		this.content = TranslationDto.fromEntity(
+			DictionaryHelper.getTranslationWithCode(content.getContent())
+		);
+	}
+
 	public static TaskContentDto fromEntity(TaskContent content) {
-		return TaskContentDto.builder()
-			.id(content.getId())
-			.index(content.getIndex())
-			.type(content.getType())
-			.content(TranslationDto.fromEntity(
-				DictionaryHelper.getTranslationWithCode(content.getContent())
-			))
-			.build();
+		return content == null ? null : new TaskContentDto(content);
 	}
 }

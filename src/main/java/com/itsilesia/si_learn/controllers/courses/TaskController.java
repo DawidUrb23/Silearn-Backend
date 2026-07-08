@@ -1,10 +1,11 @@
 package com.itsilesia.si_learn.controllers.courses;
 
+import com.itsilesia.si_learn.dtos.request.courses.ContentsOrderUpdateRequest;
 import com.itsilesia.si_learn.dtos.request.courses.TaskContentRequest;
 import com.itsilesia.si_learn.dtos.request.courses.TestScenarioRequest;
 import com.itsilesia.si_learn.dtos.request.courses.UpdateTaskRequest;
 import com.itsilesia.si_learn.dtos.response.IdOnlyDto;
-import com.itsilesia.si_learn.dtos.response.courses.TaskResponse;
+import com.itsilesia.si_learn.dtos.response.courses.TaskWithContentResponse;
 import com.itsilesia.si_learn.dtos.response.courses.TestScenarioResponse;
 import com.itsilesia.si_learn.dtos.response.exceptions.ErrorDetailsDto;
 import com.itsilesia.si_learn.entities.courses.Task;
@@ -43,14 +44,14 @@ public class TaskController {
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
 	@ApiResponse(responseCode = "404",
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
-	public TaskResponse getTask(
+	public TaskWithContentResponse getTask(
 		@PathVariable UUID taskId,
 		@RequestHeader(value = HttpHeaders.ACCEPT_LANGUAGE, required = false) String languageCode,  //exposes the header for LocaleContextHolder
 		@Parameter(hidden = true) @AuthenticationPrincipal UUID userId
 	) {
 		Task task = taskService.getTaskById(taskId);
 		courseHelperService.isAuthorOrThrow(task, userId);
-		return TaskResponse.fromEntity(task);
+		return TaskWithContentResponse.fromEntity(task);
 	}
 
 	@GetMapping("/{taskId}/test-scenarios")
@@ -85,7 +86,7 @@ public class TaskController {
 
 	@PatchMapping("/{taskId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@Operation(summary = "Update task by id (Owner). Swaps the content of TaskContents list if present.")
+	@Operation(summary = "Update task by id (Owner).")
 	@ApiResponse(responseCode = "400", description = "Invalid input",
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
 	@ApiResponse(responseCode = "403", description = "Not the owner!",
@@ -101,25 +102,45 @@ public class TaskController {
 	}
 
 	@PostMapping("/{taskId}/contents")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@ResponseStatus(HttpStatus.CREATED)
 	@Operation(summary = "Add content to task (Owner)")
+	@ApiResponse(responseCode = "201", description = "returns id of created TaskContent")
 	@ApiResponse(responseCode = "400", description = "Invalid input",
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
 	@ApiResponse(responseCode = "403", description = "Not the owner!",
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
 	@ApiResponse(responseCode = "404",
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
-	public void addContentToTask(
+	public IdOnlyDto addContentToTask(
 		@PathVariable("taskId") UUID taskId,
 		@RequestBody @Valid TaskContentRequest request,
 		@Parameter(hidden = true) @AuthenticationPrincipal UUID userId
 	) {
-		taskService.addContentToTask(taskId, request, userId);
+		return IdOnlyDto.fromEntity(
+			taskService.addTaskContent(taskId, request, userId));
+	}
+
+	@PutMapping("/{taskId}/contents")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@Operation(summary = "Update task content order in task (Owner)")
+	@ApiResponse(responseCode = "400", description = "Invalid input, contents size mismatch",
+		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
+	@ApiResponse(responseCode = "403", description = "Not the owner!",
+		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
+	@ApiResponse(responseCode = "404",
+		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
+	public void UpdateTaskContentOrderInTask(
+		@PathVariable("taskId") UUID taskId,
+		@RequestBody @Valid ContentsOrderUpdateRequest request,
+		@Parameter(hidden = true) @AuthenticationPrincipal UUID userId
+	) {
+		taskService.updateTaskContentsOrder(taskId, request, userId);
 	}
 
 	@PostMapping("/{taskId}/test-scenarios")
 	@ResponseStatus(HttpStatus.CREATED)
 	@Operation(summary = "Add test scenario to task (Owner)")
+	@ApiResponse(responseCode = "201", description = "returns id of created TestScenario")
 	@ApiResponse(responseCode = "400", description = "Invalid input",
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
 	@ApiResponse(responseCode = "403", description = "Not the owner!",
