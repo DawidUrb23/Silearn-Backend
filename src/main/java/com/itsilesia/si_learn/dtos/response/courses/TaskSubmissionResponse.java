@@ -1,4 +1,20 @@
 package com.itsilesia.si_learn.dtos.response.courses;
 
-public class TaskSubmissionResponse {
+import com.itsilesia.si_learn.entities.courses.Task;
+import com.itsilesia.si_learn.entities.user_progress.UserTask;
+
+import java.util.UUID;
+
+public record TaskSubmissionResponse(
+	UUID userId,
+	String userFullName,
+	String submittedCode
+) {
+	public static TaskSubmissionResponse fromEntity(Task task, UserTask userTask){
+		return new TaskSubmissionResponse(
+			userTask.getUser().getId(),
+			userTask.getUser().getName() + " " + userTask.getUser().getSurname(),
+			userTask.getUserSolution()
+			);
+	}
 }

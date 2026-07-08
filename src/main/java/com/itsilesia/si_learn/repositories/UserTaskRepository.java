@@ -7,7 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface TaskUserRepository extends JpaRepository<UserTask, UserTaskId> {
+public interface UserTaskRepository extends JpaRepository<UserTask, UserTaskId> {
 
 	Optional<UserTask> findByTaskIdAndUserId(UUID taskId, UUID userId);
+	long deleteByTaskIdAndUserId(UUID taskId, UUID userId);
 }
