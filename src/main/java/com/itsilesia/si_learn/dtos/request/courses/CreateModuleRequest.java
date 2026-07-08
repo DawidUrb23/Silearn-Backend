@@ -1,8 +1,9 @@
 package com.itsilesia.si_learn.dtos.request.courses;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 public record CreateModuleRequest(
-	@NotBlank String title
+	@NotNull @Size(min = 1, max = 255) String title
 ) {
 }

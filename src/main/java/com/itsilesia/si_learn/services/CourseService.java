@@ -42,10 +42,13 @@ public class CourseService {
 		course.setTitle(translationService.createDictionary(request.title(), request.languageCode()));
 		course.setDescription(translationService.createDictionary(request.description(), request.languageCode()));
 		course.setAuthor(author);
-		course.setStatus(request.status());
+		course.setStatus(VisibilityStatus.DRAFT);
 		course.setDifficulty(request.difficulty());
 		course.setProgramingLanguage(request.programingLanguage());
-		course.setForceSequentialTasks(request.forceSequentialTasks());
+		if (request.forceSequentialTasks() == null || !request.forceSequentialTasks())
+			course.setForceSequentialTasks(false);
+		else
+			course.setForceSequentialTasks(true);
 
 		return courseRepository.save(course);
 	}
@@ -89,6 +92,7 @@ public class CourseService {
 
 		return courseRepository.findAllSliced(specification, PageRequest.of(0, size));
 	}
+
 	@Transactional
 	public Course changeStatus(UUID courseId, VisibilityStatus status) {
 		Course course = courseRepository.findById(courseId)
