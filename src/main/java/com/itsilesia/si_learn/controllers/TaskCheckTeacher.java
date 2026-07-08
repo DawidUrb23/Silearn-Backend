@@ -20,6 +20,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RestController
 @Validated
+@RequestMapping("api/teacher-check")
 @Tag(name = "Task Check", description = "Teacher gets solutions sent by users and can grade them")
 public class TaskCheckTeacher {
 
@@ -36,7 +37,7 @@ public class TaskCheckTeacher {
 	}
 
 
-	@PostMapping("/{taskId}/students/{studentId}/evaluate")
+	@PostMapping("/students/{studentId}/tasks/{taskId}")
 	@ResponseStatus(HttpStatus.OK)
 	@Operation(summary = "Grades students exercise")
 	public void gradeStudentSolution(
@@ -49,7 +50,7 @@ public class TaskCheckTeacher {
 	}
 
 	@Transactional
-	@DeleteMapping("/{studentId}/student/{taskId}/task")
+	@DeleteMapping("/students/{studentId}/tasks/{taskId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@Operation(summary = "Delete students solution")
 	public void deleteStudentSolution(

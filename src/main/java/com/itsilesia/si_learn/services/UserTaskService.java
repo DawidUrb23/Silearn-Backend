@@ -21,7 +21,6 @@ public class UserTaskService {
 	private final UserTaskRepository userTaskRepository;
 	private final TaskRepository taskRepository;
 	private final UserRepository userRepository;
-	private final LessonRepository lessonRepository;
 
 	public TaskUserResponse getTaskUser(UUID taskId, UUID userId) {
 		Task task = taskRepository.findById(taskId)

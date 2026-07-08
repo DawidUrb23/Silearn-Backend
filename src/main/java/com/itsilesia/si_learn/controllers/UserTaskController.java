@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/my/tasks")
+@RequestMapping("api/my/tasks")
 @RequiredArgsConstructor
 @Validated
 @Tag(name = "User Task", description = "manage tasks that user sent and teacher can check")
@@ -29,17 +29,17 @@ public class UserTaskController {
 	@ResponseStatus(HttpStatus.OK)
 	@Operation(summary = "Shows full user info about task")
 	public TaskUserResponse getTaskUser(@PathVariable UUID taskId,
-										@Parameter(hidden = true) @AuthenticationPrincipal UUID userId) {
+	                                    @Parameter(hidden = true) @AuthenticationPrincipal UUID userId) {
 		return userTaskService.getTaskUser(taskId, userId);
 	}
 
-	@PostMapping("/{taskId}/submit")
+	@PostMapping("submit/{taskId}")
 	@ResponseStatus(HttpStatus.CREATED)
 	@Operation(summary = "Sends exercise to be checked")
-	public TaskUserResponse	submitTask(@PathVariable UUID taskId,
-	                                      @Parameter(hidden = true) @AuthenticationPrincipal UUID userId,
-	                                      @Valid @RequestBody SubmitTaskRequest request){
-		return userTaskService.submitTask(taskId,userId, request);
+	public TaskUserResponse submitTask(@PathVariable UUID taskId,
+	                                   @Parameter(hidden = true) @AuthenticationPrincipal UUID userId,
+	                                   @Valid @RequestBody SubmitTaskRequest request) {
+		return userTaskService.submitTask(taskId, userId, request);
 	}
 
 

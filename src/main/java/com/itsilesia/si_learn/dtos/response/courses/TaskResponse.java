@@ -2,8 +2,6 @@ package com.itsilesia.si_learn.dtos.response.courses;
 
 import com.itsilesia.si_learn.entities.courses.Task;
 import com.itsilesia.si_learn.entities.courses.TaskContent;
-import com.itsilesia.si_learn.entities.enums.ProgressStatus;
-import com.itsilesia.si_learn.entities.user_progress.UserTask;
 import lombok.*;
 
 import java.util.*;

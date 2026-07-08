@@ -2,7 +2,6 @@ package com.itsilesia.si_learn.services;
 
 import com.itsilesia.si_learn.dtos.request.users.GradeTaskRequest;
 import com.itsilesia.si_learn.dtos.response.courses.TaskSubmissionResponse;
-import com.itsilesia.si_learn.dtos.response.courses.TaskUserResponse;
 import com.itsilesia.si_learn.entities.compositeIds.UserTaskId;
 import com.itsilesia.si_learn.entities.courses.Task;
 import com.itsilesia.si_learn.entities.user_progress.UserTask;
@@ -10,7 +9,6 @@ import com.itsilesia.si_learn.exceptions.ItemNotFoundException;
 import com.itsilesia.si_learn.repositories.TaskRepository;
 import com.itsilesia.si_learn.repositories.UserTaskRepository;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -62,7 +60,7 @@ public class TaskCheckService {
 	public void deleteStudentSolution(UUID taskId, UUID studentId, UUID teacherId) {
 		Task task = taskRepository.findById(taskId)
 			.orElseThrow(() -> new ItemNotFoundException(Task.class, taskId));
-		courseHelperService.isAuthorOrThrow(task,teacherId);
-		userTaskRepository.deleteByTaskIdAndUserId(taskId,studentId);
+		courseHelperService.isAuthorOrThrow(task, teacherId);
+		userTaskRepository.deleteByTaskIdAndUserId(taskId, studentId);
 	}
 }

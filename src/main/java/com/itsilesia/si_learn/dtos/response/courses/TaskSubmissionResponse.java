@@ -10,11 +10,11 @@ public record TaskSubmissionResponse(
 	String userFullName,
 	String submittedCode
 ) {
-	public static TaskSubmissionResponse fromEntity(Task task, UserTask userTask){
+	public static TaskSubmissionResponse fromEntity(Task task, UserTask userTask) {
 		return new TaskSubmissionResponse(
 			userTask.getUser().getId(),
 			userTask.getUser().getName() + " " + userTask.getUser().getSurname(),
 			userTask.getUserSolution()
-			);
+		);
 	}
 }

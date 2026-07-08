@@ -36,7 +36,7 @@ public class TaskUserResponse {
 		Float userScore = null;
 		ProgressStatus status = ProgressStatus.NOT_STARTED;
 
-		if(userTask != null){
+		if (userTask != null) {
 			userScore = userTask.getTaskScore();
 			status = userTask.progressStatus();
 		}
