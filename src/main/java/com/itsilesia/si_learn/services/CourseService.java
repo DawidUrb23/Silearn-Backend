@@ -102,4 +102,12 @@ public class CourseService {
 
 		return courseRepository.save(course);
 	}
+
+	@Transactional
+	public void setStatusDeleted(UUID courseId) {
+		Course course = courseRepository.findById(courseId)
+			.orElseThrow(() -> new ItemNotFoundException(Course.class, courseId));
+		course.setStatus(VisibilityStatus.DELETED);
+		courseRepository.save(course);
+	}
 }
