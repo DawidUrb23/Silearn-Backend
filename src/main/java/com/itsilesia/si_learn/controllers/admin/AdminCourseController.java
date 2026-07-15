@@ -1,4 +1,5 @@
 package com.itsilesia.si_learn.controllers.admin;
+
 import com.itsilesia.si_learn.dtos.request.courses.ChangeCourseStatusRequest;
 import com.itsilesia.si_learn.dtos.response.exceptions.ErrorDetailsDto;
 import com.itsilesia.si_learn.services.CourseService;
@@ -14,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/admin/courses")
 @RequiredArgsConstructor
@@ -34,5 +36,14 @@ public class AdminCourseController {
 		@Valid @RequestBody ChangeCourseStatusRequest request
 	) {
 		courseService.changeStatus(courseId, request.status());
+	}
+
+	@DeleteMapping("{courseId}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@Operation(summary = "Change course status DELETED (Admin)")
+	@ApiResponse(responseCode = "404", description = "Course not found",
+		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
+	public void changeCourseToDeleted(@PathVariable UUID courseId){
+		courseService.setStatusDeleted(courseId);
 	}
 }
