@@ -35,6 +35,7 @@ public class SecurityConfig {
 			.csrf(AbstractHttpConfigurer::disable)
 			.authorizeHttpRequests(authorize -> {
 				new ConfigureAuthority(authorize)
+					.teacherApi() // api/teacher
 					.coursesApi() // api/courses
 					.modulesApi() // api/modules
 					.lessonsApi() // api/lessons
@@ -80,6 +81,15 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.GET, "/api/courses/*").permitAll()
 				.requestMatchers("/api/courses/*/enroll").authenticated()
 				.requestMatchers("/api/courses/**").hasAuthority(Role.TEACHER.name());
+			return this;
+		}
+
+		//TODO: see if this is not duplicated after merge
+
+		/// `api/teacher` can be accessed by Teacher
+		public ConfigureAuthority teacherApi() {
+			authorize
+				.requestMatchers("/api/teacher/**").hasAuthority(Role.TEACHER.name());
 			return this;
 		}
 
