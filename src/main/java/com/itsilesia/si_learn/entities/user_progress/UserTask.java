@@ -1,6 +1,7 @@
 package com.itsilesia.si_learn.entities.user_progress;
 
 
+import com.itsilesia.si_learn.entities.abstractions.CompoundIdEntityWithUser;
 import com.itsilesia.si_learn.entities.compositeIds.UserTaskId;
 import com.itsilesia.si_learn.entities.courses.Lesson;
 import com.itsilesia.si_learn.entities.courses.Task;
@@ -12,13 +13,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Entity(name = "user_tasks")
 @IdClass(UserTaskId.class)
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class UserTask {
+public class UserTask implements CompoundIdEntityWithUser {
 
 	@Id
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -58,5 +61,10 @@ public class UserTask {
 			return ProgressStatus.FINISHED;
 		}
 		return ProgressStatus.IN_PROGRESS;
+	}
+
+	@Override
+	public UUID getId() {
+		return task.getId();
 	}
 }

@@ -2,6 +2,7 @@ package com.itsilesia.si_learn.entities.courses;
 
 import com.itsilesia.si_learn.entities.BaseEntity;
 import com.itsilesia.si_learn.entities.TranslationDictionary;
+import com.itsilesia.si_learn.entities.abstractions.EntityWithUuId;
 import com.itsilesia.si_learn.entities.enums.DifficultyLevel;
 import com.itsilesia.si_learn.entities.enums.ProgramingLanguage;
 import com.itsilesia.si_learn.entities.enums.VisibilityStatus;
@@ -25,7 +26,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Course extends BaseEntity {
+public class Course extends BaseEntity implements EntityWithUuId {
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	//Dictionary is Unique for each instance
 	@JoinColumn(name = "title_id", nullable = false)

@@ -1,12 +1,13 @@
-package com.itsilesia.si_learn.controllers;
+package com.itsilesia.si_learn.controllers.courses;
 
 import com.itsilesia.si_learn.dtos.request.courses.CreateCourseRequest;
 import com.itsilesia.si_learn.dtos.request.courses.CreateModuleRequest;
 import com.itsilesia.si_learn.dtos.response.IdOnlyDto;
-import com.itsilesia.si_learn.dtos.response.courses.CourseResponse;
 import com.itsilesia.si_learn.dtos.response.courses.CourseWithModulesResponse;
 import com.itsilesia.si_learn.dtos.response.courses.KeysetCourseResponse;
 import com.itsilesia.si_learn.dtos.response.exceptions.ErrorDetailsDto;
+import com.itsilesia.si_learn.dtos.response.user_progress.MyCourseOverviewDto;
+import com.itsilesia.si_learn.entities.abstractions.EntityWithOrderedChildren;
 import com.itsilesia.si_learn.entities.courses.Course;
 import com.itsilesia.si_learn.entities.enums.DifficultyLevel;
 import com.itsilesia.si_learn.entities.enums.ProgramingLanguage;
@@ -123,20 +124,20 @@ public class CourseController {
 		@RequestHeader(value = HttpHeaders.ACCEPT_LANGUAGE, required = false) String languageCode,
 		@Parameter(hidden = true) @AuthenticationPrincipal UUID userId
 	) {
-		var courseSlice = courseService.getCourses(status, difficulty, programingLanguage, name, authorId, cursor, size);
+		var courseSlice = courseService.getFilteredCourses(status, difficulty, programingLanguage, name, authorId, cursor, size, userId);
+		var userCourses = userCourseService.getUserCourses(userId);
+		List<@NonNull Course> courses = courseSlice.getContent();
+		var coursesWithUserCourses = EntityWithOrderedChildren.JoinItemWithUserItem(courseSlice.getContent(), userCourses);
 
 		String nextCursor = null;
-		if (courseSlice.hasNext() && !courseSlice.getContent().isEmpty()) {
-			Course lastCourse = courseSlice.getContent().getLast();
+		if (courseSlice.hasNext() && !courses.isEmpty()) {
+			Course lastCourse = courses.getLast();
 			nextCursor = CursorUtil.encode(new CourseCursor(lastCourse.getCreatedAt(), lastCourse.getId()));
 		}
+		return new KeysetCourseResponse(
+			coursesWithUserCourses.stream().map(MyCourseOverviewDto::fromEntity).toList(),
+			nextCursor);
 
-		List<CourseResponse> data = courseSlice.getContent().stream()
-			.map(course -> CourseResponse.fromEntity(
-				course,
-				userCourseService.getUserCourseOrNull(userId, course.getId())
-			)).toList();
-		return new KeysetCourseResponse(data, nextCursor);
 	}
 
 }

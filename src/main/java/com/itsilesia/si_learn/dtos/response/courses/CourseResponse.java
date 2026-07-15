@@ -8,12 +8,12 @@ import com.itsilesia.si_learn.entities.courses.Course;
 import com.itsilesia.si_learn.entities.enums.DifficultyLevel;
 import com.itsilesia.si_learn.entities.enums.ProgramingLanguage;
 import com.itsilesia.si_learn.entities.enums.VisibilityStatus;
-import com.itsilesia.si_learn.entities.user_progress.UserCourse;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
@@ -29,9 +29,10 @@ public class CourseResponse {
 	private boolean forceSequentialTasks;
 	private UserGeneralDataDto author;
 	private LanguageDto courseLanguage;
-	private boolean enrolled;
+	private LocalDateTime createdAt;
+	private LocalDateTime updatedAt;
 
-	public CourseResponse(@NotNull Course course, UserCourse userCourse) {
+	public CourseResponse(@NotNull Course course) {
 		this.id = course.getId();
 		this.title = TranslationDto.fromEntity(
 			DictionaryHelper.getTranslationWithCode(course.getTitle())
@@ -45,10 +46,11 @@ public class CourseResponse {
 		this.forceSequentialTasks = course.isForceSequentialTasks();
 		this.author = UserGeneralDataDto.fromEntity(course.getAuthor());
 		this.courseLanguage = LanguageDto.fromEntity(course.getTitle().getOriginalLanguage());
-		this.enrolled = userCourse != null;
+		this.createdAt = course.getCreatedAt();
+		this.updatedAt = course.getUpdatedAt();
 	}
 
-	public static CourseResponse fromEntity(@NotNull Course course, UserCourse userCourse) {
-		return new CourseResponse(course, userCourse);
+	public static CourseResponse fromEntity(@NotNull Course course) {
+		return new CourseResponse(course);
 	}
 }

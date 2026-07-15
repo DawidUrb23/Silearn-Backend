@@ -9,6 +9,7 @@ import com.itsilesia.si_learn.exceptions.ItemNotFoundException;
 import com.itsilesia.si_learn.repositories.CourseRepository;
 import com.itsilesia.si_learn.repositories.UserCourseRepository;
 import com.itsilesia.si_learn.repositories.users.UserRepository;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,10 +24,8 @@ public class UserCourseService {
 	private final UserRepository userRepository;
 	private final UserCourseRepository userCourseRepository;
 
-	public List<UserCourse> getUserCourses(UUID userId) {
-		var user = userRepository.findById(userId)
-			.orElseThrow(() -> new ItemNotFoundException(User.class, userId));
-		return user.getUserCourses();
+	public @NotNull List<UserCourse> getUserCourses(UUID userId) {
+		return userCourseRepository.findAllByUser_Id(userId);
 	}
 
 	public UserCourse getUserCourse(UUID userId, UUID courseId) {

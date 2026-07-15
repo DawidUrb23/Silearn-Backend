@@ -134,7 +134,9 @@ public class SecurityConfig {
 		public ConfigureAuthority tasksApi() {
 			authorize
 //				.requestMatchers(HttpMethod.GET, "/api/tasks/**").permitAll()
-				.requestMatchers("/api/tasks/**").hasAuthority(Role.TEACHER.name());
+				.requestMatchers("/api/tasks/**").hasAuthority(Role.TEACHER.name())
+				//allow only the teacher(owner) to grade students
+				.requestMatchers("/api/teacher-check/**").hasAuthority(Role.TEACHER.name());
 			return this;
 		}
 
