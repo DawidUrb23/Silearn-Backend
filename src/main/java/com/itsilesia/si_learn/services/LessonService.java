@@ -2,6 +2,8 @@ package com.itsilesia.si_learn.services;
 
 import com.itsilesia.si_learn.dtos.request.courses.ContentsOrderUpdateRequest;
 import com.itsilesia.si_learn.dtos.request.courses.CreateLessonRequest;
+import com.itsilesia.si_learn.dtos.request.courses.UpdateLessonRequest;
+import com.itsilesia.si_learn.dtos.response.IdOnlyDto;
 import com.itsilesia.si_learn.entities.abstractions.EntityWithOrderedChildren;
 import com.itsilesia.si_learn.entities.courses.Lesson;
 import com.itsilesia.si_learn.entities.courses.Module;
@@ -12,6 +14,7 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -61,5 +64,22 @@ public class LessonService {
 		//update the indexes
 		EntityWithOrderedChildren.updateIndexesOfChildren(toUpdate.getLessons(), request);
 		return moduleRepository.save(toUpdate);
+	}
+
+	public ResponseEntity<IdOnlyDto> updateLesson(UUID lessonId, UUID userId, UpdateLessonRequest updateLessonRequest) {
+		Lesson lesson = lessonRepository.findById(lessonId)
+			.orElseThrow(() -> new ItemNotFoundException(Lesson.class, lessonId));
+		courseHelperService.isAuthorOrThrow(lesson, userId);
+		var lessonLang = courseHelperService.getOriginalLanguage(lesson);
+
+		if(updateLessonRequest.getDescription() != null){
+			lesson.setDescription(translationService.createDictionary(updateLessonRequest.getDescription(),lessonLang));
+		}
+		if(updateLessonRequest.getTopic() != null){
+			lesson.setTopic(translationService.createDictionary(updateLessonRequest.getTopic(),lessonLang));
+		}
+
+		Lesson lessonSaved = lessonRepository.save(lesson);
+		return ResponseEntity.ok(IdOnlyDto.fromEntity(lessonSaved));
 	}
 }
