@@ -114,7 +114,10 @@ public class SecurityConfig {
 		public ConfigureAuthority myApis() {
 			authorize
 				// `api/my/courses` can be accessed by logged-in users
-				.requestMatchers("/api/my/courses/**").authenticated();
+				.requestMatchers("/api/my/courses/**").authenticated()
+				.requestMatchers("/api/my/modules/**").authenticated()
+				.requestMatchers("/api/my/lessons/**").authenticated()
+				.requestMatchers("/api/my/tasks/**").authenticated();
 			return this;
 		}
 

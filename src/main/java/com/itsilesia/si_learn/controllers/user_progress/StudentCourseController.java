@@ -44,7 +44,7 @@ public class StudentCourseController {
 
 	@GetMapping("{id}")
 	@ResponseStatus(HttpStatus.OK)
-	@Operation(summary = "Get the course details")
+	@Operation(summary = "Get the course with user progress")
 	@ApiResponse(responseCode = "404",
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
 	public MyCourseWithModulesDto myCourse(
