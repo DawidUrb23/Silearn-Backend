@@ -1,4 +1,4 @@
-package com.itsilesia.si_learn.controllers;
+package com.itsilesia.si_learn.controllers.user_progress;
 
 
 import com.itsilesia.si_learn.dtos.request.users.SubmitTaskRequest;

@@ -1,18 +1,19 @@
-package com.itsilesia.si_learn.controllers;
+package com.itsilesia.si_learn.controllers.courses;
 
+import com.itsilesia.si_learn.dtos.request.courses.ContentsOrderUpdateRequest;
 import com.itsilesia.si_learn.dtos.request.courses.CreateTaskRequest;
 import com.itsilesia.si_learn.dtos.response.IdOnlyDto;
 import com.itsilesia.si_learn.dtos.response.courses.LessonWithTasksResponse;
+import com.itsilesia.si_learn.dtos.response.exceptions.ErrorDetailsDto;
 import com.itsilesia.si_learn.services.CourseHelperService;
 import com.itsilesia.si_learn.services.LessonService;
 import com.itsilesia.si_learn.services.TaskService;
-import com.itsilesia.si_learn.dtos.response.exceptions.ErrorDetailsDto;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -21,7 +22,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.http.ResponseEntity;
 
 import java.util.UUID;
 
@@ -50,6 +50,21 @@ public class LessonController {
 		return new ResponseEntity<>(dto, HttpStatus.CREATED);
 	}
 
+	@PutMapping("/{id}/tasks")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@Operation(summary = "Update task order in lesson (Owner)")
+	@ApiResponse(responseCode = "400", description = "Invalid input",
+		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
+	@ApiResponse(responseCode = "404",
+		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
+	public void updateTaskOrder(
+		@PathVariable UUID id,
+		@RequestBody @Valid ContentsOrderUpdateRequest request,
+		@Parameter(hidden = true) @AuthenticationPrincipal UUID userId
+	) {
+		taskService.updateTaskOrder(id, request, userId);
+	}
+
 	@GetMapping("/{id}")
 	public LessonWithTasksResponse getLessonWithContent(
 		@PathVariable UUID id,
@@ -60,6 +75,7 @@ public class LessonController {
 		courseHelperService.isAuthorOrThrow(lesson, userId);
 		return LessonWithTasksResponse.fromEntity(lesson);
 	}
+
 	@DeleteMapping("/{lessonId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@Operation(summary = "Delete lesson (Teacher)")

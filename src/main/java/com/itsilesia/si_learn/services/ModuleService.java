@@ -1,5 +1,6 @@
 package com.itsilesia.si_learn.services;
 
+import com.itsilesia.si_learn.dtos.request.courses.ContentsOrderUpdateRequest;
 import com.itsilesia.si_learn.dtos.request.courses.CreateModuleRequest;
 import com.itsilesia.si_learn.entities.abstractions.EntityWithOrderedChildren;
 import com.itsilesia.si_learn.entities.courses.Course;
@@ -7,6 +8,7 @@ import com.itsilesia.si_learn.entities.courses.Module;
 import com.itsilesia.si_learn.exceptions.ItemNotFoundException;
 import com.itsilesia.si_learn.repositories.CourseRepository;
 import com.itsilesia.si_learn.repositories.ModuleRepository;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,5 +43,15 @@ public class ModuleService {
 	public Module getModuleWithLessons(UUID moduleId) {
 		return moduleRepository.findById(moduleId)
 			.orElseThrow(() -> new ItemNotFoundException(Module.class, moduleId));
+	}
+
+	@Transactional
+	public Course updateModuleOrder(UUID courseId, @Valid ContentsOrderUpdateRequest request, UUID userId) {
+		var toUpdate = courseRepository.findById(courseId)
+			.orElseThrow(() -> new ItemNotFoundException(Course.class, courseId));
+		courseHelperService.isAuthorOrThrow(toUpdate, userId);
+		//update the indexes
+		EntityWithOrderedChildren.updateIndexesOfChildren(toUpdate.getModules(), request);
+		return courseRepository.save(toUpdate);
 	}
 }

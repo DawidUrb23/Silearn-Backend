@@ -135,4 +135,13 @@ public class TaskService {
 		taskToUpdate.getTaskContents().add(newContent);
 		return newContent;
 	}
+
+	public Lesson updateTaskOrder(UUID lessonId, @Valid ContentsOrderUpdateRequest request, UUID userId) {
+		var toUpdate = lessonRepository.findById(lessonId)
+			.orElseThrow(() -> new ItemNotFoundException(Lesson.class, lessonId));
+		courseHelperService.isAuthorOrThrow(toUpdate, userId);
+		//update the indexes
+		EntityWithOrderedChildren.updateIndexesOfChildren(toUpdate.getTasks(), request);
+		return lessonRepository.save(toUpdate);
+	}
 }
