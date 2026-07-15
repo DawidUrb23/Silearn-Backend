@@ -45,6 +45,12 @@ public class DefaultExceptionHandler {
 		return new ResponseEntity<@NotNull ErrorDetailsDto>(new ErrorDetailsDto(ex.getMessage()), HttpStatus.FORBIDDEN);
 	}
 
+	/// NotEnrolledInCourseException Forbidden Exception (403)
+	@ExceptionHandler(NotEnrolledInCourseException.class)
+	public ResponseEntity<@NotNull ErrorDetailsDto> handleInvalidParameters(NotEnrolledInCourseException ex) {
+		return new ResponseEntity<@NotNull ErrorDetailsDto>(new ErrorDetailsDto(ex.getMessage()), HttpStatus.FORBIDDEN);
+	}
+
 	/// already exists, Conflict (409)
 	@ExceptionHandler(ItemAlreadyExistsException.class)
 	public ResponseEntity<@NotNull ErrorDetailsDto> handleInvalidParameters(ItemAlreadyExistsException ex) {
