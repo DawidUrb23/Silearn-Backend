@@ -1,5 +1,6 @@
 package com.itsilesia.si_learn.controllers.courses;
 
+import com.itsilesia.si_learn.dtos.request.courses.ContentsOrderUpdateRequest;
 import com.itsilesia.si_learn.dtos.request.courses.CreateCourseRequest;
 import com.itsilesia.si_learn.dtos.request.courses.CreateModuleRequest;
 import com.itsilesia.si_learn.dtos.response.IdOnlyDto;
@@ -93,6 +94,21 @@ public class CourseController {
 		return IdOnlyDto.fromEntity(
 			moduleService.createModule(courseId, request, userId)
 		);
+	}
+
+	@PutMapping("/{courseId}/modules")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@Operation(summary = "Update module order in course (Owner)")
+	@ApiResponse(responseCode = "400", description = "Invalid input",
+		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
+	@ApiResponse(responseCode = "404",
+		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
+	public void UpdateModuleOrderInCourse(
+		@PathVariable UUID courseId,
+		@Valid @RequestBody ContentsOrderUpdateRequest request,
+		@Parameter(hidden = true) @AuthenticationPrincipal UUID userId
+	) {
+		moduleService.updateModuleOrder(courseId, request, userId);
 	}
 
 	@GetMapping("/{courseId}")

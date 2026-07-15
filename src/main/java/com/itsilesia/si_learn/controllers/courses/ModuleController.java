@@ -1,14 +1,18 @@
-package com.itsilesia.si_learn.controllers;
+package com.itsilesia.si_learn.controllers.courses;
 
+import com.itsilesia.si_learn.dtos.request.courses.ContentsOrderUpdateRequest;
 import com.itsilesia.si_learn.dtos.request.courses.CreateLessonRequest;
 import com.itsilesia.si_learn.dtos.response.IdOnlyDto;
-import com.itsilesia.si_learn.dtos.response.courses.LessonResponse;
-import com.itsilesia.si_learn.dtos.response.courses.ModuleResponse;
 import com.itsilesia.si_learn.dtos.response.courses.ModuleWithLessonsResponse;
+import com.itsilesia.si_learn.dtos.response.exceptions.ErrorDetailsDto;
 import com.itsilesia.si_learn.services.CourseHelperService;
 import com.itsilesia.si_learn.services.LessonService;
 import com.itsilesia.si_learn.services.ModuleService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +21,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -42,6 +45,21 @@ public class ModuleController {
 		return IdOnlyDto.fromEntity(
 			lessonService.createLesson(moduleId, request, userId)
 		);
+	}
+
+	@PutMapping("/{moduleId}/lessons")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@Operation(summary = "Update lesson order in module (Owner)")
+	@ApiResponse(responseCode = "400", description = "Invalid input",
+		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
+	@ApiResponse(responseCode = "404",
+		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
+	public void updateLessonOrder(
+		@PathVariable UUID moduleId,
+		@Valid @RequestBody ContentsOrderUpdateRequest request,
+		@Parameter(hidden = true) @AuthenticationPrincipal UUID userId
+	) {
+		lessonService.updateLessonOrder(moduleId, request, userId);
 	}
 
 	@GetMapping("/{moduleId}")
