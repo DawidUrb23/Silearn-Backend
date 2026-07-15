@@ -2,6 +2,7 @@ package com.itsilesia.si_learn.controllers.courses;
 
 import com.itsilesia.si_learn.dtos.request.courses.ContentsOrderUpdateRequest;
 import com.itsilesia.si_learn.dtos.request.courses.CreateTaskRequest;
+import com.itsilesia.si_learn.dtos.request.courses.UpdateLessonRequest;
 import com.itsilesia.si_learn.dtos.response.IdOnlyDto;
 import com.itsilesia.si_learn.dtos.response.courses.LessonWithTasksResponse;
 import com.itsilesia.si_learn.dtos.response.exceptions.ErrorDetailsDto;
@@ -84,5 +85,19 @@ public class LessonController {
 	public ResponseEntity<Void> deleteLesson(@PathVariable UUID lessonId) {
 		lessonService.deleteLesson(lessonId);
 		return ResponseEntity.noContent().build();
+	}
+
+	@PatchMapping({"/{lessonId}"})
+	@ResponseStatus(HttpStatus.OK)
+	@Operation(summary = "Change lesson description (Teacher)")
+	@ApiResponse(responseCode = "404", description = "Lesson not found",
+		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
+	public ResponseEntity<IdOnlyDto> updateLesson(
+		@PathVariable UUID lessonId,
+		@RequestHeader(value = HttpHeaders.ACCEPT_LANGUAGE, required = false) String languageCode,
+		@Parameter(hidden = true) @AuthenticationPrincipal UUID userId,
+		@RequestBody @Valid UpdateLessonRequest updateLessonRequest
+	) {
+		return lessonService.updateLesson(lessonId, userId, updateLessonRequest);
 	}
 }
