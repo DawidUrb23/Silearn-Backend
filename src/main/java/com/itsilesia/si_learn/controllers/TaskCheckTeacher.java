@@ -21,7 +21,7 @@ import java.util.UUID;
 @RestController
 @Validated
 @RequestMapping("api/teacher-check")
-@Tag(name = "Task Check", description = "Teacher gets solutions sent by users and can grade them")
+@Tag(name = "Task Check", description = "Teacher gets solutions sent by users and can grade them (Teacher)")
 public class TaskCheckTeacher {
 
 	private final TaskCheckService taskCheckService;
