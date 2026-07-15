@@ -2,6 +2,7 @@ package com.itsilesia.si_learn.controllers.courses;
 
 import com.itsilesia.si_learn.dtos.request.courses.ContentsOrderUpdateRequest;
 import com.itsilesia.si_learn.dtos.request.courses.CreateLessonRequest;
+import com.itsilesia.si_learn.dtos.request.courses.ModuleUpdateRequest;
 import com.itsilesia.si_learn.dtos.response.IdOnlyDto;
 import com.itsilesia.si_learn.dtos.response.courses.ModuleWithLessonsResponse;
 import com.itsilesia.si_learn.dtos.response.exceptions.ErrorDetailsDto;
@@ -18,6 +19,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -74,4 +76,28 @@ public class ModuleController {
 		return ModuleWithLessonsResponse.fromEntity(module);
 	}
 
+	@DeleteMapping("/{moduleId}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@Operation(summary = "Delete module (Teacher)")
+	@ApiResponse(responseCode = "404", description = "Module not found",
+		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
+	public ResponseEntity<Void> deleteModule(@PathVariable UUID moduleId,
+	                                         @Parameter(hidden = true)@AuthenticationPrincipal  UUID userId) {
+		moduleService.deleteModule(moduleId, userId);
+		return ResponseEntity.noContent().build();
+	}
+
+	@PatchMapping("/{moduleId}")
+	@ResponseStatus(HttpStatus.OK)
+	@Operation(summary = "Changes the module (Teacher)")
+	@ApiResponse(responseCode = "404", description = "Module not found",
+		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
+	public ResponseEntity<IdOnlyDto> updateModule(
+		@PathVariable UUID moduleId,
+		@RequestHeader(value = HttpHeaders.ACCEPT_LANGUAGE, required = false) String languageCode,
+		@Parameter(hidden = true) @AuthenticationPrincipal UUID userId,
+		@RequestBody ModuleUpdateRequest moduleUpdateRequest
+	) {
+		return moduleService.updateModuleByTeacher(moduleId, userId, moduleUpdateRequest);
+	}
 }

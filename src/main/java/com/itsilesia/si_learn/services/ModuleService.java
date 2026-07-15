@@ -2,6 +2,9 @@ package com.itsilesia.si_learn.services;
 
 import com.itsilesia.si_learn.dtos.request.courses.ContentsOrderUpdateRequest;
 import com.itsilesia.si_learn.dtos.request.courses.CreateModuleRequest;
+import com.itsilesia.si_learn.dtos.request.courses.ModuleUpdateRequest;
+import com.itsilesia.si_learn.dtos.request.dictionary.UpdateTranslationDictionaryRequest;
+import com.itsilesia.si_learn.dtos.response.IdOnlyDto;
 import com.itsilesia.si_learn.entities.abstractions.EntityWithOrderedChildren;
 import com.itsilesia.si_learn.entities.courses.Course;
 import com.itsilesia.si_learn.entities.courses.Module;
@@ -10,6 +13,7 @@ import com.itsilesia.si_learn.repositories.CourseRepository;
 import com.itsilesia.si_learn.repositories.ModuleRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,5 +57,30 @@ public class ModuleService {
 		//update the indexes
 		EntityWithOrderedChildren.updateIndexesOfChildren(toUpdate.getModules(), request);
 		return courseRepository.save(toUpdate);
+	}
+
+	public void deleteModule(UUID moduleId, UUID userId) {
+		Module module = moduleRepository.findById(moduleId)
+			.orElseThrow(() -> new ItemNotFoundException(Module.class, moduleId));
+		courseHelperService.isAuthorOrThrow(module, userId);
+
+		moduleRepository.delete(module);
+	}
+
+	public ResponseEntity<IdOnlyDto> updateModuleByTeacher(UUID moduleId, UUID userId, ModuleUpdateRequest moduleUpdateRequest) {
+		Module module = moduleRepository.findById(moduleId)
+			.orElseThrow(() -> new ItemNotFoundException(Module.class, moduleId));
+		courseHelperService.isAuthorOrThrow(module, userId);
+		var moduleLang = courseHelperService.getOriginalLanguage(module);
+		var content = new UpdateTranslationDictionaryRequest();
+		content.setLanguageCode(moduleLang.getCode());
+		content.setContent(moduleUpdateRequest.getTitle());
+		if (moduleUpdateRequest.getTitle() != null) {
+			module.setTitle(translationService.updateTranslationDictionary(
+				module.getTitle().getId(), content));
+		}
+		Module moduleSaved = moduleRepository.save(module);
+		return ResponseEntity.ok(IdOnlyDto.fromEntity(moduleSaved));
+
 	}
 }
