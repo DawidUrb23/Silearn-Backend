@@ -15,7 +15,7 @@ public class CourseStatisticsDto {
 	private long inProgress;
 
 	public CourseStatisticsDto(Course course, long registered, long completed, long inProgress) {
-		this.course = CourseResponse.fromEntity(course, null);
+		this.course = CourseResponse.fromEntity(course);
 		this.registered = registered;
 		this.completed = completed;
 		this.inProgress = inProgress;
