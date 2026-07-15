@@ -57,9 +57,8 @@ public class UserTask implements CompoundIdEntityWithUser {
 
 
 	public ProgressStatus progressStatus() {
-		if (passed) {
+		if (passed)
 			return ProgressStatus.FINISHED;
-		}
 		return ProgressStatus.IN_PROGRESS;
 	}
 
