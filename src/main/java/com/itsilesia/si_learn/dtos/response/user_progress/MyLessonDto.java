@@ -29,7 +29,7 @@ public class MyLessonDto {
 		return new MyLessonDto(userLesson.getLesson(), userLesson);
 	}
 
-	static public MyLessonDto fromEntity(Tuple<@NonNull Lesson, UserLesson> userAndLesson) {
-		return new MyLessonDto(userAndLesson._1(), userAndLesson._2());
+	static public MyLessonDto fromEntity(Tuple<@NonNull Lesson, UserLesson> userAndProgress) {
+		return new MyLessonDto(userAndProgress._1(), userAndProgress._2());
 	}
 }

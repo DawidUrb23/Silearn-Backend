@@ -32,8 +32,10 @@ public class CourseService {
 	private final UserRepository userRepository;
 	private final TranslationService translationService;
 	private final CourseHelperService courseHelperService;
+	private final UserCourseService userCourseService;
 	private final UserCourseRepository userCourseRepository;
-	static private final int maxSize = 100;
+	private final int maxSize = 100;
+
 
 	@Transactional
 	public Course createCourse(CreateCourseRequest request, UUID authorId) {
@@ -52,7 +54,9 @@ public class CourseService {
 		else
 			course.setForceSequentialTasks(true);
 
-		return courseRepository.save(course);
+		Course savedCourse = courseRepository.save(course);
+		userCourseService.enroll(savedCourse.getId(), authorId);
+		return savedCourse;
 	}
 
 	public Course getCourse(UUID courseId) {
