@@ -24,6 +24,10 @@ public class MyModuleDto {
 		return new MyModuleDto(module, userModule);
 	}
 
+	static public MyModuleDto fromEntity(@NonNull UserModule userModule) {
+		return new MyModuleDto(userModule.getModule(), userModule);
+	}
+
 	static public MyModuleDto fromEntity(Tuple<@NonNull Module, UserModule> userAndModule) {
 		return new MyModuleDto(userAndModule._1(), userAndModule._2());
 	}

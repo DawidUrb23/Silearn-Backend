@@ -2,6 +2,7 @@ package com.itsilesia.si_learn.entities.user_progress;
 
 
 import com.itsilesia.si_learn.dtos.response.TwoIntsProgress;
+import com.itsilesia.si_learn.entities.abstractions.CompoundIdEntityWithUser;
 import com.itsilesia.si_learn.entities.compositeIds.UserModuleId;
 import com.itsilesia.si_learn.entities.courses.Course;
 import com.itsilesia.si_learn.entities.courses.Module;
@@ -15,6 +16,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Entity(name = "user_modules")
 @IdClass(UserModuleId.class)
@@ -22,7 +24,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class UserModule extends StartFinishForUserProgress {
+public class UserModule extends StartFinishForUserProgress implements CompoundIdEntityWithUser {
 
 	@Id
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -59,5 +61,10 @@ public class UserModule extends StartFinishForUserProgress {
 				it -> it.progressStatus() == ProgressStatus.FINISHED
 			).count()
 		);
+	}
+
+	@Override
+	public UUID getId() {
+		return module.getId();
 	}
 }

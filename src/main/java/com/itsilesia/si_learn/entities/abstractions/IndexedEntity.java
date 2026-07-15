@@ -1,11 +1,7 @@
 package com.itsilesia.si_learn.entities.abstractions;
 
-import java.util.UUID;
-
-public interface IndexedEntity {
+public interface IndexedEntity extends EntityWithUuId {
 	int getIndex();
 
 	void setIndex(int value);
-
-	UUID getId();
 }

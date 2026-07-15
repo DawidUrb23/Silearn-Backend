@@ -4,6 +4,7 @@ import com.itsilesia.si_learn.dtos.request.courses.ContentsOrderUpdateRequest;
 import com.itsilesia.si_learn.exceptions.InvalidParametersException;
 import com.itsilesia.si_learn.exceptions.ItemNotFoundException;
 import jakarta.validation.constraints.NotNull;
+import org.yaml.snakeyaml.util.Tuple;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -35,5 +36,23 @@ public interface EntityWithOrderedChildren {
 				throw new ItemNotFoundException(IndexedEntity.class, itemId);
 			keyValue.setIndex(index++);
 		}
+	}
+
+	/**
+	 * Joins (course, module ...) with (userCourse, userModule ...)
+	 *
+	 * @param items      (course, module ...)
+	 * @param userItems  (userCourse, userModule ...)
+	 * @param <Item>     (course, module ...)
+	 * @param <UserItem> (userCourse, userModule ...)
+	 * @return a list of joined items
+	 */
+	static <Item extends EntityWithUuId, UserItem extends CompoundIdEntityWithUser>
+	@NotNull List<@NotNull Tuple<@NotNull Item, UserItem>>
+	JoinItemWithUserItem(@NotNull List<@NotNull Item> items, @NotNull List<UserItem> userItems) {
+		var userItemsMap = userItems.stream().collect(
+			Collectors.toMap(EntityWithUuId::getId, item -> item)
+		);
+		return items.stream().map(item -> new Tuple<>(item, userItemsMap.get(item.getId()))).toList();
 	}
 }

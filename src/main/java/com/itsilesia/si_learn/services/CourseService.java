@@ -10,6 +10,7 @@ import com.itsilesia.si_learn.exceptions.ItemNotFoundException;
 import com.itsilesia.si_learn.helpers.CourseCursor;
 import com.itsilesia.si_learn.helpers.CursorUtil;
 import com.itsilesia.si_learn.repositories.CourseRepository;
+import com.itsilesia.si_learn.repositories.UserCourseRepository;
 import com.itsilesia.si_learn.repositories.users.UserRepository;
 import com.itsilesia.si_learn.specifications.CourseSpecification;
 import jakarta.transaction.Transactional;
@@ -31,7 +32,8 @@ public class CourseService {
 	private final UserRepository userRepository;
 	private final TranslationService translationService;
 	private final CourseHelperService courseHelperService;
-	private final int maxSize = 100;
+	private final UserCourseRepository userCourseRepository;
+	static private final int maxSize = 100;
 
 	@Transactional
 	public Course createCourse(CreateCourseRequest request, UUID authorId) {
@@ -66,14 +68,15 @@ public class CourseService {
 		return course;
 	}
 
-	public Slice<@NonNull Course> getCourses(
+	public Slice<@NonNull Course> getFilteredCourses(
 		VisibilityStatus status,
 		DifficultyLevel difficulty,
 		ProgramingLanguage programingLanguage,
 		String name,
 		UUID authorId,
 		String cursor,
-		int size
+		int size,
+		UUID userId
 	) {
 		if (size > maxSize) size = maxSize;
 		if (size < 1) size = 1;

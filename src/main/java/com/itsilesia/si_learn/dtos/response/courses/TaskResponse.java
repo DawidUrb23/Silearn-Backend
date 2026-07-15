@@ -14,13 +14,11 @@ public class TaskResponse {
 	private UUID id;
 	private Float passingScore;
 	private String startingCode;
-	private UUID lessonId;
 
 	public TaskResponse(Task task) {
 		this.id = task.getId();
 		this.startingCode = task.getStartingCode();
 		this.passingScore = task.getPassingScore();
-		this.lessonId = task.getLesson() != null ? task.getLesson().getId() : null;
 	}
 
 	public static TaskResponse fromEntity(Task task) {

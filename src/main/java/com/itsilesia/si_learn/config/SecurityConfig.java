@@ -35,6 +35,7 @@ public class SecurityConfig {
 			.csrf(AbstractHttpConfigurer::disable)
 			.authorizeHttpRequests(authorize -> {
 				new ConfigureAuthority(authorize)
+					.teacherApi() // api/teacher
 					.coursesApi() // api/courses
 					.modulesApi() // api/modules
 					.lessonsApi() // api/lessons
@@ -83,6 +84,15 @@ public class SecurityConfig {
 			return this;
 		}
 
+		//TODO: see if this is not duplicated after merge
+
+		/// `api/teacher` can be accessed by Teacher
+		public ConfigureAuthority teacherApi() {
+			authorize
+				.requestMatchers("/api/teacher/**").hasAuthority(Role.TEACHER.name());
+			return this;
+		}
+
 		/// `api/modules` can be accessed by Owner Teacher
 		public ConfigureAuthority modulesApi() {
 			authorize
@@ -114,7 +124,10 @@ public class SecurityConfig {
 		public ConfigureAuthority myApis() {
 			authorize
 				// `api/my/courses` can be accessed by logged-in users
-				.requestMatchers("/api/my/courses/**").authenticated();
+				.requestMatchers("/api/my/courses/**").authenticated()
+				.requestMatchers("/api/my/modules/**").authenticated()
+				.requestMatchers("/api/my/lessons/**").authenticated()
+				.requestMatchers("/api/my/tasks/**").authenticated();
 			return this;
 		}
 
@@ -131,7 +144,9 @@ public class SecurityConfig {
 		public ConfigureAuthority tasksApi() {
 			authorize
 //				.requestMatchers(HttpMethod.GET, "/api/tasks/**").permitAll()
-				.requestMatchers("/api/tasks/**").hasAuthority(Role.TEACHER.name());
+				.requestMatchers("/api/tasks/**").hasAuthority(Role.TEACHER.name())
+				//allow only the teacher(owner) to grade students
+				.requestMatchers("/api/teacher-check/**").hasAuthority(Role.TEACHER.name());
 			return this;
 		}
 
