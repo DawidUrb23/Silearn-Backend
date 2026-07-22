@@ -1,11 +1,12 @@
-package com.itsilesia.si_learn.services;
+package com.itsilesia.si_learn.services.courses;
 
 import com.itsilesia.si_learn.dtos.request.courses.TaskContentRequest;
 import com.itsilesia.si_learn.dtos.request.dictionary.UpdateTranslationDictionaryRequest;
 import com.itsilesia.si_learn.dtos.response.helper.DictionaryHelper;
 import com.itsilesia.si_learn.entities.courses.TaskContent;
 import com.itsilesia.si_learn.exceptions.ItemNotFoundException;
-import com.itsilesia.si_learn.repositories.TaskContentRepository;
+import com.itsilesia.si_learn.repositories.courses.TaskContentRepository;
+import com.itsilesia.si_learn.services.TranslationService;
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -33,7 +33,8 @@ public class TaskCheckTeacher {
 		@PathVariable UUID taskId,
 		@Parameter(hidden = true) @AuthenticationPrincipal UUID teacherId
 	) {
-		return taskCheckService.getAllSolutions(taskId, teacherId);
+		return taskCheckService.getAllSolutions(taskId, teacherId)
+			.stream().map(TaskSubmissionResponse::fromEntity).toList();
 	}
 
 
@@ -58,7 +59,6 @@ public class TaskCheckTeacher {
 		@PathVariable UUID studentId,
 		@Parameter(hidden = true) @AuthenticationPrincipal UUID teacherId
 	) {
-
 		taskCheckService.deleteStudentSolution(taskId, studentId, teacherId);
 	}
 }

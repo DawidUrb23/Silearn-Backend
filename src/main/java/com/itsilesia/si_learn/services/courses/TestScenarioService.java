@@ -1,9 +1,9 @@
-package com.itsilesia.si_learn.services;
+package com.itsilesia.si_learn.services.courses;
 
 import com.itsilesia.si_learn.dtos.request.courses.TestScenarioRequest;
 import com.itsilesia.si_learn.entities.courses.TestScenario;
 import com.itsilesia.si_learn.exceptions.ItemNotFoundException;
-import com.itsilesia.si_learn.repositories.TestScenarioRepository;
+import com.itsilesia.si_learn.repositories.courses.TestScenarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

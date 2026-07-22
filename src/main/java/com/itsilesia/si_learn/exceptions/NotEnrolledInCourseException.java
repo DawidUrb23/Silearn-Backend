@@ -17,7 +17,7 @@ public class NotEnrolledInCourseException extends RuntimeException {
 
 	public NotEnrolledInCourseException(UUID userId, Course course) {
 		super(String.format("User \"%s\" is not enrolled to \"%s\": \"%s\"", userId, course.getId(),
-			DictionaryHelper.getTranslationWithCode(course.getTitle())));
+			DictionaryHelper.getTranslationWithCode(course.getTitle()).getValue()));
 		this.userId = userId;
 		this.course = course;
 	}

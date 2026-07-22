@@ -3,6 +3,7 @@ package com.itsilesia.si_learn.entities.user_progress;
 
 import com.itsilesia.si_learn.dtos.response.TwoIntsProgress;
 import com.itsilesia.si_learn.entities.abstractions.CompoundIdEntityWithUser;
+import com.itsilesia.si_learn.entities.abstractions.UserProgressNode;
 import com.itsilesia.si_learn.entities.compositeIds.UserModuleId;
 import com.itsilesia.si_learn.entities.courses.Course;
 import com.itsilesia.si_learn.entities.courses.Module;
@@ -15,6 +16,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,7 +26,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-public class UserModule extends StartFinishForUserProgress implements CompoundIdEntityWithUser {
+public class UserModule extends StartFinishForUserProgress implements UserProgressNode, CompoundIdEntityWithUser {
 
 	@Id
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -66,5 +68,20 @@ public class UserModule extends StartFinishForUserProgress implements CompoundId
 	@Override
 	public UUID getId() {
 		return module.getId();
+	}
+
+	@Override
+	public UserProgressNode getParentProgressNode() {
+		return this.getUserCourse();
+	}
+
+	@Override
+	public Collection<? extends UserProgressNode> getSiblingProgressNodes() {
+		return this.getUserCourse().getUserModules();
+	}
+
+	@Override
+	public Collection<?> getBlueprintNodes() {
+		return this.getCourse().getModules();
 	}
 }

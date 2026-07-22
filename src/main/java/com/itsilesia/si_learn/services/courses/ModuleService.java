@@ -1,4 +1,4 @@
-package com.itsilesia.si_learn.services;
+package com.itsilesia.si_learn.services.courses;
 
 import com.itsilesia.si_learn.dtos.request.courses.ContentsOrderUpdateRequest;
 import com.itsilesia.si_learn.dtos.request.courses.CreateModuleRequest;
@@ -9,8 +9,9 @@ import com.itsilesia.si_learn.entities.abstractions.EntityWithOrderedChildren;
 import com.itsilesia.si_learn.entities.courses.Course;
 import com.itsilesia.si_learn.entities.courses.Module;
 import com.itsilesia.si_learn.exceptions.ItemNotFoundException;
-import com.itsilesia.si_learn.repositories.CourseRepository;
-import com.itsilesia.si_learn.repositories.ModuleRepository;
+import com.itsilesia.si_learn.repositories.courses.CourseRepository;
+import com.itsilesia.si_learn.repositories.courses.ModuleRepository;
+import com.itsilesia.si_learn.services.TranslationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

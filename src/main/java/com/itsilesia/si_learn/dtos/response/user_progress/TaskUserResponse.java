@@ -29,4 +29,8 @@ public class TaskUserResponse {
 	public static TaskUserResponse fromEntity(@NotNull Task task, UserTask userTask) {
 		return new TaskUserResponse(task, userTask);
 	}
+
+	public static TaskUserResponse fromEntity(@NotNull UserTask userTask) {
+		return new TaskUserResponse(userTask.getTask(), userTask);
+	}
 }

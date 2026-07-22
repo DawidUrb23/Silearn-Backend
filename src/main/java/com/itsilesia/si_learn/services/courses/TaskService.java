@@ -1,4 +1,4 @@
-package com.itsilesia.si_learn.services;
+package com.itsilesia.si_learn.services.courses;
 
 import com.itsilesia.si_learn.dtos.request.courses.*;
 import com.itsilesia.si_learn.entities.TranslationDictionary;
@@ -8,10 +8,11 @@ import com.itsilesia.si_learn.entities.courses.Task;
 import com.itsilesia.si_learn.entities.courses.TaskContent;
 import com.itsilesia.si_learn.entities.courses.TestScenario;
 import com.itsilesia.si_learn.exceptions.ItemNotFoundException;
-import com.itsilesia.si_learn.repositories.LessonRepository;
-import com.itsilesia.si_learn.repositories.TaskContentRepository;
-import com.itsilesia.si_learn.repositories.TaskRepository;
-import com.itsilesia.si_learn.repositories.TestScenarioRepository;
+import com.itsilesia.si_learn.repositories.courses.LessonRepository;
+import com.itsilesia.si_learn.repositories.courses.TaskContentRepository;
+import com.itsilesia.si_learn.repositories.courses.TaskRepository;
+import com.itsilesia.si_learn.repositories.courses.TestScenarioRepository;
+import com.itsilesia.si_learn.services.TranslationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
