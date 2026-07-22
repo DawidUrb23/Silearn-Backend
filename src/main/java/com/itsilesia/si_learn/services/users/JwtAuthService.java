@@ -7,6 +7,8 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class JwtAuthService {
@@ -19,5 +21,11 @@ public class JwtAuthService {
 			.filter(user -> passwordEncoder.matches(loginRequest.getPassword(), user.getPassword()))
 			.map(jwtProvider::generateToken)
 			.orElseThrow(() -> new BadCredentialsException("Invalid credentials"));
+	}
+
+	public String refresh(UUID userId){
+		return jwtProvider.generateToken(
+			userService.getById(userId)
+		);
 	}
 }
