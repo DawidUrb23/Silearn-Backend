@@ -15,6 +15,8 @@ import com.itsilesia.si_learn.repositories.users.UserRepository;
 import com.itsilesia.si_learn.services.TranslationService;
 import com.itsilesia.si_learn.services.user_progress.UserCourseService;
 import com.itsilesia.si_learn.specifications.CourseSpecification;
+import com.itsilesia.si_learn.dtos.request.courses.UpdateCourseRequest;
+import com.itsilesia.si_learn.exceptions.InvalidParametersException;
 import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -108,6 +110,50 @@ public class CourseService {
 			.orElseThrow(() -> new ItemNotFoundException(Course.class, courseId));
 
 		course.setStatus(status);
+
+		return courseRepository.save(course);
+	}
+
+	@Transactional
+	public Course updateCourse(UUID courseId, UpdateCourseRequest request, UUID userId) {
+		Course course = courseRepository.findById(courseId)
+			.orElseThrow(() -> new ItemNotFoundException(Course.class, courseId));
+
+		courseHelperService.isAuthorOrThrow(course, userId);
+
+		if (request.title() != null)
+			translationService.updateOriginalTranslation(
+				course.getTitle(),
+				request.title()
+			);
+
+		if (request.description() != null)
+			translationService.updateOriginalTranslation(
+				course.getDescription(),
+				request.description()
+			);
+
+		if (request.difficulty() != null)
+			course.setDifficulty(request.difficulty());
+
+		if (request.programingLanguage() != null)
+			course.setProgramingLanguage(request.programingLanguage());
+
+		if (request.forceSequentialTasks() != null)
+			course.setForceSequentialTasks(request.forceSequentialTasks());
+
+		if (request.status() != null) {
+			if (
+				request.status() != VisibilityStatus.DRAFT &&
+					request.status() != VisibilityStatus.ACTIVE &&
+					request.status() != VisibilityStatus.DELETED
+			)
+				throw new InvalidParametersException(
+					"Author can set course status only to DRAFT, ACTIVE or DELETED"
+				);
+
+			course.setStatus(request.status());
+		}
 
 		return courseRepository.save(course);
 	}

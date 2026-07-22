@@ -98,6 +98,27 @@ public class TranslationService {
 
 		return translationDictionaryRepository.save(translationDict);
 	}
+	@Transactional
+	public TranslationDictionary updateOriginalTranslation(
+		TranslationDictionary dictionary,
+		String content
+	) {
+		Language originalLanguage = dictionary.getOriginalLanguage();
+
+		DictionaryItem originalItem = dictionary.getItems().stream()
+			.filter(item ->
+				item.getLanguage().getCode().equals(originalLanguage.getCode())
+			)
+			.findFirst()
+			.orElseThrow(() -> new ItemNotFoundException(
+				DictionaryItem.class,
+				originalLanguage.getCode()
+			));
+
+		originalItem.setValue(content);
+
+		return translationDictionaryRepository.save(dictionary);
+	}
 
 	@Transactional
 	public void removeLocale(@NotBlank String languageCode) {
