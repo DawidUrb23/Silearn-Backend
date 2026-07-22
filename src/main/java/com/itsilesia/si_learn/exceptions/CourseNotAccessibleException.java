@@ -13,7 +13,7 @@ public class CourseNotAccessibleException extends RuntimeException {
 	private final Course course;
 
 	public CourseNotAccessibleException(Course course) {
-		super(String.format("Course \"%s\": \"%s\"", course.getId(),
+		super(String.format("Course \"%s\": \"%s\" is not accessible!", course.getId(),
 			DictionaryHelper.getTranslationWithCode(course.getTitle()).getValue()));
 		this.course = course;
 	}

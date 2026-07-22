@@ -43,6 +43,8 @@ public class UserCourseService {
 			.orElseThrow(() -> new ItemNotFoundException(User.class, userId));
 		var course = courseRepository.findById(courseId)
 			.orElseThrow(() -> new ItemNotFoundException(Course.class, courseId));
+		userCourseHelperService.isAccessibleOrThrow(course);
+
 		var userCourse = new UserCourse();
 		userCourse.setUser(user);
 		userCourse.setCourse(course);
