@@ -5,12 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Range;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
 @Getter
 public class UpdateTaskRequest {
+	@Range(min = 0, max = 1)
 	private Float passingScore;
 	@Size(max = 4 << 10)
 	private String startingCode;

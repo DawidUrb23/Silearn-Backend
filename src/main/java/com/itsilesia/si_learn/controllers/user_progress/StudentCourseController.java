@@ -4,7 +4,7 @@ package com.itsilesia.si_learn.controllers.user_progress;
 import com.itsilesia.si_learn.dtos.response.exceptions.ErrorDetailsDto;
 import com.itsilesia.si_learn.dtos.response.user_progress.MyCourseWithModulesDto;
 import com.itsilesia.si_learn.dtos.response.user_progress.MyCoursesDto;
-import com.itsilesia.si_learn.services.UserCourseService;
+import com.itsilesia.si_learn.services.user_progress.UserCourseService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;

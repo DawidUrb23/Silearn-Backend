@@ -2,6 +2,7 @@ package com.itsilesia.si_learn.entities.courses;
 
 import com.itsilesia.si_learn.entities.BaseEntity;
 import com.itsilesia.si_learn.entities.TranslationDictionary;
+import com.itsilesia.si_learn.entities.abstractions.CourseAccessNode;
 import com.itsilesia.si_learn.entities.abstractions.IndexedEntity;
 import com.itsilesia.si_learn.entities.user_progress.UserLesson;
 import com.itsilesia.si_learn.entities.user_progress.UserLesson_;
@@ -12,6 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Entity(name = "lessons")
@@ -19,7 +21,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Lesson extends BaseEntity implements IndexedEntity {
+public class Lesson extends BaseEntity implements IndexedEntity, CourseAccessNode {
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	//Dictionary is Unique for each instance
 	@JoinColumn(name = "topic_id", nullable = false)
@@ -43,4 +45,19 @@ public class Lesson extends BaseEntity implements IndexedEntity {
 
 	@OneToMany(mappedBy = UserLesson_.LESSON, cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<UserLesson> userLessons = new ArrayList<>();
+
+	@Override
+	public Collection<? extends CourseAccessNode> getSiblings() {
+		return this.getModule().getLessons();
+	}
+
+	@Override
+	public CourseAccessNode getParentNode() {
+		return this.getModule();
+	}
+
+	@Override
+	public Course getCourse() {
+		return this.getParentNode().getCourse();
+	}
 }

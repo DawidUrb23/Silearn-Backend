@@ -1,4 +1,4 @@
-package com.itsilesia.si_learn.services;
+package com.itsilesia.si_learn.services.courses;
 
 import com.itsilesia.si_learn.entities.Language;
 import com.itsilesia.si_learn.entities.courses.*;

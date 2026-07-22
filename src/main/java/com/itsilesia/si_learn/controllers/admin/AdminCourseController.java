@@ -2,7 +2,7 @@ package com.itsilesia.si_learn.controllers.admin;
 
 import com.itsilesia.si_learn.dtos.request.courses.ChangeCourseStatusRequest;
 import com.itsilesia.si_learn.dtos.response.exceptions.ErrorDetailsDto;
-import com.itsilesia.si_learn.services.CourseService;
+import com.itsilesia.si_learn.services.courses.CourseService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

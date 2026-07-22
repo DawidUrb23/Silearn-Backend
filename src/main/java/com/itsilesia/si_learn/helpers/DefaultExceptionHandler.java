@@ -39,6 +39,18 @@ public class DefaultExceptionHandler {
 		return new ResponseEntity<@NotNull ErrorDetailsDto>(new ErrorDetailsDto(ex.getMessage()), HttpStatus.BAD_REQUEST);
 	}
 
+	/// CourseIsSequential Exception (400)
+	@ExceptionHandler(CourseIsSequentialException.class)
+	public ResponseEntity<@NotNull ErrorDetailsDto> handleInvalidParameters(CourseIsSequentialException ex) {
+		return new ResponseEntity<@NotNull ErrorDetailsDto>(new ErrorDetailsDto(ex.getMessage()), HttpStatus.BAD_REQUEST);
+	}
+
+	/// CourseNotAccessibleException Exception (400)
+	@ExceptionHandler(CourseNotAccessibleException.class)
+	public ResponseEntity<@NotNull ErrorDetailsDto> handleInvalidParameters(CourseNotAccessibleException ex) {
+		return new ResponseEntity<@NotNull ErrorDetailsDto>(new ErrorDetailsDto(ex.getMessage()), HttpStatus.BAD_REQUEST);
+	}
+
 	/// NotOwnerException Forbidden Exception (403)
 	@ExceptionHandler(NotOwnerException.class)
 	public ResponseEntity<@NotNull ErrorDetailsDto> handleInvalidParameters(NotOwnerException ex) {

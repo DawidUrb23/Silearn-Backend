@@ -2,6 +2,7 @@ package com.itsilesia.si_learn.entities.user_progress;
 
 
 import com.itsilesia.si_learn.entities.abstractions.CompoundIdEntityWithUser;
+import com.itsilesia.si_learn.entities.abstractions.UserProgressNode;
 import com.itsilesia.si_learn.entities.compositeIds.UserTaskId;
 import com.itsilesia.si_learn.entities.courses.Lesson;
 import com.itsilesia.si_learn.entities.courses.Task;
@@ -13,6 +14,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.UUID;
 
 @Entity(name = "user_tasks")
@@ -21,7 +24,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Getter
 @Setter
-public class UserTask implements CompoundIdEntityWithUser {
+public class UserTask implements UserProgressNode, CompoundIdEntityWithUser {
 
 	@Id
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -33,9 +36,14 @@ public class UserTask implements CompoundIdEntityWithUser {
 	@JoinColumn(name = "task_id", nullable = false)
 	private Task task;
 
+	/**
+	 * Valid range [0, 1]
+	 */
 	@Column(name = "task_score")
 	private Float taskScore;
-
+	/**
+	 * Indicates that user has passed the task (persists even after solution update)
+	 */
 	private boolean passed;
 
 	@Column(name = "user_solution", nullable = true, columnDefinition = "TEXT")
@@ -65,5 +73,25 @@ public class UserTask implements CompoundIdEntityWithUser {
 	@Override
 	public UUID getId() {
 		return task.getId();
+	}
+
+	@Override
+	public UserProgressNode getParentProgressNode() {
+		return this.getUserLesson();
+	}
+
+	@Override
+	public Collection<? extends UserProgressNode> getSiblingProgressNodes() {
+		return this.getUserLesson().getUserTasks();
+	}
+
+	@Override
+	public Collection<?> getBlueprintNodes() {
+		return this.getLesson().getTasks();
+	}
+
+	@Override
+	public void setEndDate(LocalDateTime endDate) {
+		return; //does nothing
 	}
 }

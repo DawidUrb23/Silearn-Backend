@@ -1,4 +1,4 @@
-package com.itsilesia.si_learn.services;
+package com.itsilesia.si_learn.services.courses;
 
 import com.itsilesia.si_learn.dtos.request.courses.ContentsOrderUpdateRequest;
 import com.itsilesia.si_learn.dtos.request.courses.CreateLessonRequest;
@@ -8,8 +8,9 @@ import com.itsilesia.si_learn.entities.abstractions.EntityWithOrderedChildren;
 import com.itsilesia.si_learn.entities.courses.Lesson;
 import com.itsilesia.si_learn.entities.courses.Module;
 import com.itsilesia.si_learn.exceptions.ItemNotFoundException;
-import com.itsilesia.si_learn.repositories.LessonRepository;
-import com.itsilesia.si_learn.repositories.ModuleRepository;
+import com.itsilesia.si_learn.repositories.courses.LessonRepository;
+import com.itsilesia.si_learn.repositories.courses.ModuleRepository;
+import com.itsilesia.si_learn.services.TranslationService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;

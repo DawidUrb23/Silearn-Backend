@@ -1,4 +1,4 @@
-package com.itsilesia.si_learn.services;
+package com.itsilesia.si_learn.services.courses;
 
 import com.itsilesia.si_learn.dtos.request.courses.CreateCourseRequest;
 import com.itsilesia.si_learn.entities.courses.Course;
@@ -9,9 +9,11 @@ import com.itsilesia.si_learn.entities.users.User;
 import com.itsilesia.si_learn.exceptions.ItemNotFoundException;
 import com.itsilesia.si_learn.helpers.CourseCursor;
 import com.itsilesia.si_learn.helpers.CursorUtil;
-import com.itsilesia.si_learn.repositories.CourseRepository;
-import com.itsilesia.si_learn.repositories.UserCourseRepository;
+import com.itsilesia.si_learn.repositories.courses.CourseRepository;
+import com.itsilesia.si_learn.repositories.user_progress.UserCourseRepository;
 import com.itsilesia.si_learn.repositories.users.UserRepository;
+import com.itsilesia.si_learn.services.TranslationService;
+import com.itsilesia.si_learn.services.user_progress.UserCourseService;
 import com.itsilesia.si_learn.specifications.CourseSpecification;
 import jakarta.transaction.Transactional;
 import lombok.NonNull;
@@ -34,7 +36,7 @@ public class CourseService {
 	private final CourseHelperService courseHelperService;
 	private final UserCourseService userCourseService;
 	private final UserCourseRepository userCourseRepository;
-	private final int maxSize = 100;
+	static private final int maxSize = 100;
 
 
 	@Transactional

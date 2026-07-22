@@ -1,4 +1,4 @@
-package com.itsilesia.si_learn.repositories;
+package com.itsilesia.si_learn.repositories.courses;
 import com.itsilesia.si_learn.entities.courses.Lesson;
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -6,11 +6,10 @@ import com.itsilesia.si_learn.entities.courses.Lesson;
 import com.itsilesia.si_learn.entities.user_progress.UserLesson;
 import com.itsilesia.si_learn.entities.users.User;
 import com.itsilesia.si_learn.exceptions.ItemNotFoundException;
-import com.itsilesia.si_learn.repositories.LessonRepository;
-import com.itsilesia.si_learn.repositories.UserLessonRepository;
+import com.itsilesia.si_learn.repositories.courses.LessonRepository;
+import com.itsilesia.si_learn.repositories.user_progress.UserLessonRepository;
 import com.itsilesia.si_learn.repositories.user_progress.UserModuleRepository;
 import com.itsilesia.si_learn.repositories.users.UserRepository;
-import com.itsilesia.si_learn.entities.user_progress.UserModule;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,12 +22,14 @@ public class UserLessonService {
 	private final UserLessonRepository userLessonRepository;
 	private final UserModuleRepository userModuleRepository;
 	private final LessonRepository lessonRepository;
+	private final UserCourseHelperService userCourseHelperService;
 
 	public UserLesson getByIdAndStart(UUID userId, UUID lessonId) {
 		var userLesson = userLessonRepository.findById(
 			new UserLessonId(userId, lessonId)
 		);
 
+		// user is linked to this item, return it
 		if (userLesson.isPresent())
 			return userLesson.get();
 
@@ -44,14 +45,11 @@ public class UserLessonService {
 
 		var module = lesson.getModule();
 
+		//confirm that user is enrolled
 		var userModule = userModuleRepository.findById(
 			new UserModuleId(userId, module.getId())
-		).orElseThrow(() ->
-			new ItemNotFoundException(
-				UserModule.class,
-				new UserModuleId(userId, module.getId())
-			)
-		);
+		).orElse(null);
+		userCourseHelperService.isAccessibleOrThrow(lesson, userId, userModule);
 
 		var newUserLesson = new UserLesson();
 		newUserLesson.setUser(user);
