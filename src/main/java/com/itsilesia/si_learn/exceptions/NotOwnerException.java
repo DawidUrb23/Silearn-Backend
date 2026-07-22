@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 /// Not Authorized to do this (403)
 @Getter
 @ResponseStatus(HttpStatus.FORBIDDEN)
-public class NotOwnerException extends RuntimeException {
+public class NotOwnerException extends Base403StatusException {
 	private final Object userId;
 	private final Object itemId;
 

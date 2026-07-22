@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 /// bad -course is not accessible (400)
 @Getter
 @ResponseStatus(HttpStatus.BAD_REQUEST)
-public class CourseNotAccessibleException extends RuntimeException {
+public class CourseNotAccessibleException extends Base400StatusException {
 	private final Course course;
 
 	public CourseNotAccessibleException(Course course) {

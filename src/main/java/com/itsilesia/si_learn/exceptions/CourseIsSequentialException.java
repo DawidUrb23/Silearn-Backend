@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 /// Not Authorized to do this (400)
 @Getter
 @ResponseStatus(HttpStatus.BAD_REQUEST)
-public class CourseIsSequentialException extends RuntimeException {
+public class CourseIsSequentialException extends Base400StatusException {
 	private final Course course;
 	private final CourseAccessNode resource;
 
