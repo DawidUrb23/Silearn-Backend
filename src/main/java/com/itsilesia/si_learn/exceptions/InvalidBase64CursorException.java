@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 /// Bad Request (400)
 @Getter
 @ResponseStatus(HttpStatus.BAD_REQUEST)
-public class InvalidBase64CursorException extends InvalidParametersException {
+public class InvalidBase64CursorException extends Base400StatusException {
 	private final Object object;
 
 	public InvalidBase64CursorException(Object object) {
