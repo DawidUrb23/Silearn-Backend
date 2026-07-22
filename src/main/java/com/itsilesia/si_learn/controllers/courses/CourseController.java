@@ -3,6 +3,7 @@ package com.itsilesia.si_learn.controllers.courses;
 import com.itsilesia.si_learn.dtos.request.courses.ContentsOrderUpdateRequest;
 import com.itsilesia.si_learn.dtos.request.courses.CreateCourseRequest;
 import com.itsilesia.si_learn.dtos.request.courses.CreateModuleRequest;
+import com.itsilesia.si_learn.dtos.request.courses.UpdateCourseRequest;
 import com.itsilesia.si_learn.dtos.response.IdOnlyDto;
 import com.itsilesia.si_learn.dtos.response.courses.CourseWithModulesResponse;
 import com.itsilesia.si_learn.dtos.response.courses.KeysetCourseResponse;
@@ -154,6 +155,25 @@ public class CourseController {
 			coursesWithUserCourses.stream().map(MyCourseOverviewDto::fromEntity).toList(),
 			nextCursor);
 
+	}
+
+	@PatchMapping("/{courseId}")
+	@ResponseStatus(HttpStatus.OK)
+	@Operation(summary = "Update course (Owner)")
+	@ApiResponse(responseCode = "400", description = "Invalid input",
+		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
+	@ApiResponse(responseCode = "403", description = "Not the owner",
+		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
+	@ApiResponse(responseCode = "404",
+		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
+	public IdOnlyDto updateCourse(
+		@PathVariable UUID courseId,
+		@Valid @RequestBody UpdateCourseRequest request,
+		@Parameter(hidden = true) @AuthenticationPrincipal UUID userId
+	) {
+		return IdOnlyDto.fromEntity(
+			courseService.updateCourse(courseId, request, userId)
+		);
 	}
 
 }
