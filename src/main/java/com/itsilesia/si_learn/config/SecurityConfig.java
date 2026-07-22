@@ -65,6 +65,7 @@ public class SecurityConfig {
 		/// (everyone/authenticated users) have access to those endpoints
 		public ConfigureAuthority otherApis() {
 			authorize
+				.requestMatchers("/api/auth/refresh").authenticated()
 				.requestMatchers("/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
 				// any user can get and change their account info
 				.requestMatchers("/api/account/**").authenticated()

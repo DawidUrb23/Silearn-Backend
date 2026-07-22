@@ -8,6 +8,7 @@ import com.itsilesia.si_learn.dtos.response.exceptions.ErrorDetailsDto;
 import com.itsilesia.si_learn.services.users.JwtAuthService;
 import com.itsilesia.si_learn.services.users.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -16,9 +17,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -55,6 +58,24 @@ public class AuthController {
 	) {
 		return new JwtDto(
 			jwtAuthService.login(loginRequest)
+		);
+	}
+
+	@PostMapping("/refresh")
+	@ResponseStatus(HttpStatus.OK)
+	@Operation(
+		summary = "Refresh JWT token",
+		description = "Returns a new JWT token for an authenticated user."
+	)
+	@ApiResponse(responseCode = "200", description = "JWT token refreshed successfully")
+	@ApiResponse(responseCode = "401", description = "Missing, invalid or expired JWT token",
+		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
+	public JwtDto refresh(
+		@Parameter(hidden = true)
+		@AuthenticationPrincipal UUID userId
+	) {
+		return new JwtDto(
+			jwtAuthService.refresh(userId)
 		);
 	}
 }
