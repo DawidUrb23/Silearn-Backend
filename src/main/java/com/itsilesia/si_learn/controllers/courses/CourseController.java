@@ -144,7 +144,7 @@ public class CourseController {
 		var courseSlice = courseService.getFilteredCourses(status, difficulty, programingLanguage, query, authorId, cursor, size, userId);
 		var userCourses = userCourseService.getUserCourses(userId);
 		List<@NonNull Course> courses = courseSlice.getContent();
-		var coursesWithUserCourses = EntityWithOrderedChildren.JoinItemWithUserItem(courseSlice.getContent(), userCourses);
+		var coursesWithUserCourses = EntityWithOrderedChildren.JoinItemWithUserItem(courses, userCourses);
 
 		String nextCursor = null;
 		if (courseSlice.hasNext() && !courses.isEmpty()) {
