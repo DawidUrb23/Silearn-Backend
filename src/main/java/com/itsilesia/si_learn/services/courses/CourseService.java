@@ -80,7 +80,7 @@ public class CourseService {
 		VisibilityStatus status,
 		DifficultyLevel difficulty,
 		ProgramingLanguage programingLanguage,
-		String name,
+		String query,
 		UUID authorId,
 		String cursor,
 		int size,
@@ -92,7 +92,7 @@ public class CourseService {
 			.where(CourseSpecification.hasStatus(status))  //static "ACTIVE"?, dynamic status
 			.and(CourseSpecification.hasDifficulty(difficulty))
 			.and(CourseSpecification.hasProgramingLanguage(programingLanguage))
-			.and(CourseSpecification.anyTitleContains(name))
+			.and(CourseSpecification.matchesQuery(query))
 			.and(CourseSpecification.hasAuthor(authorId))
 			.and(CourseSpecification.orderBy(Sort.Direction.DESC));
 
