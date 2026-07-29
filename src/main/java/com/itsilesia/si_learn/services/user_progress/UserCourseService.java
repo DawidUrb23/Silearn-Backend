@@ -38,6 +38,17 @@ public class UserCourseService {
 			.orElseThrow(() -> new ItemNotFoundException(UserCourse.class, new UserCourseId(userId, courseId)));
 	}
 
+	public UserCourse createUserCourse(
+		@NotNull User user,
+		@NotNull Course course
+	) {
+		var userCourse = new UserCourse();
+		userCourse.setUser(user);
+		userCourse.setCourse(course);
+
+		return userCourseRepository.save(userCourse);
+	}
+
 	public UserCourse enroll(UUID courseId, UUID userId) {
 		var user = userRepository.findById(userId)
 			.orElseThrow(() -> new ItemNotFoundException(User.class, userId));
@@ -45,11 +56,7 @@ public class UserCourseService {
 			.orElseThrow(() -> new ItemNotFoundException(Course.class, courseId));
 		userCourseHelperService.isAccessibleOrThrow(course);
 
-		var userCourse = new UserCourse();
-		userCourse.setUser(user);
-		userCourse.setCourse(course);
-
-		return userCourseRepository.save(userCourse);
+		return createUserCourse(user, course);
 	}
 
 	public UserCourse getUserCourseOrNull(UUID userId, UUID courseId) {
@@ -59,4 +66,6 @@ public class UserCourseService {
 		return userCourseRepository.findById(new UserCourseId(userId, courseId))
 			.orElse(null);
 	}
+
+
 }
