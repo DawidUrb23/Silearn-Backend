@@ -7,7 +7,7 @@ import com.itsilesia.si_learn.entities.enums.DifficultyLevel;
 import com.itsilesia.si_learn.entities.enums.ProgramingLanguage;
 import com.itsilesia.si_learn.entities.enums.VisibilityStatus;
 import com.itsilesia.si_learn.entities.users.User_;
-import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.*;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -54,46 +54,156 @@ public class CourseSpecification {
 	}
 
 	/**
-	 * Checks if title in the user chosen language (or original language fallback) contains the sequence.
+	 * Checks if the query matches:
+	 * - course title,
+	 * - course description,
+	 * - author's name,
+	 * - author's surname,
+	 * - author's full name.
 	 *
-	 * @param name - part of title to match
+	 * Title and description are searched in the user's chosen language,
+	 * with fallback to the original language.
+	 *
+	 * @param searchQuery text to search for
 	 */
-	public static Specification<Course> anyTitleContains(String name) {
-		return (root, query, criteriaBuilder) -> {
-			if (name == null || name.isBlank()) {
+	public static Specification<Course> matchesQuery(String searchQuery) {
+		return (root, criteriaQuery, criteriaBuilder) -> {
+			if (searchQuery == null || searchQuery.isBlank())
 				return criteriaBuilder.conjunction();
-			}
 
-			String userLang = LocaleContextHolder.getLocale().getLanguage();
-			String namePattern = "%" + name.toLowerCase() + "%";
+			criteriaQuery.distinct(true);
 
-			Join<Course, TranslationDictionary> titleJoin = root.join(Course_.TITLE);
-			Join<TranslationDictionary, DictionaryItem> itemsJoin = titleJoin.join(TranslationDictionary_.ITEMS);
+			String userLanguage = LocaleContextHolder.getLocale().getLanguage();
+			String pattern = "%" + searchQuery.trim().toLowerCase() + "%";
 
-			// Subquery to check if translation in userLang exists
-			jakarta.persistence.criteria.Subquery<Integer> userLangExistsSubquery = query.subquery(Integer.class);
-			jakarta.persistence.criteria.Root<DictionaryItem> subqueryRoot = userLangExistsSubquery.from(DictionaryItem.class);
-			userLangExistsSubquery.select(criteriaBuilder.literal(1))
-				.where(
-					criteriaBuilder.equal(subqueryRoot.get(DictionaryItem_.TRANSLATION_DICTIONARY), titleJoin),
-					criteriaBuilder.equal(subqueryRoot.get(DictionaryItem_.LANGUAGE).get(Language_.CODE), userLang)
-				);
+			Join<Course, TranslationDictionary> titleJoin =
+				root.join(Course_.TITLE);
 
-			// Predicate 1: item language matches userLang, and matches the pattern
-			jakarta.persistence.criteria.Predicate userLangMatch = criteriaBuilder.and(
-				criteriaBuilder.equal(itemsJoin.get(DictionaryItem_.LANGUAGE).get(Language_.CODE), userLang),
-				criteriaBuilder.like(criteriaBuilder.lower(itemsJoin.get(DictionaryItem_.VALUE)), namePattern)
+			Join<Course, TranslationDictionary> descriptionJoin =
+				root.join(Course_.DESCRIPTION);
+
+			Predicate titleMatches = dictionaryContains(
+				criteriaQuery,
+				criteriaBuilder,
+				titleJoin,
+				userLanguage,
+				pattern
 			);
 
-			// Predicate 2: item language matches original language, matches the pattern, AND no translation in userLang exists
-			jakarta.persistence.criteria.Predicate originalLangMatch = criteriaBuilder.and(
-				criteriaBuilder.equal(itemsJoin.get(DictionaryItem_.LANGUAGE).get(Language_.CODE), titleJoin.get(TranslationDictionary_.ORIGINAL_LANGUAGE).get(Language_.CODE)),
-				criteriaBuilder.like(criteriaBuilder.lower(itemsJoin.get(DictionaryItem_.VALUE)), namePattern),
-				criteriaBuilder.not(criteriaBuilder.exists(userLangExistsSubquery))
+			Predicate descriptionMatches = dictionaryContains(
+				criteriaQuery,
+				criteriaBuilder,
+				descriptionJoin,
+				userLanguage,
+				pattern
 			);
 
-			return criteriaBuilder.or(userLangMatch, originalLangMatch);
+			Predicate authorNameMatches = criteriaBuilder.like(
+				criteriaBuilder.lower(
+					root.get(Course_.AUTHOR).get(User_.NAME)
+				),
+				pattern
+			);
+
+			Predicate authorSurnameMatches = criteriaBuilder.like(
+				criteriaBuilder.lower(
+					root.get(Course_.AUTHOR).get(User_.SURNAME)
+				),
+				pattern
+			);
+
+			Predicate authorFullNameMatches = criteriaBuilder.like(
+				criteriaBuilder.lower(
+					criteriaBuilder.concat(
+						criteriaBuilder.concat(
+							root.get(Course_.AUTHOR).get(User_.NAME),
+							" "
+						),
+						root.get(Course_.AUTHOR).get(User_.SURNAME)
+					)
+				),
+				pattern
+			);
+
+			return criteriaBuilder.or(
+				titleMatches,
+				descriptionMatches,
+				authorNameMatches,
+				authorSurnameMatches,
+				authorFullNameMatches
+			);
 		};
+	}
+
+	private static Predicate dictionaryContains(
+		CriteriaQuery<?> criteriaQuery,
+		CriteriaBuilder criteriaBuilder,
+		Join<Course, TranslationDictionary> dictionaryJoin,
+		String userLanguage,
+		String pattern
+	) {
+		Join<TranslationDictionary, DictionaryItem> itemsJoin =
+			dictionaryJoin.join(TranslationDictionary_.ITEMS);
+
+		Subquery<Integer> userLanguageExistsSubquery =
+			criteriaQuery.subquery(Integer.class);
+
+		Root<DictionaryItem> subqueryRoot =
+			userLanguageExistsSubquery.from(DictionaryItem.class);
+
+		userLanguageExistsSubquery
+			.where(
+				criteriaBuilder.equal(
+					subqueryRoot.get(DictionaryItem_.TRANSLATION_DICTIONARY),
+					dictionaryJoin
+				),
+				criteriaBuilder.equal(
+					subqueryRoot
+						.get(DictionaryItem_.LANGUAGE)
+						.get(Language_.CODE),
+					userLanguage
+				)
+			);
+
+		Predicate userLanguageMatches = criteriaBuilder.and(
+			criteriaBuilder.equal(
+				itemsJoin
+					.get(DictionaryItem_.LANGUAGE)
+					.get(Language_.CODE),
+				userLanguage
+			),
+			criteriaBuilder.like(
+				criteriaBuilder.lower(
+					itemsJoin.get(DictionaryItem_.VALUE)
+				),
+				pattern
+			)
+		);
+
+		Predicate originalLanguageMatches = criteriaBuilder.and(
+			criteriaBuilder.equal(
+				itemsJoin
+					.get(DictionaryItem_.LANGUAGE)
+					.get(Language_.CODE),
+				dictionaryJoin
+					.get(TranslationDictionary_.ORIGINAL_LANGUAGE)
+					.get(Language_.CODE)
+			),
+			criteriaBuilder.like(
+				criteriaBuilder.lower(
+					itemsJoin.get(DictionaryItem_.VALUE)
+				),
+				pattern
+			),
+			criteriaBuilder.not(
+				criteriaBuilder.exists(userLanguageExistsSubquery)
+			)
+		);
+
+		return criteriaBuilder.or(
+			userLanguageMatches,
+			originalLanguageMatches
+		);
 	}
 
 	public static Specification<Course> isBefore(LocalDateTime createdAt, UUID id) {

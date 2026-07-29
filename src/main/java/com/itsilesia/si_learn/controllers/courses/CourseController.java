@@ -134,14 +134,14 @@ public class CourseController {
 		@RequestParam(required = false) VisibilityStatus status,
 		@RequestParam(required = false) DifficultyLevel difficulty,
 		@RequestParam(required = false) ProgramingLanguage programingLanguage,
-		@RequestParam(required = false) String name,
+		@RequestParam(required = false) String query,
 		@RequestParam(required = false) UUID authorId,
 		@RequestParam(required = false) String cursor,
 		@RequestParam(defaultValue = "20") int size,
 		@RequestHeader(value = HttpHeaders.ACCEPT_LANGUAGE, required = false) String languageCode,
 		@Parameter(hidden = true) @AuthenticationPrincipal UUID userId
 	) {
-		var courseSlice = courseService.getFilteredCourses(status, difficulty, programingLanguage, name, authorId, cursor, size, userId);
+		var courseSlice = courseService.getFilteredCourses(status, difficulty, programingLanguage, query, authorId, cursor, size, userId);
 		var userCourses = userCourseService.getUserCourses(userId);
 		List<@NonNull Course> courses = courseSlice.getContent();
 		var coursesWithUserCourses = EntityWithOrderedChildren.JoinItemWithUserItem(courseSlice.getContent(), userCourses);
