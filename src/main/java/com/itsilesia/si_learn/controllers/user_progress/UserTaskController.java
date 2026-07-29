@@ -2,8 +2,8 @@ package com.itsilesia.si_learn.controllers.user_progress;
 
 
 import com.itsilesia.si_learn.dtos.request.users.SubmitTaskRequest;
-import com.itsilesia.si_learn.dtos.response.user_progress.TaskUserResponse;
 import com.itsilesia.si_learn.dtos.response.user_progress.TaskUserSubmittedResponse;
+import com.itsilesia.si_learn.dtos.response.user_progress.TaskUserWithContentsResponse;
 import com.itsilesia.si_learn.services.user_progress.UserTaskService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -29,9 +29,9 @@ public class UserTaskController {
 	@GetMapping("/{taskId}")
 	@ResponseStatus(HttpStatus.OK)
 	@Operation(summary = "Shows full user info about task")
-	public TaskUserResponse getTaskUser(@PathVariable UUID taskId,
-	                                    @Parameter(hidden = true) @AuthenticationPrincipal UUID userId) {
-		return TaskUserResponse.fromEntity(
+	public TaskUserWithContentsResponse getTaskUser(@PathVariable UUID taskId,
+	                                                @Parameter(hidden = true) @AuthenticationPrincipal UUID userId) {
+		return TaskUserWithContentsResponse.fromEntity(
 			userTaskService.getTaskUser(taskId, userId));
 	}
 

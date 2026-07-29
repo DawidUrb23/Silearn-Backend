@@ -41,8 +41,8 @@ public interface EntityWithOrderedChildren {
 	/**
 	 * Joins (course, module ...) with (userCourse, userModule ...)
 	 *
-	 * @param items      (course, module ...)
-	 * @param userItems  (userCourse, userModule ...)
+	 * @param items      (course, module ...), order of items is preserved
+	 * @param userItems  (userCourse, userModule ...), order of userItems is overridden by items order
 	 * @param <Item>     (course, module ...)
 	 * @param <UserItem> (userCourse, userModule ...)
 	 * @return a list of joined items

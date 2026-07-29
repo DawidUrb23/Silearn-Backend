@@ -1,21 +1,21 @@
 package com.itsilesia.si_learn.dtos.response.user_progress;
+
 import com.itsilesia.si_learn.entities.abstractions.EntityWithOrderedChildren;
+import com.itsilesia.si_learn.entities.abstractions.IndexedEntity;
 import com.itsilesia.si_learn.entities.courses.Lesson;
 import com.itsilesia.si_learn.entities.user_progress.UserLesson;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.NonNull;
+import lombok.Setter;
 
+import java.util.Comparator;
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @Setter
-public class MyLessonWithTasksDto extends MyLessonDto{
+public class MyLessonWithTasksDto extends MyLessonDto {
 	private int taskCount;
-	private List<MyTaskDetailsDto> tasks;
+	private List<MyTaskDto> tasks;
 
 	public MyLessonWithTasksDto(
 		@NonNull Lesson lesson,
@@ -24,6 +24,7 @@ public class MyLessonWithTasksDto extends MyLessonDto{
 		super(lesson, userLesson);
 
 		var tasks = lesson.getTasks();
+		tasks.sort(Comparator.comparingInt(IndexedEntity::getIndex)); // Sorts ascending by Index;
 		var userTasks = userLesson.getUserTasks();
 
 		var tuples = EntityWithOrderedChildren.JoinItemWithUserItem(
@@ -33,7 +34,7 @@ public class MyLessonWithTasksDto extends MyLessonDto{
 
 		this.taskCount = tasks.size();
 		this.tasks = tuples.stream()
-			.map(MyTaskDetailsDto::fromEntity)
+			.map(MyTaskDto::fromEntity)
 			.toList();
 	}
 

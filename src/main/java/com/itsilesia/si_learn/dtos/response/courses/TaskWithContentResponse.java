@@ -1,7 +1,7 @@
 package com.itsilesia.si_learn.dtos.response.courses;
 
+import com.itsilesia.si_learn.entities.abstractions.IndexedEntity;
 import com.itsilesia.si_learn.entities.courses.Task;
-import com.itsilesia.si_learn.entities.courses.TaskContent;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,7 +20,7 @@ public class TaskWithContentResponse extends TaskResponse {
 	public TaskWithContentResponse(Task task) {
 		super(task);
 		this.taskContents = Optional.ofNullable(task.getTaskContents()).orElse(Collections.emptyList()).stream()
-			.sorted(Comparator.comparingInt(TaskContent::getIndex)) // Sorts ascending by Index
+			.sorted(Comparator.comparingInt(IndexedEntity::getIndex)) // Sorts ascending by Index
 			.map(TaskContentDto::fromEntity)
 			.toList();
 	}
