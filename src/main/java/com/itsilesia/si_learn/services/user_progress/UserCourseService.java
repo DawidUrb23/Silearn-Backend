@@ -32,7 +32,7 @@ public class UserCourseService {
 	public @NotNull UserCourse getUserCourse(UUID userId, UUID courseId) {
 		var course = courseRepository.findById(courseId)
 			.orElseThrow(() -> new ItemNotFoundException(Course.class, courseId));
-		userCourseHelperService.isAccessibleOrThrow(course);
+		userCourseHelperService.isAccessibleOrThrow(course, userId);
 
 		return userCourseRepository.findById(new UserCourseId(userId, courseId))
 			.orElseThrow(() -> new ItemNotFoundException(UserCourse.class, new UserCourseId(userId, courseId)));
@@ -54,7 +54,7 @@ public class UserCourseService {
 			.orElseThrow(() -> new ItemNotFoundException(User.class, userId));
 		var course = courseRepository.findById(courseId)
 			.orElseThrow(() -> new ItemNotFoundException(Course.class, courseId));
-		userCourseHelperService.isAccessibleOrThrow(course);
+		userCourseHelperService.isAccessibleOrThrow(course, userId);
 
 		return createUserCourse(user, course);
 	}

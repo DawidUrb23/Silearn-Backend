@@ -18,6 +18,7 @@ import com.itsilesia.si_learn.repositories.user_progress.UserCourseRepository;
 import com.itsilesia.si_learn.repositories.user_progress.UserLessonRepository;
 import com.itsilesia.si_learn.repositories.user_progress.UserModuleRepository;
 import com.itsilesia.si_learn.repositories.user_progress.UserTaskRepository;
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -48,7 +49,7 @@ public class UserCourseHelperService {
 	@Transactional(readOnly = true)
 	public void isAccessibleOrThrow(@NotNull CourseAccessNode node, @NotNull UUID userId, UserProgressNode userProgress) {
 		var course = node.getCourse();
-		this.isAccessibleOrThrow(course);
+		this.isAccessibleOrThrow(course, userId);
 		//user does not have access to course
 		if (userProgress == null)
 			throw new NotEnrolledInCourseException(userId, course);
@@ -72,7 +73,9 @@ public class UserCourseHelperService {
 	}
 
 	@Transactional(readOnly = true)
-	public void isAccessibleOrThrow(@NotNull Course course) {
+	public void isAccessibleOrThrow(@NotNull Course course, @Nullable UUID userId) {
+		//author can access at any time his course
+		if (userId != null && userId.equals(course.getAuthor().getId())) return;
 		//this is as a switch statement for later if we decide that there should be more statuses that user can access
 		switch (course.getStatus()) {
 			case ACTIVE -> {
