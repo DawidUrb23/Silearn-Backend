@@ -10,7 +10,6 @@ import com.itsilesia.si_learn.exceptions.ItemNotFoundException;
 import com.itsilesia.si_learn.helpers.CourseCursor;
 import com.itsilesia.si_learn.helpers.CursorUtil;
 import com.itsilesia.si_learn.repositories.courses.CourseRepository;
-import com.itsilesia.si_learn.repositories.user_progress.UserCourseRepository;
 import com.itsilesia.si_learn.repositories.users.UserRepository;
 import com.itsilesia.si_learn.services.TranslationService;
 import com.itsilesia.si_learn.services.user_progress.UserCourseService;
@@ -37,7 +36,6 @@ public class CourseService {
 	private final TranslationService translationService;
 	private final CourseHelperService courseHelperService;
 	private final UserCourseService userCourseService;
-	private final UserCourseRepository userCourseRepository;
 	static private final int maxSize = 100;
 
 
@@ -59,7 +57,7 @@ public class CourseService {
 			course.setForceSequentialTasks(true);
 
 		Course savedCourse = courseRepository.save(course);
-		userCourseService.enroll(savedCourse.getId(), authorId);
+		userCourseService.createUserCourse(author, savedCourse);
 		return savedCourse;
 	}
 
