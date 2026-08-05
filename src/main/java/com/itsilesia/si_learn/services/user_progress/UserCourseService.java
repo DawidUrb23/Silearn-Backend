@@ -6,6 +6,7 @@ import com.itsilesia.si_learn.entities.courses.Course;
 import com.itsilesia.si_learn.entities.user_progress.UserCourse;
 import com.itsilesia.si_learn.entities.users.User;
 import com.itsilesia.si_learn.exceptions.ItemNotFoundException;
+import com.itsilesia.si_learn.exceptions.ItemAlreadyExistsException;
 import com.itsilesia.si_learn.repositories.courses.CourseRepository;
 import com.itsilesia.si_learn.repositories.user_progress.UserCourseRepository;
 import com.itsilesia.si_learn.repositories.users.UserRepository;
@@ -52,9 +53,16 @@ public class UserCourseService {
 	public UserCourse enroll(UUID courseId, UUID userId) {
 		var user = userRepository.findById(userId)
 			.orElseThrow(() -> new ItemNotFoundException(User.class, userId));
+
 		var course = courseRepository.findById(courseId)
 			.orElseThrow(() -> new ItemNotFoundException(Course.class, courseId));
+
 		userCourseHelperService.isAccessibleOrThrow(course, userId);
+
+		var userCourseId = new UserCourseId(userId, courseId);
+
+		if (userCourseRepository.existsById(userCourseId))
+			throw new ItemAlreadyExistsException(UserCourse.class, userCourseId);
 
 		return createUserCourse(user, course);
 	}
