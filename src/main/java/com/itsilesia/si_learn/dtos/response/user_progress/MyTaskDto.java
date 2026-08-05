@@ -15,7 +15,7 @@ import org.yaml.snakeyaml.util.Tuple;
 @Setter
 public class MyTaskDto {
 	private TaskResponse task;
-	private float taskScore;
+	private Float taskScore;
 	private boolean passed;
 	private ProgressStatus progressStatus;
 
