@@ -3,6 +3,7 @@ package com.itsilesia.si_learn.dtos.response.courses;
 import com.itsilesia.si_learn.dtos.response.dictonary.TranslationDto;
 import com.itsilesia.si_learn.dtos.response.helper.DictionaryHelper;
 import com.itsilesia.si_learn.entities.courses.Lesson;
+import com.itsilesia.si_learn.entities.enums.ProgramingLanguage;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,7 @@ public class LessonResponse {
 	private UUID id;
 	private TranslationDto topic;
 	private TranslationDto description;
+	private ProgramingLanguage programingLanguage;
 
 	public LessonResponse(@NotNull Lesson lesson) {
 		this.id = lesson.getId();
@@ -26,6 +28,7 @@ public class LessonResponse {
 		this.description = TranslationDto.fromEntity(
 			DictionaryHelper.getTranslationWithCode(lesson.getDescription())
 		);
+		this.programingLanguage = lesson.getCourse().getProgramingLanguage();
 	}
 
 	public static LessonResponse fromEntity(@NotNull Lesson lesson) {
