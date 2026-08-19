@@ -1,0 +1,9 @@
+databaseChangeLog:
+- changeSet:
+    id: 1787138698421-8
+    author: fafik (generated)
+    changes:
+    - dropColumn:
+        columnName: auto_grading
+        tableName: tasks
+

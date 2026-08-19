@@ -37,7 +37,6 @@ public class Task extends BaseEntity implements IndexedEntity, CourseAccessNode 
 	@JoinColumn(name = "lesson_id", nullable = false)
 	private Lesson lesson;
 
-
 	@OneToMany(mappedBy = TaskContent_.TASK, cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<TaskContent> taskContents = new ArrayList<>();
 

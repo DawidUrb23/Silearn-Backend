@@ -1,0 +1,15 @@
+databaseChangeLog:
+- changeSet:
+    id: 1784719742421-3
+    author: fafik (generated)
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: auto_grading
+            type: BOOLEAN
+            defaultValue: false
+        tableName: tasks
+

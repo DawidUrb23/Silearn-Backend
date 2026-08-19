@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
@@ -51,10 +52,12 @@ public class UserTaskService {
 		return userTaskRepository.save(newUserTask);
 	}
 
+	/// @TODO: merge this method into test user code (only test)
 	@Transactional
 	public @NonNull UserTask submitTask(UUID taskId, UUID userId, SubmitTaskRequest request) {
 		var userTask = this.getTaskUser(taskId, userId);
 		userTask.setUserSolution(request.code());
+		userTask.setUpdatedSolutionAt(LocalDateTime.now());
 		userTaskGradingService.gradeUserSolutionAutomatically(userTask, request);
 		userCourseHelperService.propagateUpdateProgress(userTask);
 

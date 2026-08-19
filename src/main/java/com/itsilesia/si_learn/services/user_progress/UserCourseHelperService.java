@@ -1,5 +1,6 @@
 package com.itsilesia.si_learn.services.user_progress;
 
+import com.itsilesia.si_learn.dtos.intermediate.UserTaskIdOnly;
 import com.itsilesia.si_learn.entities.abstractions.CourseAccessNode;
 import com.itsilesia.si_learn.entities.abstractions.UserProgressNode;
 import com.itsilesia.si_learn.entities.compositeIds.UserCourseId;
@@ -11,21 +12,26 @@ import com.itsilesia.si_learn.entities.courses.Lesson;
 import com.itsilesia.si_learn.entities.courses.Module;
 import com.itsilesia.si_learn.entities.courses.Task;
 import com.itsilesia.si_learn.entities.enums.ProgressStatus;
+import com.itsilesia.si_learn.entities.user_progress.UserTask;
 import com.itsilesia.si_learn.exceptions.CourseIsSequentialException;
 import com.itsilesia.si_learn.exceptions.CourseNotAccessibleException;
+import com.itsilesia.si_learn.exceptions.InvalidParametersException;
 import com.itsilesia.si_learn.exceptions.NotEnrolledInCourseException;
 import com.itsilesia.si_learn.repositories.user_progress.UserCourseRepository;
 import com.itsilesia.si_learn.repositories.user_progress.UserLessonRepository;
 import com.itsilesia.si_learn.repositories.user_progress.UserModuleRepository;
 import com.itsilesia.si_learn.repositories.user_progress.UserTaskRepository;
+import com.itsilesia.si_learn.specifications.UserTaskSpecification;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -36,6 +42,8 @@ public class UserCourseHelperService {
 	private final UserModuleRepository userModuleRepository;
 	private final UserLessonRepository userLessonRepository;
 	private final UserTaskRepository userTaskRepository;
+	/// max length for checking in the DB using "WHERE ? IN()"
+	private static final int maxCollectionLength = 10_000;
 
 	/**
 	 * Checks if user can gain access to (Resource) whether he is enrolled in a Course and if it is sequential check if previous task are complete
@@ -125,6 +133,30 @@ public class UserCourseHelperService {
 		// Complete the parent node and recursively trigger bubble up
 		parent.setEndDate(LocalDateTime.now());
 		propagateUpdateProgress(parent);
+	}
+
+
+	/**
+	 * Gets only ids of children
+	 *
+	 * @param taskIds list of task ids
+	 * @return a list of user task ids
+	 */
+	public List<UserTaskIdOnly> getAllUserTaskIdsIn(List<UUID> taskIds, Specification<UserTask> filter) {
+		if (taskIds == null || taskIds.isEmpty())
+			return List.of();
+		if (taskIds.size() > maxCollectionLength)
+			throw new InvalidParametersException("Collection limit exceeded. " + taskIds.size() + "/" + maxCollectionLength);
+
+
+		return userTaskRepository.findBy(
+				Specification.allOf(
+					filter,
+					UserTaskSpecification.hasTaskIdIn(taskIds)
+				),
+				query -> query.as(UserTaskIdOnly.class).all()
+			).stream()
+			.toList();
 	}
 
 }

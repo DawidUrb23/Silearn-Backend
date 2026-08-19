@@ -1,0 +1,13 @@
+databaseChangeLog:
+- changeSet:
+    id: 1787132092142-1
+    author: fafik
+    changes:
+    - dropDefaultValue:
+        columnDataType: timestamp(6)
+        columnName: updated_solution_at
+        tableName: user_tasks
+    - dropNotNullConstraint:
+        columnDataType: timestamp(6)
+        columnName: updated_solution_at
+        tableName: user_tasks
