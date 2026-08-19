@@ -19,7 +19,7 @@ public class BootstrapService {
 	}
 
 	private void addLanguages() {
-		if (languageService.getAll().isEmpty()) {
+		if (languageService.findAll().isEmpty()) {
 			languageService.addLanguage("pl");
 			languageService.addLanguage("en");
 		}

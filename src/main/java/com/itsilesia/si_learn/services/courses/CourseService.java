@@ -7,9 +7,10 @@ import com.itsilesia.si_learn.entities.enums.ProgramingLanguage;
 import com.itsilesia.si_learn.entities.enums.VisibilityStatus;
 import com.itsilesia.si_learn.entities.users.User;
 import com.itsilesia.si_learn.exceptions.ItemNotFoundException;
-import com.itsilesia.si_learn.helpers.CourseCursor;
-import com.itsilesia.si_learn.helpers.CursorUtil;
+import com.itsilesia.si_learn.helpers.cursors.CourseCursor;
+import com.itsilesia.si_learn.helpers.cursors.CursorUtil;
 import com.itsilesia.si_learn.repositories.courses.CourseRepository;
+import com.itsilesia.si_learn.repositories.user_progress.UserCourseRepository;
 import com.itsilesia.si_learn.repositories.users.UserRepository;
 import com.itsilesia.si_learn.services.TranslationService;
 import com.itsilesia.si_learn.services.user_progress.UserCourseService;
@@ -36,6 +37,7 @@ public class CourseService {
 	private final TranslationService translationService;
 	private final CourseHelperService courseHelperService;
 	private final UserCourseService userCourseService;
+	private final UserCourseRepository userCourseRepository;
 	static private final int maxSize = 100;
 
 
@@ -86,17 +88,18 @@ public class CourseService {
 	) {
 		if (size > maxSize) size = maxSize;
 		if (size < 1) size = 1;
+		var courseSpecification = new CourseSpecification();
 		Specification<@NonNull Course> specification = Specification
 			.where(CourseSpecification.hasStatus(status))  //static "ACTIVE"?, dynamic status
 			.and(CourseSpecification.hasDifficulty(difficulty))
 			.and(CourseSpecification.hasProgramingLanguage(programingLanguage))
 			.and(CourseSpecification.matchesQuery(query))
 			.and(CourseSpecification.hasAuthor(authorId))
-			.and(CourseSpecification.orderBy(Sort.Direction.DESC));
+			.and(courseSpecification.orderByCreatedAtDateId(Sort.Direction.DESC));
 
 		if (cursor != null && !cursor.isBlank()) {
-			CourseCursor decoded = CursorUtil.decode(cursor);
-			specification = specification.and(CourseSpecification.isBefore(decoded.createdAt(), decoded.id()));
+			CourseCursor decoded = CursorUtil.decode(CourseCursor.class, cursor);
+			specification = specification.and(courseSpecification.isBefore(decoded.createdAt(), decoded.id()));
 		}
 
 		return courseRepository.findAllSliced(specification, PageRequest.of(0, size));

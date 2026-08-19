@@ -12,7 +12,7 @@ import com.itsilesia.si_learn.exceptions.ItemAlreadyExistsException;
 import com.itsilesia.si_learn.exceptions.ItemNotFoundException;
 import com.itsilesia.si_learn.exceptions.UserAlreadyExistsException;
 import com.itsilesia.si_learn.repositories.users.UserRepository;
-import com.itsilesia.si_learn.services.LanguageService;
+import com.itsilesia.si_learn.services.cache.LanguageCacheService;
 import com.itsilesia.si_learn.specifications.UserSpecification;
 import io.micrometer.common.util.StringUtils;
 import jakarta.validation.Valid;
@@ -32,9 +32,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserService {
 	private final UserRepository userRepository;
-	private final LanguageService languageService;
+	private final LanguageCacheService languageCacheService;
 	private final RoleService roleService;
-	private final LangService langService;
 	private final PasswordEncoder passwordEncoder;
 
 	public List<User> getAll(Role role) {
@@ -79,7 +78,7 @@ public class UserService {
 		if (registerRequest.isTeacherRole())
 			roleService.addRoleToUser(user, Role.TEACHER);
 
-		languageService.getLanguage(registerRequest.getLanguageCode())
+		languageCacheService.getLanguage(registerRequest.getLanguageCode())
 			.ifPresent(user::setLanguage);
 
 		user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
@@ -101,7 +100,7 @@ public class UserService {
 			roleService.addRoleToUser(user, Role.TEACHER);
 
 		if (StringUtils.isNotBlank(request.getLanguageCode())) {
-			var lang = langService.getLangByCode(request.getLanguageCode())
+			var lang = languageCacheService.getLanguage(request.getLanguageCode())
 				.orElseThrow(() -> new ItemNotFoundException(Language.class, request.getLanguageCode()));
 			user.setLanguage(lang);
 		}
