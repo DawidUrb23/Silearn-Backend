@@ -1,11 +1,13 @@
 package com.itsilesia.si_learn.services.courses;
 
 import com.itsilesia.si_learn.dtos.request.courses.CreateCourseRequest;
+import com.itsilesia.si_learn.dtos.request.courses.UpdateCourseRequest;
 import com.itsilesia.si_learn.entities.courses.Course;
 import com.itsilesia.si_learn.entities.enums.DifficultyLevel;
 import com.itsilesia.si_learn.entities.enums.ProgramingLanguage;
 import com.itsilesia.si_learn.entities.enums.VisibilityStatus;
 import com.itsilesia.si_learn.entities.users.User;
+import com.itsilesia.si_learn.exceptions.InvalidParametersException;
 import com.itsilesia.si_learn.exceptions.ItemNotFoundException;
 import com.itsilesia.si_learn.helpers.cursors.CourseCursor;
 import com.itsilesia.si_learn.helpers.cursors.CursorUtil;
@@ -15,8 +17,6 @@ import com.itsilesia.si_learn.repositories.users.UserRepository;
 import com.itsilesia.si_learn.services.TranslationService;
 import com.itsilesia.si_learn.services.user_progress.UserCourseService;
 import com.itsilesia.si_learn.specifications.CourseSpecification;
-import com.itsilesia.si_learn.dtos.request.courses.UpdateCourseRequest;
-import com.itsilesia.si_learn.exceptions.InvalidParametersException;
 import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -47,8 +47,8 @@ public class CourseService {
 			.orElseThrow(() -> new ItemNotFoundException(User.class, authorId));
 
 		Course course = new Course();
-		course.setTitle(translationService.createDictionary(request.title(), request.languageCode()));
-		course.setDescription(translationService.createDictionary(request.description(), request.languageCode()));
+		course.setTitle(translationService.createDictionary(request.title(), request.languageCode().getLanguage()));
+		course.setDescription(translationService.createDictionary(request.description(), request.languageCode().getLanguage()));
 		course.setAuthor(author);
 		course.setStatus(VisibilityStatus.DRAFT);
 		course.setDifficulty(request.difficulty());

@@ -199,11 +199,11 @@ public class TranslationService {
 	 * @return true if there was an update
 	 */
 	private boolean updateTranslationDictionaryWithItem(UpdateTranslationDictionaryRequest request, TranslationDictionary translationDict) {
-		Language language = getLanguage(request.getLanguageCode());
+		Language language = getLanguage(request.getLanguageCode().getLanguage());
 
 		//try to update the existing item
 		var existingItem = translationDict.getItems().stream()
-			.filter(item -> item.getLanguage().getCode().contentEquals(request.getLanguageCode()))
+			.filter(item -> item.getLanguage().getCode().contentEquals(request.getLanguageCode().getLanguage()))
 			.findFirst();
 
 		if (existingItem.isPresent()) {
@@ -237,7 +237,7 @@ public class TranslationService {
 		//check if there are duplicates
 		Set<String> uniqueLangSet = new HashSet<>();
 		for (var item : request.getTranslations()) {
-			if (!uniqueLangSet.add(item.getLanguageCode()))
+			if (!uniqueLangSet.add(item.getLanguageCode().getLanguage()))
 				throw new InvalidParametersException("Duplicate language code: " + item.getLanguageCode());
 		}
 

@@ -1,6 +1,6 @@
 package com.itsilesia.si_learn.controllers;
 
-import com.itsilesia.si_learn.dtos.request.dictionary.AddLocaleRequest;
+import com.itsilesia.si_learn.dtos.request.dictionary.AddRemoveLocaleRequest;
 import com.itsilesia.si_learn.dtos.request.dictionary.GetUntranslatedDictionariesFilters;
 import com.itsilesia.si_learn.dtos.request.dictionary.UpdateTranslationDictionaryRequest;
 import com.itsilesia.si_learn.dtos.request.dictionary.UpdateTranslationsInDictionaryRequest;
@@ -58,9 +58,9 @@ public class TranslationsController {
 	@ApiResponse(responseCode = "409", description = "Language already exists",
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
 	public void addLanguage(
-		@Valid @RequestBody AddLocaleRequest request
+		@Valid @RequestBody AddRemoveLocaleRequest request
 	) {
-		translationService.addLocale(request.getLanguageCode());
+		translationService.addLocale(request.getLanguageCode().getLanguage());
 	}
 
 	@DeleteMapping("languages")
@@ -69,9 +69,9 @@ public class TranslationsController {
 	@ApiResponse(responseCode = "400", description = "Invalid input, invalid language code",
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
 	public void removeLanguage(
-		@Valid @RequestBody AddLocaleRequest request
+		@Valid @RequestBody AddRemoveLocaleRequest request
 	) {
-		translationService.removeLocale(request.getLanguageCode());
+		translationService.removeLocale(request.getLanguageCode().getLanguage());
 	}
 
 	@GetMapping("/{id}")

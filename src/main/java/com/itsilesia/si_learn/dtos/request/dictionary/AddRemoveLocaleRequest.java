@@ -1,18 +1,18 @@
 package com.itsilesia.si_learn.dtos.request.dictionary;
 
 import com.itsilesia.si_learn.validators.locale.ValidLocaleCode;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Locale;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AddLocaleRequest {
-	@NotBlank
+public class AddRemoveLocaleRequest {
 	@ValidLocaleCode
-	private String languageCode;
+	private Locale languageCode;
 }

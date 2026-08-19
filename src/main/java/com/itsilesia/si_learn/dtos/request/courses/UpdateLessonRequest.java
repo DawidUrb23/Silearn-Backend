@@ -1,5 +1,6 @@
 package com.itsilesia.si_learn.dtos.request.courses;
 
+import com.itsilesia.si_learn.config.ValidationConstants;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,9 +13,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateLessonRequest {
-	@Size(max = 80, message = "Topic is too Long")
+	@Size(min = ValidationConstants.titleLenMin, max = ValidationConstants.titleLenMax)
 	private String topic;
 
-	@Size(max = 2300, message = "Description is too long")
+	@Size(min = ValidationConstants.descriptionLenMin, max = ValidationConstants.descriptionLenMax)
 	private String description;
 }

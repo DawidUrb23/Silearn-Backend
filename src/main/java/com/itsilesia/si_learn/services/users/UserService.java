@@ -78,7 +78,7 @@ public class UserService {
 		if (registerRequest.isTeacherRole())
 			roleService.addRoleToUser(user, Role.TEACHER);
 
-		languageCacheService.getLanguage(registerRequest.getLanguageCode())
+		languageCacheService.getLanguage(registerRequest.getLanguageCode().getLanguage())
 			.ifPresent(user::setLanguage);
 
 		user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
@@ -99,8 +99,8 @@ public class UserService {
 		if (request.getBecomeTeacher() != null && request.getBecomeTeacher())
 			roleService.addRoleToUser(user, Role.TEACHER);
 
-		if (StringUtils.isNotBlank(request.getLanguageCode())) {
-			var lang = languageCacheService.getLanguage(request.getLanguageCode())
+		if (StringUtils.isNotBlank(request.getLanguageCode().getLanguage())) {
+			var lang = languageCacheService.getLanguage(request.getLanguageCode().getLanguage())
 				.orElseThrow(() -> new ItemNotFoundException(Language.class, request.getLanguageCode()));
 			user.setLanguage(lang);
 		}

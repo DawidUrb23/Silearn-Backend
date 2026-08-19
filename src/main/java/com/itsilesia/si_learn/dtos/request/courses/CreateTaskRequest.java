@@ -1,5 +1,6 @@
 package com.itsilesia.si_learn.dtos.request.courses;
 
+import com.itsilesia.si_learn.config.ValidationConstants;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,8 +13,9 @@ import org.hibernate.validator.constraints.Range;
 @Setter
 @Getter
 public class CreateTaskRequest {
-	@Range(min = 0, max = 1)
+	@Range(min = ValidationConstants.gradeMinScore, max = ValidationConstants.gradeMaxScore)
 	private Float passingScore;
-	@Size(max = 4 << 10)
+
+	@Size(max = ValidationConstants.codeLenMax)
 	private String startingCode;
 }
