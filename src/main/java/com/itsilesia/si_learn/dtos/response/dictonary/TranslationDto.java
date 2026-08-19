@@ -1,6 +1,7 @@
 package com.itsilesia.si_learn.dtos.response.dictonary;
 
 import com.itsilesia.si_learn.entities.DictionaryItem;
+import com.itsilesia.si_learn.entities.TranslationDictionary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,15 @@ public class TranslationDto {
 			item.getLanguage().getCode(),
 			item.getValue(),
 			item.getTranslationDictionary().getId()
+		);
+	}
+
+	static public TranslationDto fromEntity(TranslationDictionary item) {
+		var origLang = item.getOriginalLanguage().getCode();
+		return new TranslationDto(
+			origLang,
+			item.getItems().stream().filter(it -> it.getLanguage().getCode().equals(origLang)).findFirst().get().getValue(),
+			item.getId()
 		);
 	}
 }

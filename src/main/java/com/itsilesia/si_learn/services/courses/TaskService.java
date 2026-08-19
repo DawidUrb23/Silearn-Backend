@@ -7,6 +7,8 @@ import com.itsilesia.si_learn.entities.courses.Lesson;
 import com.itsilesia.si_learn.entities.courses.Task;
 import com.itsilesia.si_learn.entities.courses.TaskContent;
 import com.itsilesia.si_learn.entities.courses.TestScenario;
+import com.itsilesia.si_learn.entities.enums.ContentType;
+import com.itsilesia.si_learn.entities.enums.Translatable;
 import com.itsilesia.si_learn.exceptions.ItemNotFoundException;
 import com.itsilesia.si_learn.repositories.courses.LessonRepository;
 import com.itsilesia.si_learn.repositories.courses.TaskContentRepository;
@@ -121,11 +123,13 @@ public class TaskService {
 	 * @return new TaskContent
 	 */
 	private TaskContent addContentToTask(Task taskToUpdate, TaskContentRequest taskContent) {
+		//this entry can be auto translated if it's not a code
+		var translatable = taskContent.getType() == ContentType.CODE ? Translatable.NotTranslatable : Translatable.AutoTranslation;
 		var originalLanguage = courseHelperService.getOriginalLanguage(taskToUpdate);
 		TranslationDictionary dictionary = translationService.createDictionary(
 			taskContent.getContent(),
-			originalLanguage
-		);
+			originalLanguage,
+			translatable);
 
 		TaskContent newContent = new TaskContent();
 		newContent.setTask(taskToUpdate);

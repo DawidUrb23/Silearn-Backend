@@ -71,14 +71,11 @@ public class LessonService {
 		Lesson lesson = lessonRepository.findById(lessonId)
 			.orElseThrow(() -> new ItemNotFoundException(Lesson.class, lessonId));
 		courseHelperService.isAuthorOrThrow(lesson, userId);
-		var lessonLang = courseHelperService.getOriginalLanguage(lesson);
 
-		if(updateLessonRequest.getDescription() != null){
-			lesson.setDescription(translationService.createDictionary(updateLessonRequest.getDescription(),lessonLang));
-		}
-		if(updateLessonRequest.getTopic() != null){
-			lesson.setTopic(translationService.createDictionary(updateLessonRequest.getTopic(),lessonLang));
-		}
+		if (updateLessonRequest.getDescription() != null)
+			translationService.updateOriginalTranslation(lesson.getDescription(), updateLessonRequest.getDescription());
+		if (updateLessonRequest.getTopic() != null)
+			translationService.updateOriginalTranslation(lesson.getTopic(), updateLessonRequest.getTopic());
 
 		Lesson lessonSaved = lessonRepository.save(lesson);
 		return ResponseEntity.ok(IdOnlyDto.fromEntity(lessonSaved));

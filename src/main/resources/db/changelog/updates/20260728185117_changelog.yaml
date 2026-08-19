@@ -1,0 +1,28 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1785264693874-1
+      author: fafik (generated)
+      changes:
+        - addColumn:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                  defaultValueBoolean: true
+                  name: needs_re_translation
+                  type: BOOLEAN
+            tableName: translation_dictionary
+  - changeSet:
+      id: 1785264693874-2
+      author: fafik (generated)
+      changes:
+        - addColumn:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                  defaultValueNumeric: 2
+                  name: translatable
+                  type: SMALLINT
+            tableName: translation_dictionary
+

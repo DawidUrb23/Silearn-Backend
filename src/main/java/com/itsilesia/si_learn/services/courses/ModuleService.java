@@ -3,7 +3,6 @@ package com.itsilesia.si_learn.services.courses;
 import com.itsilesia.si_learn.dtos.request.courses.ContentsOrderUpdateRequest;
 import com.itsilesia.si_learn.dtos.request.courses.CreateModuleRequest;
 import com.itsilesia.si_learn.dtos.request.courses.ModuleUpdateRequest;
-import com.itsilesia.si_learn.dtos.request.dictionary.UpdateTranslationDictionaryRequest;
 import com.itsilesia.si_learn.dtos.response.IdOnlyDto;
 import com.itsilesia.si_learn.entities.abstractions.EntityWithOrderedChildren;
 import com.itsilesia.si_learn.entities.courses.Course;
@@ -72,14 +71,10 @@ public class ModuleService {
 		Module module = moduleRepository.findById(moduleId)
 			.orElseThrow(() -> new ItemNotFoundException(Module.class, moduleId));
 		courseHelperService.isAuthorOrThrow(module, userId);
-		var moduleLang = courseHelperService.getOriginalLanguage(module);
-		var content = new UpdateTranslationDictionaryRequest();
-		content.setLanguageCode(moduleLang.getCode());
-		content.setContent(moduleUpdateRequest.getTitle());
-		if (moduleUpdateRequest.getTitle() != null) {
-			module.setTitle(translationService.updateTranslationDictionary(
-				module.getTitle().getId(), content));
-		}
+
+		if (moduleUpdateRequest.getTitle() != null)
+			translationService.updateOriginalTranslation(module.getTitle(), moduleUpdateRequest.getTitle());
+
 		Module moduleSaved = moduleRepository.save(module);
 		return ResponseEntity.ok(IdOnlyDto.fromEntity(moduleSaved));
 

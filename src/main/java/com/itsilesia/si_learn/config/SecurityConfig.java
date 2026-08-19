@@ -42,7 +42,7 @@ public class SecurityConfig {
 					.tasksApi() // api/tasks
 					.testScenariosApi() // api/test-scenarios
 					.adminApi()   // api/admin
-					.translationsApi()   // api/admin
+					.translationsApi()   // api/translations
 					.myApis()   // api/my/*
 
 					.otherApis();   // other
@@ -117,6 +117,7 @@ public class SecurityConfig {
 			authorize
 				.requestMatchers(HttpMethod.GET, "/api/translations").permitAll()
 				.requestMatchers(HttpMethod.GET, "/api/translations/*").permitAll()
+				.requestMatchers("/api/translations/languages").hasAnyAuthority(Role.ADMINISTRATOR.name())
 				.requestMatchers("/api/translations/**").hasAnyAuthority(Role.TRANSLATOR.name(), Role.ADMINISTRATOR.name());
 			return this;
 		}

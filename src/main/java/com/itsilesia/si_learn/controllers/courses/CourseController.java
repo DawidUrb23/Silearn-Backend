@@ -15,8 +15,8 @@ import com.itsilesia.si_learn.entities.enums.DifficultyLevel;
 import com.itsilesia.si_learn.entities.enums.ProgramingLanguage;
 import com.itsilesia.si_learn.entities.enums.VisibilityStatus;
 import com.itsilesia.si_learn.entities.user_progress.UserCourse;
-import com.itsilesia.si_learn.helpers.CourseCursor;
-import com.itsilesia.si_learn.helpers.CursorUtil;
+import com.itsilesia.si_learn.helpers.cursors.CourseCursor;
+import com.itsilesia.si_learn.helpers.cursors.CursorUtil;
 import com.itsilesia.si_learn.services.courses.CourseService;
 import com.itsilesia.si_learn.services.courses.ModuleService;
 import com.itsilesia.si_learn.services.user_progress.UserCourseService;
@@ -141,20 +141,20 @@ public class CourseController {
 		@RequestHeader(value = HttpHeaders.ACCEPT_LANGUAGE, required = false) String languageCode,
 		@Parameter(hidden = true) @AuthenticationPrincipal UUID userId
 	) {
-		var courseSlice = courseService.getFilteredCourses(status, difficulty, programingLanguage, query, authorId, cursor, size, userId);
+		var slice = courseService.getFilteredCourses(status, difficulty, programingLanguage, query, authorId, cursor, size, userId);
 		var userCourses = userCourseService.getUserCourses(userId);
-		List<@NonNull Course> courses = courseSlice.getContent();
+		List<@NonNull Course> courses = slice.getContent();
 		var coursesWithUserCourses = EntityWithOrderedChildren.JoinItemWithUserItem(courses, userCourses);
 
 		String nextCursor = null;
-		if (courseSlice.hasNext() && !courses.isEmpty()) {
-			Course lastCourse = courses.getLast();
-			nextCursor = CursorUtil.encode(new CourseCursor(lastCourse.getCreatedAt(), lastCourse.getId()));
+		if (slice.hasNext() && !courses.isEmpty()) {
+			var lastItem = courses.getLast();
+			nextCursor = CursorUtil.encode(new CourseCursor(lastItem.getCreatedAt(), lastItem.getId()));
 		}
+
 		return new KeysetCourseResponse(
 			coursesWithUserCourses.stream().map(MyCourseOverviewDto::fromEntity).toList(),
 			nextCursor);
-
 	}
 
 	@PatchMapping("/{courseId}")

@@ -1,13 +1,10 @@
 package com.itsilesia.si_learn.services.courses;
 
 import com.itsilesia.si_learn.dtos.request.courses.TaskContentRequest;
-import com.itsilesia.si_learn.dtos.request.dictionary.UpdateTranslationDictionaryRequest;
-import com.itsilesia.si_learn.dtos.response.helper.DictionaryHelper;
 import com.itsilesia.si_learn.entities.courses.TaskContent;
 import com.itsilesia.si_learn.exceptions.ItemNotFoundException;
 import com.itsilesia.si_learn.repositories.courses.TaskContentRepository;
 import com.itsilesia.si_learn.services.TranslationService;
-import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,16 +22,10 @@ public class TaskContentService {
 		TaskContent taskContentToUpdate = taskContentRepository.findById(taskContentId)
 			.orElseThrow(() -> new ItemNotFoundException(TaskContent.class, taskContentId));
 		courseHelperService.isAuthorOrThrow(taskContentToUpdate, userId);
-		var originalLanguage = courseHelperService.getOriginalLanguage(taskContentToUpdate);
 
-		var contentStr = taskContent.getContent();
-		var originalContent = DictionaryHelper.getOriginalTranslation(taskContentToUpdate.getContent()).getValue();
-		if (StringUtils.isNotBlank(contentStr) && !originalContent.equals(contentStr)) {
-			translationService.updateTranslationDictionary(
-				taskContentToUpdate.getContent().getId(),
-				new UpdateTranslationDictionaryRequest(originalLanguage.getCode(), contentStr)
-			);
-		}
+		if (taskContent.getContent() != null)
+			translationService.updateOriginalTranslation(taskContentToUpdate.getContent(), taskContent.getContent());
+
 		if (taskContent.getType() != null)
 			taskContentToUpdate.setType(taskContent.getType());
 		return taskContentRepository.save(taskContentToUpdate);

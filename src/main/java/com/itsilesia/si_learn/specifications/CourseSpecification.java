@@ -9,14 +9,12 @@ import com.itsilesia.si_learn.entities.enums.VisibilityStatus;
 import com.itsilesia.si_learn.entities.users.User_;
 import jakarta.persistence.criteria.*;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.UUID;
 
-public class CourseSpecification {
+public class CourseSpecification extends CommonBaseSpecification<Course> {
 	public static Specification<Course> hasDifficulty(DifficultyLevel difficulty) {
 		return (root, query, criteriaBuilder) -> {
 			if (difficulty == null) {
@@ -204,38 +202,6 @@ public class CourseSpecification {
 			userLanguageMatches,
 			originalLanguageMatches
 		);
-	}
-
-	public static Specification<Course> isBefore(LocalDateTime createdAt, UUID id) {
-		return (root, query, criteriaBuilder) -> {
-			if (createdAt == null || id == null) {
-				return criteriaBuilder.conjunction();
-			}
-			return criteriaBuilder.or(
-				criteriaBuilder.lessThan(root.get(Course_.createdAt), createdAt),
-				criteriaBuilder.and(
-					criteriaBuilder.equal(root.get(Course_.createdAt), createdAt),
-					criteriaBuilder.lessThan(root.get(Course_.id), id)
-				)
-			);
-		};
-	}
-
-	public static Specification<Course> orderBy(Sort.Direction orderDirection) {
-		return (root, query, criteriaBuilder) -> {
-			if (orderDirection.isAscending()) {
-				query.orderBy(
-					criteriaBuilder.asc(root.get(Course_.CREATED_AT)),
-					criteriaBuilder.asc(root.get(Course_.ID))
-				);
-			} else {
-				query.orderBy(
-					criteriaBuilder.desc(root.get(Course_.CREATED_AT)),
-					criteriaBuilder.desc(root.get(Course_.ID))
-				);
-			}
-			return criteriaBuilder.conjunction();
-		};
 	}
 
 }
