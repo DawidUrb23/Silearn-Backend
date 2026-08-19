@@ -36,7 +36,7 @@ public class UserTaskController {
 	}
 
 	@PostMapping("{taskId}/submissions")
-	@ResponseStatus(HttpStatus.CREATED)
+	@ResponseStatus(HttpStatus.ACCEPTED)
 	@Operation(summary = "Sends exercise to be checked")
 	public TaskUserSubmittedResponse submitTask(@PathVariable UUID taskId,
 	                                            @Parameter(hidden = true) @AuthenticationPrincipal UUID userId,

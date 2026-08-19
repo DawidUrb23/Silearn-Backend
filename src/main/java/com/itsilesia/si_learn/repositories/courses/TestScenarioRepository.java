@@ -8,5 +8,5 @@ import java.util.UUID;
 
 public interface TestScenarioRepository extends SpecificationJpaRepository<TestScenario, UUID> {
 	List<TestScenario> findAllByTaskId(UUID id);
-
+	boolean existsByTaskId(UUID id);
 }

@@ -18,4 +18,11 @@ public class TaskSpecification {
 		};
 	}
 
+	public static Specification<Task> isAutoGraded() {
+		return (root, query, criteriaBuilder) -> criteriaBuilder.isNotEmpty(root.get(Task_.TEST_SCENARIOS));
+	}
+
+	public static Specification<Task> isManuallyGraded() {
+		return (root, query, criteriaBuilder) -> criteriaBuilder.isEmpty(root.get(Task_.TEST_SCENARIOS));
+	}
 }

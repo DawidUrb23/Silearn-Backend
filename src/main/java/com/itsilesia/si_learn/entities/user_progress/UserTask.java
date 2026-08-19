@@ -49,6 +49,11 @@ public class UserTask implements UserProgressNode, CompoundIdEntityWithUser {
 	@Column(name = "user_solution", nullable = true, columnDefinition = "TEXT")
 	private String userSolution;
 
+	@Column(name = "updated_solution_at", nullable = true)
+	private LocalDateTime updatedSolutionAt;
+
+	@Column(name = "graded_at", nullable = true)
+	private LocalDateTime gradedAt;
 
 	// Handles the actual writing/inserting of the lesson_id column
 	@ManyToOne(fetch = FetchType.LAZY)

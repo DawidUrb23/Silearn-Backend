@@ -1,8 +1,9 @@
-package com.itsilesia.si_learn.controllers;
+package com.itsilesia.si_learn.controllers.user_progress;
 
 import com.itsilesia.si_learn.dtos.request.users.GradeTaskRequest;
-import com.itsilesia.si_learn.dtos.response.courses.TaskSubmissionResponse;
+import com.itsilesia.si_learn.dtos.response.courses.TaskSubmissionsResponse;
 import com.itsilesia.si_learn.services.TaskCheckService;
+import com.itsilesia.si_learn.services.courses.TaskService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,19 +23,31 @@ import java.util.UUID;
 @Validated
 @RequestMapping("api/teacher-check")
 @Tag(name = "Task Check", description = "Teacher gets solutions sent by users and can grade them (Teacher)")
-public class TaskCheckTeacher {
-
+public class TaskCheckTeacherController {
+	private final TaskService taskService;
 	private final TaskCheckService taskCheckService;
 
 	@GetMapping("/tasks/{taskId}/solutions")
 	@ResponseStatus(HttpStatus.OK)
-	@Operation(summary = "Gets all solutions to specific task")
-	public List<TaskSubmissionResponse> getAllSolutions(
+	@Operation(summary = "Gets all user solutions to specific task")
+	public TaskSubmissionsResponse getAllSolutions(
 		@PathVariable UUID taskId,
 		@Parameter(hidden = true) @AuthenticationPrincipal UUID teacherId
 	) {
-		return taskCheckService.getAllSolutions(taskId, teacherId)
-			.stream().map(TaskSubmissionResponse::fromEntity).toList();
+		return TaskSubmissionsResponse.fromEntity(
+			taskService.getTaskById(taskId),
+			taskCheckService.getAllTaskSolutionsToGrade(taskId, teacherId)
+		);
+	}
+
+	@GetMapping("/courses/{courseId}/tasks-to-grade")
+	@ResponseStatus(HttpStatus.OK)
+	@Operation(summary = "Gets all task ids that need manual grading")
+	public List<UUID> getAllTasks(
+		@PathVariable UUID courseId,
+		@Parameter(hidden = true) @AuthenticationPrincipal UUID teacherId
+	) {
+		return taskCheckService.getAllTasksInCourseToGrade(courseId, teacherId);
 	}
 
 

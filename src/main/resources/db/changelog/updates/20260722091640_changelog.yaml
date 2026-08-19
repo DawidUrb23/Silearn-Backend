@@ -1,0 +1,25 @@
+databaseChangeLog:
+- changeSet:
+    id: 1784711820995-1
+    author: fafik (generated)
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            name: graded_at
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        tableName: user_tasks
+- changeSet:
+    id: 1784711820995-2
+    author: fafik (generated)
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: updated_solution_at
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+            defaultValueDate: '2026-01-01 00:00:00'
+        tableName: user_tasks
+
