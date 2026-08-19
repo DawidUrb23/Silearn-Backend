@@ -1,10 +1,14 @@
 package com.itsilesia.si_learn.dtos.request.users;
 
+import com.itsilesia.si_learn.config.ValidationConstants;
+import com.itsilesia.si_learn.validators.locale.ValidLocaleCode;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Locale;
 
 @Data
 @NoArgsConstructor
@@ -13,13 +17,13 @@ public class UpdateUserRequest {
 	@Email
 	private String email;
 
-	@Size(max = 30)
-	private String languageCode;
+	@ValidLocaleCode
+	private Locale languageCode;
 
-	@Size(max = 100)
+	@Size(max = ValidationConstants.nameLenMax)
 	private String name;
 
-	@Size(max = 100)
+	@Size(max = ValidationConstants.surnameLenMax)
 	private String surname;
 
 	private Boolean becomeTeacher = false;

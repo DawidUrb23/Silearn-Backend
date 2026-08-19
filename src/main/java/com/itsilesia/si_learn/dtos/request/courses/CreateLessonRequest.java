@@ -1,10 +1,15 @@
 package com.itsilesia.si_learn.dtos.request.courses;
 
+import com.itsilesia.si_learn.config.ValidationConstants;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public record CreateLessonRequest(
-	@NotNull @Size(min = 1, max = 255) String topic,
-	@NotNull @Size(min = 1, max = 4 << 10) String description
+	@NotNull
+	@Size(min = ValidationConstants.titleLenMin, max = ValidationConstants.titleLenMax)
+	String topic,
+	@NotNull
+	@Size(min = ValidationConstants.descriptionLenMin, max = ValidationConstants.descriptionLenMax)
+	String description
 ) {
 }

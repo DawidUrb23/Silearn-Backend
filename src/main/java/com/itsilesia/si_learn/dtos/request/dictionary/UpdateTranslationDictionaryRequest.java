@@ -1,19 +1,23 @@
 package com.itsilesia.si_learn.dtos.request.dictionary;
 
+import com.itsilesia.si_learn.config.ValidationConstants;
+import com.itsilesia.si_learn.validators.locale.ValidLocaleCode;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Locale;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateTranslationDictionaryRequest {
-	private String languageCode;
+	@ValidLocaleCode
+	private Locale languageCode;
 
-	//fixme: this could be very restrictive for TaskContent
-	@Size(max = 4 << 10)
+	@Size(max = ValidationConstants.translationDictItemContentMaxLen)
 	private String content;
 }

@@ -1,9 +1,10 @@
 package com.itsilesia.si_learn.dtos.request.users;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
+import com.itsilesia.si_learn.config.ValidationConstants;
+import org.hibernate.validator.constraints.Range;
 
 public record GradeTaskRequest(
-	@Min(0) @Max(100) Float grade
+	@Range(min = ValidationConstants.gradeMinScore, max = ValidationConstants.gradeMaxScore)
+	Float grade
 ) {
 }

@@ -1,5 +1,6 @@
 package com.itsilesia.si_learn.dtos.request.courses;
 
+import com.itsilesia.si_learn.config.ValidationConstants;
 import com.itsilesia.si_learn.entities.enums.ContentType;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -15,7 +16,8 @@ import lombok.Setter;
 public class TaskContentRequest {
 	@NotNull
 	private ContentType type;
+
 	@NotNull
-	@Size(min = 1, max = 4 << 10)
+	@Size(max = ValidationConstants.translationDictItemContentMaxLen)
 	private String content;
 }
