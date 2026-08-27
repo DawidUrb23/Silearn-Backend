@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1787165721059-1
+      author: fafik (generated)
+      changes:
+        - addUniqueConstraint:
+            columnNames: language
+            constraintName: UC_PROGRAMING_LANGUAGESLANGUAGE_COL
+            tableName: programing_languages
+

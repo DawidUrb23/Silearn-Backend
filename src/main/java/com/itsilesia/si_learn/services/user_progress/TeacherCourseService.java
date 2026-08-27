@@ -1,4 +1,4 @@
-package com.itsilesia.si_learn.services;
+package com.itsilesia.si_learn.services.user_progress;
 
 import com.itsilesia.si_learn.dtos.response.courses.CourseStatisticsDto;
 import com.itsilesia.si_learn.entities.courses.Course;

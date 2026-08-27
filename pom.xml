@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.itsilesia</groupId>
 	<artifactId>si_learn</artifactId>
-	<version>0.8.5-AlmostCodeReady2</version>
+	<version>0.9.0-CodeTests</version>
 	<name>SiLearn</name>
 	<description>SiLearn backend project for Spring Boot</description>
 
@@ -97,6 +97,19 @@
 		<dependency>
 			<groupId>com.github.ben-manes.caffeine</groupId>
 			<artifactId>caffeine</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-cache</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.github.ben-manes.caffeine</groupId>
+			<artifactId>caffeine</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-restclient</artifactId>
+			<version>4.0.5</version>
 		</dependency>
 	</dependencies>
 

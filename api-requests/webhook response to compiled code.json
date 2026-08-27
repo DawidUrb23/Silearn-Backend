@@ -1,0 +1,17 @@
+POST
+http://localhost:8080/api/compiler/webhook
+
+
+{
+"error": "",
+"exit_code": null,
+"extra_params": {
+"compilationId": "fe878c49-6d7b-4e7b-825d-e1f215d0fc0a"
+},
+"memory": 2868.0,
+"output": "Hello World from Azure api 22:21",
+"signal": null,
+"status": "success",
+"time": 0.0195,
+"total": 0.1485
+}

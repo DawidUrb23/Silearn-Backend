@@ -67,6 +67,7 @@ public class SecurityConfig {
 			authorize
 				.requestMatchers("/api/auth/refresh").authenticated()
 				.requestMatchers("/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+				.requestMatchers("/api/compiler/webhook").permitAll()
 				// any user can get and change their account info
 				.requestMatchers("/api/account/**").authenticated()
 
@@ -84,8 +85,6 @@ public class SecurityConfig {
 				.requestMatchers("/api/courses/**").hasAuthority(Role.TEACHER.name());
 			return this;
 		}
-
-		//TODO: see if this is not duplicated after merge
 
 		/// `api/teacher` can be accessed by Teacher
 		public ConfigureAuthority teacherApi() {

@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1787153622990-2
+      author: fafik (generated)
+      changes:
+        - addColumn:
+            columns:
+              - column:
+                  name: group_id
+                  type: UUID
+            tableName: user_test_scenarios
+

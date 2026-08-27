@@ -1,11 +1,15 @@
 package com.itsilesia.si_learn.entities.courses;
 
 import com.itsilesia.si_learn.entities.BaseEntity;
+import com.itsilesia.si_learn.entities.user_progress.UserCodeExecution;
+import com.itsilesia.si_learn.entities.user_progress.UserCodeExecution_;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity(name = "test_scenarios")
 @Getter
@@ -26,4 +30,7 @@ public class TestScenario extends BaseEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "task_id", nullable = false)
 	private Task task;
+
+	@OneToMany(mappedBy = UserCodeExecution_.TEST_SCENARIO, fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	List<UserCodeExecution> executions;
 }

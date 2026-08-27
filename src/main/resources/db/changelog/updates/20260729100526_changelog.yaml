@@ -1,0 +1,33 @@
+databaseChangeLog:
+- changeSet:
+    id: 1785319539077-1
+    author: urban (generated)
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            name: compilation_id
+            type: VARCHAR(255)
+        tableName: user_tasks
+- changeSet:
+    id: 1785319539077-2
+    author: urban (generated)
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            name: compilation_progress
+            type: SMALLINT
+        tableName: user_tasks
+- changeSet:
+    id: 1785319539077-3
+    author: urban (generated)
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            name: compiler_output
+            type: TEXT
+        tableName: user_tasks
+
+

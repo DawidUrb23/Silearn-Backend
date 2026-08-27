@@ -1,0 +1,49 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1785951885190-2
+      author: fafik (generated)
+      changes:
+        - addColumn:
+            columns:
+              - column:
+                  name: exit_code
+                  type: INTEGER
+            tableName: user_test_scenarios
+  - changeSet:
+      id: 1785951885190-3
+      author: fafik (generated)
+      changes:
+        - addUniqueConstraint:
+            columnNames: compilation_id
+            constraintName: UC_USER_TEST_SCENARIOSCOMPILATION_ID_COL
+            tableName: user_test_scenarios
+  - changeSet:
+      id: 1785951885190-5
+      author: fafik (generated)
+      changes:
+        - dropColumn:
+            columnName: compilation_id
+            tableName: user_tasks
+  - changeSet:
+      id: 1785951885190-6
+      author: fafik (generated)
+      changes:
+        - dropColumn:
+            columnName: compilation_progress
+            tableName: user_tasks
+  - changeSet:
+      id: 1785951885190-7
+      author: fafik (generated)
+      changes:
+        - dropColumn:
+            columnName: compiler_output
+            tableName: user_tasks
+  - changeSet:
+      id: 1785951885190-1
+      author: fafik (generated)
+      changes:
+        - dropNotNullConstraint:
+            columnDataType: uuid
+            columnName: test_scenario_id
+            tableName: user_test_scenarios
+

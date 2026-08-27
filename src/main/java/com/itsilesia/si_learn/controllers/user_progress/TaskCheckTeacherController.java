@@ -1,9 +1,9 @@
 package com.itsilesia.si_learn.controllers.user_progress;
 
-import com.itsilesia.si_learn.dtos.request.users.GradeTaskRequest;
+import com.itsilesia.si_learn.dtos.request.teacher_progress.GradeTaskRequest;
 import com.itsilesia.si_learn.dtos.response.courses.TaskSubmissionsResponse;
-import com.itsilesia.si_learn.services.TaskCheckService;
 import com.itsilesia.si_learn.services.courses.TaskService;
+import com.itsilesia.si_learn.services.user_progress.TaskCheckService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -11,7 +11,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -61,17 +60,5 @@ public class TaskCheckTeacherController {
 		@Parameter(hidden = true) @AuthenticationPrincipal UUID teacherId
 	) {
 		taskCheckService.gradeStudentSolution(taskId, studentId, request, teacherId);
-	}
-
-	@Transactional
-	@DeleteMapping("/tasks/{taskId}/students/{studentId}")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@Operation(summary = "Delete students solution")
-	public void deleteStudentSolution(
-		@PathVariable UUID taskId,
-		@PathVariable UUID studentId,
-		@Parameter(hidden = true) @AuthenticationPrincipal UUID teacherId
-	) {
-		taskCheckService.deleteStudentSolution(taskId, studentId, teacherId);
 	}
 }

@@ -3,6 +3,8 @@ package com.itsilesia.si_learn.entities.courses;
 import com.itsilesia.si_learn.entities.BaseEntity;
 import com.itsilesia.si_learn.entities.abstractions.CourseAccessNode;
 import com.itsilesia.si_learn.entities.abstractions.IndexedEntity;
+import com.itsilesia.si_learn.entities.user_progress.UserCodeExecution;
+import com.itsilesia.si_learn.entities.user_progress.UserCodeExecution_;
 import com.itsilesia.si_learn.entities.user_progress.UserTask;
 import com.itsilesia.si_learn.entities.user_progress.UserTask_;
 import jakarta.persistence.*;
@@ -43,9 +45,11 @@ public class Task extends BaseEntity implements IndexedEntity, CourseAccessNode 
 	@OneToMany(mappedBy = TestScenario_.TASK, cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<TestScenario> testScenarios = new ArrayList<>();
 
-
 	@OneToMany(mappedBy = UserTask_.TASK, cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<UserTask> userTasks = new ArrayList<>();
+
+	@OneToMany(mappedBy = UserCodeExecution_.TASK, fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
+	private List<UserCodeExecution> userCodeExecutions = new ArrayList<>();
 
 	@Override
 	public Collection<? extends CourseAccessNode> getSiblings() {
