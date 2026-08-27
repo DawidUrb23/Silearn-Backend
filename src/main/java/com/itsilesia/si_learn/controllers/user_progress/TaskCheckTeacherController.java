@@ -2,10 +2,14 @@ package com.itsilesia.si_learn.controllers.user_progress;
 
 import com.itsilesia.si_learn.dtos.request.teacher_progress.GradeTaskRequest;
 import com.itsilesia.si_learn.dtos.response.courses.TaskSubmissionsResponse;
+import com.itsilesia.si_learn.dtos.response.exceptions.ErrorDetailsDto;
 import com.itsilesia.si_learn.services.courses.TaskService;
 import com.itsilesia.si_learn.services.user_progress.TaskCheckService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +26,7 @@ import java.util.UUID;
 @RestController
 @Validated
 @RequestMapping("api/teacher-check")
-@Tag(name = "Task Check", description = "Teacher gets solutions sent by users and can grade them (Teacher)")
+@Tag(name = "Task Check", description = "Teacher gets solutions sent by users and can grade them (Owner Teacher)")
 public class TaskCheckTeacherController {
 	private final TaskService taskService;
 	private final TaskCheckService taskCheckService;
@@ -30,6 +34,8 @@ public class TaskCheckTeacherController {
 	@GetMapping("/tasks/{taskId}/solutions")
 	@ResponseStatus(HttpStatus.OK)
 	@Operation(summary = "Gets all user solutions to specific task")
+	@ApiResponse(responseCode = "404",
+		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
 	public TaskSubmissionsResponse getAllSolutions(
 		@PathVariable UUID taskId,
 		@Parameter(hidden = true) @AuthenticationPrincipal UUID teacherId,
@@ -43,7 +49,9 @@ public class TaskCheckTeacherController {
 
 	@GetMapping("/courses/{courseId}/tasks-to-grade")
 	@ResponseStatus(HttpStatus.OK)
-	@Operation(summary = "Gets all task ids that need manual grading")
+	@Operation(summary = "Gets all task ids that need manual grading in Course")
+	@ApiResponse(responseCode = "404",
+		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
 	public List<UUID> getAllTasks(
 		@PathVariable UUID courseId,
 		@Parameter(hidden = true) @AuthenticationPrincipal UUID teacherId,
@@ -55,7 +63,9 @@ public class TaskCheckTeacherController {
 
 	@PostMapping("tasks/{taskId}/students/{studentId}")
 	@ResponseStatus(HttpStatus.OK)
-	@Operation(summary = "Grades students exercise")
+	@Operation(summary = "Grades student exercise")
+	@ApiResponse(responseCode = "404",
+		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
 	public void gradeStudentSolution(
 		@PathVariable UUID taskId,
 		@PathVariable UUID studentId,

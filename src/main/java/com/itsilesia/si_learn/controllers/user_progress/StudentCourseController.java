@@ -24,7 +24,7 @@ import java.util.UUID;
 @RequestMapping("/api/my/courses")
 @RequiredArgsConstructor
 @Validated
-@Tag(name = "My courses", description = "Endpoints for interacting with enrolled courses (User)")
+@Tag(name = "My courses", description = "Endpoints for interacting with enrolled courses (Student)")
 public class StudentCourseController {
 	private final UserCourseService userCourseService;
 

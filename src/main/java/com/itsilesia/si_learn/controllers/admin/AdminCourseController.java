@@ -20,13 +20,13 @@ import java.util.UUID;
 @RequestMapping("/api/admin/courses")
 @RequiredArgsConstructor
 @Validated
-@Tag(name = "Admin Courses", description = "Admin endpoints for managing courses")
+@Tag(name = "Admin Courses", description = "Admin endpoints for managing courses (Admin)")
 public class AdminCourseController {
 	private final CourseService courseService;
 
 	@PatchMapping("/{courseId}/status")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@Operation(summary = "Change course status (Admin)")
+	@Operation(summary = "Change course status")
 	@ApiResponse(responseCode = "400", description = "Invalid request body",
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
 	@ApiResponse(responseCode = "404", description = "Course not found",
@@ -40,7 +40,7 @@ public class AdminCourseController {
 
 	@DeleteMapping("{courseId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@Operation(summary = "Change course status DELETED (Admin)")
+	@Operation(summary = "Change course status DELETED")
 	@ApiResponse(responseCode = "404", description = "Course not found",
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
 	public void changeCourseToDeleted(@PathVariable UUID courseId){

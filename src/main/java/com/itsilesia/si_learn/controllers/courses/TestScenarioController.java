@@ -33,7 +33,7 @@ public class TestScenarioController {
 
 	@GetMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	@Operation(summary = "Get test scenario by id (Owner)")
+	@Operation(summary = "Get test scenario by id")
 	@ApiResponse(responseCode = "403", description = "Not the owner!",
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
 	@ApiResponse(responseCode = "404",
@@ -49,7 +49,7 @@ public class TestScenarioController {
 
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@Operation(summary = "Delete test scenario by id (Owner)")
+	@Operation(summary = "Delete test scenario by id")
 	@ApiResponse(responseCode = "403", description = "Not the owner!",
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
 	@ApiResponse(responseCode = "404",
@@ -63,7 +63,7 @@ public class TestScenarioController {
 
 	@PatchMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@Operation(summary = "Update test scenario by id (Owner)")
+	@Operation(summary = "Update test scenario by id")
 	@ApiResponse(responseCode = "400", description = "Invalid input",
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
 	@ApiResponse(responseCode = "403", description = "Not the owner!",

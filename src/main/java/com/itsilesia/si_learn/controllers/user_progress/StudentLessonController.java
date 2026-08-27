@@ -22,7 +22,7 @@ import java.util.UUID;
 @RequestMapping("/api/my/lessons")
 @RequiredArgsConstructor
 @Validated
-@Tag(name = "My lessons", description = "Endpoints for interacting with lesson progress (User)")
+@Tag(name = "My lessons", description = "Endpoints for interacting with lesson progress (Enrolled Student)")
 public class StudentLessonController {
 	private final UserLessonService userLessonService;
 

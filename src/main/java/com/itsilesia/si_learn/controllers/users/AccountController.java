@@ -32,7 +32,7 @@ public class AccountController {
 
 	@PatchMapping("/password")
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
-	@Operation(summary = "Change current user's password (Owner)")
+	@Operation(summary = "Change current user's password")
 	@ApiResponse(responseCode = "204", description = "Password changed successfully")
 	@ApiResponse(responseCode = "400", description = "Invalid request body",
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
@@ -46,7 +46,7 @@ public class AccountController {
 
 	@PatchMapping
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
-	@Operation(summary = "Update current user's information (Owner)")
+	@Operation(summary = "Update current user's information")
 	@ApiResponse(responseCode = "204", description = "User updated successfully")
 	@ApiResponse(responseCode = "400", description = "Invalid request body",
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
@@ -60,7 +60,7 @@ public class AccountController {
 
 	@GetMapping
 	@ResponseStatus(value = HttpStatus.OK)
-	@Operation(summary = "Get current user's information (Owner)")
+	@Operation(summary = "Get current user's information")
 	@ApiResponse(responseCode = "200", description = "User information returned successfully")
 	@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content())
 	@ApiResponse(responseCode = "404", description = "User not found",

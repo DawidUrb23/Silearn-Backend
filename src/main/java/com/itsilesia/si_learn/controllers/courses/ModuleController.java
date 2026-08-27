@@ -39,6 +39,9 @@ public class ModuleController {
 
 	@PostMapping("/{moduleId}/lessons")
 	@ResponseStatus(HttpStatus.CREATED)
+	@Operation(summary = "Create a lesson")
+	@ApiResponse(responseCode = "400", description = "Invalid input",
+		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
 	public IdOnlyDto createLesson(
 		@PathVariable UUID moduleId,
 		@Valid @RequestBody CreateLessonRequest request,
@@ -51,7 +54,7 @@ public class ModuleController {
 
 	@PutMapping("/{moduleId}/lessons")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@Operation(summary = "Update lesson order in module (Owner)")
+	@Operation(summary = "Update lesson order in module")
 	@ApiResponse(responseCode = "400", description = "Invalid input",
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
 	@ApiResponse(responseCode = "404",
@@ -66,6 +69,9 @@ public class ModuleController {
 
 	@GetMapping("/{moduleId}")
 	@ResponseStatus(HttpStatus.OK)
+	@Operation(summary = "Get a lesson by id")
+	@ApiResponse(responseCode = "404",
+		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
 	public ModuleWithLessonsResponse getModule(
 		@PathVariable UUID moduleId,
 		@RequestHeader(value = HttpHeaders.ACCEPT_LANGUAGE, required = false) String languageCode,  //exposes the header for LocaleContextHolder
@@ -78,18 +84,18 @@ public class ModuleController {
 
 	@DeleteMapping("/{moduleId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@Operation(summary = "Delete module (Teacher)")
+	@Operation(summary = "Delete module")
 	@ApiResponse(responseCode = "404", description = "Module not found",
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
 	public ResponseEntity<Void> deleteModule(@PathVariable UUID moduleId,
-	                                         @Parameter(hidden = true)@AuthenticationPrincipal  UUID userId) {
+	                                         @Parameter(hidden = true) @AuthenticationPrincipal UUID userId) {
 		moduleService.deleteModule(moduleId, userId);
 		return ResponseEntity.noContent().build();
 	}
 
 	@PatchMapping("/{moduleId}")
 	@ResponseStatus(HttpStatus.OK)
-	@Operation(summary = "Changes the module (Teacher)")
+	@Operation(summary = "Changes the module")
 	@ApiResponse(responseCode = "404", description = "Module not found",
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
 	public ResponseEntity<IdOnlyDto> updateModule(
