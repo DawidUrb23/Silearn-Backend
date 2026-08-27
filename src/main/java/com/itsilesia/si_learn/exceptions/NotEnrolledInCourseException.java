@@ -11,7 +11,7 @@ import java.util.UUID;
 /// Not Authorized to do this (403)
 @Getter
 @ResponseStatus(HttpStatus.FORBIDDEN)
-public class NotEnrolledInCourseException extends RuntimeException {
+public class NotEnrolledInCourseException extends Base403StatusException {
 	private final UUID userId;
 	private final Course course;
 

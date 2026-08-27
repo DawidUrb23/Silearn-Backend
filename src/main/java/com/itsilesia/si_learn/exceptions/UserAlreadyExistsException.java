@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 /// Conflict (409)
 @Getter
 @ResponseStatus(HttpStatus.CONFLICT)
-public class UserAlreadyExistsException extends BaseStatusException {
+public class UserAlreadyExistsException extends Base409StatusException {
 	public UserAlreadyExistsException(Object id) {
-		super(HttpStatus.CONFLICT, String.format("User \"%s\" already exists", id));
+		super( String.format("User \"%s\" already exists", id));
 	}
 }
