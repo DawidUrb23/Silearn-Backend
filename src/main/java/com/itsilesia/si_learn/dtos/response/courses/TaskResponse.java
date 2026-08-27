@@ -20,6 +20,7 @@ public class TaskResponse {
 	private Float passingScore;
 	private String startingCode;
 	private ProgramingLanguage programingLanguage;
+	private boolean isAutoGraded;
 	@Nullable
 	private TranslationDto name;
 
@@ -28,6 +29,7 @@ public class TaskResponse {
 		this.startingCode = task.getStartingCode();
 		this.passingScore = task.getPassingScore();
 		this.programingLanguage = task.getCourse().getProgramingLanguage();
+		this.isAutoGraded = !task.getTestScenarios().isEmpty();
 		var nameNullable = Optional.ofNullable(task.getName());
 		if (nameNullable.isPresent())
 			this.name = TranslationDto.fromEntity(

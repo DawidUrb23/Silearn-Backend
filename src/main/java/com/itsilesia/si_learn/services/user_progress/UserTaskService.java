@@ -3,6 +3,7 @@ package com.itsilesia.si_learn.services.user_progress;
 import com.itsilesia.si_learn.dtos.request.compiler.SubmitExecuteTaskRequest;
 import com.itsilesia.si_learn.dtos.response.CompilationResponse;
 import com.itsilesia.si_learn.dtos.response.user_progress.SubmitTestTaskRequest;
+import com.itsilesia.si_learn.dtos.response.user_progress.TaskSubmitResponse;
 import com.itsilesia.si_learn.entities.compositeIds.UserLessonId;
 import com.itsilesia.si_learn.entities.compositeIds.UserTaskId;
 import com.itsilesia.si_learn.entities.courses.Task;
@@ -87,12 +88,13 @@ public class UserTaskService {
 	 * @param submitTestTaskRequest final code to submit and test
 	 */
 	@Transactional
-	public void testStudentCodeWithTestScenario(UUID taskId, UUID userId, SubmitTestTaskRequest submitTestTaskRequest) {
+	public TaskSubmitResponse testStudentCodeWithTestScenario(UUID taskId, UUID userId, SubmitTestTaskRequest submitTestTaskRequest) {
 		var userTask = getTaskUser(taskId, userId);
 		userTask.setUserSolution(submitTestTaskRequest.getCode());
 		userTask.setUpdatedSolutionAt(LocalDateTime.now());
 		userTaskRepository.save(userTask);
 		var task = userTask.getTask();
-		onlineCompilerService.executeRunTestsOnlineAndSaveAsync(userTask, task);
+		var list = onlineCompilerService.executeRunTestsOnlineAndSaveAsync(userTask, task);
+		return new TaskSubmitResponse(!list.isEmpty());
 	}
 }
