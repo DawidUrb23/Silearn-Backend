@@ -15,7 +15,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 @Entity(name = "user_tasks")
@@ -60,6 +62,8 @@ public class UserTask implements UserProgressNode, CompoundIdEntityWithUser {
 	@JoinColumn(name = "lesson_id", nullable = false)
 	private Lesson lesson;
 
+	@OneToMany(mappedBy = UserCodeExecution_.USER_TASK, fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
+	private List<UserCodeExecution> userCodeExecutions = new ArrayList<>();
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumns({  //important order matters, otherwise those 2 columns are swapped (you have to check in DB the order)

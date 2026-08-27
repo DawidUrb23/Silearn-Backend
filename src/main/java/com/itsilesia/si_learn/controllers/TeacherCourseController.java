@@ -2,7 +2,7 @@ package com.itsilesia.si_learn.controllers;
 
 import com.itsilesia.si_learn.dtos.response.courses.CourseStatisticsDto;
 import com.itsilesia.si_learn.dtos.response.exceptions.ErrorDetailsDto;
-import com.itsilesia.si_learn.services.TeacherCourseService;
+import com.itsilesia.si_learn.services.user_progress.TeacherCourseService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;

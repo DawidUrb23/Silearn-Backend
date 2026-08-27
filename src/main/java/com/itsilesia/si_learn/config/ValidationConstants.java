@@ -22,7 +22,7 @@ public final class ValidationConstants {
 	public static final int codeLenMax = 4 << 10;
 	/// (max 100KB)
 	public static final int codeInputLenMax = 4 << 10;
-	///(max 999 chars)
+	/// (max 999 chars)
 	public static final int expectedOutputLenMax = 999;
 	public static final int timeoutSecMin = 0;
 	public static final int timeoutSecMax = 15;
@@ -31,5 +31,8 @@ public final class ValidationConstants {
 	public static final int titleLenMax = 255;
 	public static final int descriptionLenMin = 0;
 	public static final int descriptionLenMax = 2 << 10;
+
+	//admin configuration
+	public static final int programingLanguageCompilerLenMax = 30;
 
 }

@@ -1,0 +1,45 @@
+databaseChangeLog:
+- changeSet:
+    id: 1785931115840-1
+    author: fafik (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: programing_languagesPK
+            name: id
+            type: UUID
+        - column:
+            constraints:
+              nullable: false
+            name: created_at
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            name: updated_at
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            name: compiler
+            type: VARCHAR(30)
+        - column:
+            name: compiler_name_prefix
+            type: VARCHAR(30)
+        - column:
+            constraints:
+              nullable: false
+            name: language
+            type: VARCHAR(30)
+        tableName: programing_languages
+- changeSet:
+    id: 1785931115840-2
+    author: fafik (generated)
+    changes:
+    - createIndex:
+        columns:
+        - column:
+            name: language
+        indexName: idx_language
+        tableName: programing_languages
+

@@ -1,0 +1,61 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1785943758410-3
+      author: fafik (generated)
+      changes:
+        - addColumn:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                  name: created_at
+                  type: TIMESTAMP(6) WITHOUT TIME ZONE
+            tableName: user_test_scenarios
+  - changeSet:
+      id: 1785943758410-4
+      author: fafik (generated)
+      changes:
+        - addColumn:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                  name: id
+                  type: UUID
+            tableName: user_test_scenarios
+  - changeSet:
+      id: 1785943758410-5
+      author: fafik (generated)
+      changes:
+        - addColumn:
+            columns:
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP(6) WITHOUT TIME ZONE
+            tableName: user_test_scenarios
+  - changeSet:
+      id: 1785943758410-6
+      author: fafik (generated)
+      changes:
+        - createIndex:
+            columns:
+              - column:
+                  name: id
+            indexName: IX_user_test_scenariosPK
+            tableName: user_test_scenarios
+            unique: true
+  - changeSet:
+      id: 1785943758410-1
+      author: fafik (generated)
+      changes:
+        - dropPrimaryKey:
+            tableName: user_test_scenarios
+  - changeSet:
+      id: 1785943758410-2
+      author: fafik (generated)
+      changes:
+        - addPrimaryKey:
+            columnNames: id
+            constraintName: user_test_scenariosPK
+            tableName: user_test_scenarios
+

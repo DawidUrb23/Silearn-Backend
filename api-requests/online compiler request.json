@@ -1,0 +1,10 @@
+POST
+https://api.onlinecompiler.io/api/run-code/
+
+{
+"compiler": "gcc-15",
+"code": "#include <stdio.h>\n\nint main() {\n    printf(\"Hello World\");\n    return 0;\n}",
+"extra_params": {
+"compilationId": "1"
+}
+}

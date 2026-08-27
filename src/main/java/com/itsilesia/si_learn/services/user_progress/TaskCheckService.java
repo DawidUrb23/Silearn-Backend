@@ -1,7 +1,7 @@
-package com.itsilesia.si_learn.services;
+package com.itsilesia.si_learn.services.user_progress;
 
 import com.itsilesia.si_learn.dtos.intermediate.UserTaskIdOnly;
-import com.itsilesia.si_learn.dtos.request.users.GradeTaskRequest;
+import com.itsilesia.si_learn.dtos.request.teacher_progress.GradeTaskRequest;
 import com.itsilesia.si_learn.entities.compositeIds.UserTaskId;
 import com.itsilesia.si_learn.entities.courses.Course;
 import com.itsilesia.si_learn.entities.courses.Task;
@@ -13,7 +13,6 @@ import com.itsilesia.si_learn.repositories.courses.TestScenarioRepository;
 import com.itsilesia.si_learn.repositories.user_progress.UserTaskRepository;
 import com.itsilesia.si_learn.services.cache.CourseHelperCacheService;
 import com.itsilesia.si_learn.services.courses.CourseHelperService;
-import com.itsilesia.si_learn.services.user_progress.UserCourseHelperService;
 import com.itsilesia.si_learn.specifications.TaskSpecification;
 import com.itsilesia.si_learn.specifications.UserTaskSpecification;
 import jakarta.validation.Valid;
@@ -45,10 +44,11 @@ public class TaskCheckService {
 			.orElseThrow(() -> new ItemNotFoundException(UserTask.class, studentId));
 
 		userTask.setTaskScore(request.grade());
+		userTask.setGradedAt(LocalDateTime.now());
 		if (request.grade() >= task.getPassingScore())
 			userTask.setPassed(true);
 
-		userTask.setGradedAt(LocalDateTime.now());
+		userCourseHelperService.propagateUpdateProgress(userTask);
 		userTaskRepository.save(userTask);
 	}
 
@@ -80,10 +80,10 @@ public class TaskCheckService {
 		Task task = taskRepository.findById(taskId)
 			.orElseThrow(() -> new ItemNotFoundException(Task.class, taskId));
 		courseHelperService.isAuthorOrThrow(task, teacherId);
-		return getUserTasks(taskId);
+		return getUsersTasks(taskId);
 	}
 
-	private List<UserTask> getUserTasks(UUID taskId) {
+	private List<UserTask> getUsersTasks(UUID taskId) {
 		//this task has automatic grading
 		if (testScenarioRepository.existsByTaskId(taskId))
 			return List.of();
@@ -95,12 +95,5 @@ public class TaskCheckService {
 			UserTaskSpecification.needsGrading()
 		);
 		return userTaskRepository.findAll(spec);
-	}
-
-	public void deleteStudentSolution(UUID taskId, UUID studentId, UUID teacherId) {
-		Task task = taskRepository.findById(taskId)
-			.orElseThrow(() -> new ItemNotFoundException(Task.class, taskId));
-		courseHelperService.isAuthorOrThrow(task, teacherId);
-		userTaskRepository.deleteById(new UserTaskId(studentId, taskId));
 	}
 }

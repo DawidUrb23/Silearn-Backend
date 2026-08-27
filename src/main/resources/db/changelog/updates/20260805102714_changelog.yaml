@@ -1,0 +1,89 @@
+databaseChangeLog:
+- changeSet:
+    id: 1785925653181-1
+    author: fafik (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: user_test_scenariosPK
+            name: compilation_id
+            type: UUID
+        - column:
+            name: compilation_progress
+            type: SMALLINT
+        - column:
+            name: compiler_output
+            type: TEXT
+        - column:
+            constraints:
+              nullable: false
+            name: task_id
+            type: UUID
+        - column:
+            constraints:
+              nullable: false
+            name: test_scenario_id
+            type: UUID
+        - column:
+            constraints:
+              nullable: false
+            name: user_id
+            type: UUID
+        tableName: user_test_scenarios
+- changeSet:
+    id: 1785925653181-2
+    author: fafik (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: user_id
+        baseTableName: user_test_scenarios
+        constraintName: FK96avaaqwh494xd5ocsmvelfey
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+- changeSet:
+    id: 1785925653181-3
+    author: fafik (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: test_scenario_id
+        baseTableName: user_test_scenarios
+        constraintName: FKc41nq6iemu4j3e549doox40j1
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: test_scenarios
+        validate: true
+- changeSet:
+    id: 1785925653181-4
+    author: fafik (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: task_id,user_id
+        baseTableName: user_test_scenarios
+        constraintName: FKkiloi3757ols35xuvkal02wmh
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: task_id,user_id
+        referencedTableName: user_tasks
+        validate: true
+- changeSet:
+    id: 1785925653181-5
+    author: fafik (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: task_id
+        baseTableName: user_test_scenarios
+        constraintName: FKogsscyecl7l48rmkoyvusgwep
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: tasks
+        validate: true
+

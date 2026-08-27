@@ -1,4 +1,4 @@
-package com.itsilesia.si_learn.dtos.request.users;
+package com.itsilesia.si_learn.dtos.request.teacher_progress;
 
 import com.itsilesia.si_learn.config.ValidationConstants;
 import org.hibernate.validator.constraints.Range;
