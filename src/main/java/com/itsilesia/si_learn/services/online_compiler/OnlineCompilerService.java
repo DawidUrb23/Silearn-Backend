@@ -40,11 +40,13 @@ public class OnlineCompilerService {
 	private final ProgramingLanguageCompilerService programingLanguageCompilerService;
 	private final UserCodeExecutionRepository userCodeExecutionRepository;
 	private final UserAutoTestCheckService userAutoTestCheckService;
+	private final ExecutionCallbackService executionCallbackService;
 
-	public OnlineCompilerService(@Value("${api.onlinecompiler.url}") String url, @Value("${api.onlinecompiler.key}") String key, ProgramingLanguageCompilerService programingLanguageCompilerService, UserCodeExecutionRepository userCodeExecutionRepository, UserAutoTestCheckService userAutoTestCheckService) {
+	public OnlineCompilerService(@Value("${api.onlinecompiler.url}") String url, @Value("${api.onlinecompiler.key}") String key, ProgramingLanguageCompilerService programingLanguageCompilerService, UserCodeExecutionRepository userCodeExecutionRepository, UserAutoTestCheckService userAutoTestCheckService, ExecutionCallbackService executionCallbackService) {
 		this.programingLanguageCompilerService = programingLanguageCompilerService;
 		this.userCodeExecutionRepository = userCodeExecutionRepository;
 		this.userAutoTestCheckService = userAutoTestCheckService;
+		this.executionCallbackService = executionCallbackService;
 		this.restClient = RestClient.builder()
 			.baseUrl(url)
 			.defaultHeader("Authorization", key)
@@ -128,8 +130,10 @@ public class OnlineCompilerService {
 			"Exit Code: " + Optional.ofNullable(payload.getExitCode()).orElse(0).toString()
 			+ " Error:\n" + Optional.ofNullable(payload.getError()).orElse(""));
 		var savedExecution = userCodeExecutionRepository.save(userCodeExecution);
+
 		UUID groupId = userCodeExecution.getGroupId();
 		if (groupId != null) {
+			//this is automated test (do not inform the user)
 			if (TransactionSynchronizationManager.isActualTransactionActive()) {
 				TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
 					@Override
@@ -140,8 +144,19 @@ public class OnlineCompilerService {
 			} else {
 				CompletableFuture.runAsync(() -> userAutoTestCheckService.gradeUserTaskByCompilation(compilationId));
 			}
+		} else {
+			//this is normal execution (make a callback)
+			if (TransactionSynchronizationManager.isActualTransactionActive()) {
+				TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+					@Override
+					public void afterCommit() {
+						executionCallbackService.sendResultToUserCallback(savedExecution, payload);
+					}
+				});
+			} else {
+				executionCallbackService.sendResultToUserCallback(savedExecution, payload);
+			}
 		}
-
 		return savedExecution;
 	}
 

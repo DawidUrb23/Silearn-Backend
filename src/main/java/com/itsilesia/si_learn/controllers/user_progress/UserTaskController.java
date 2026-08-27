@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -32,7 +33,9 @@ public class UserTaskController {
 	@Operation(summary = "Shows full user info about task")
 	public TaskUserWithContentsResponse getTaskUser(
 		@PathVariable UUID taskId,
-		@Parameter(hidden = true) @AuthenticationPrincipal UUID userId) {
+		@Parameter(hidden = true) @AuthenticationPrincipal UUID userId,
+		@RequestHeader(value = HttpHeaders.ACCEPT_LANGUAGE, required = false) String languageCode   //exposes the header for LocaleContextHolder
+	) {
 		return TaskUserWithContentsResponse.fromEntity(
 			userTaskService.getTaskUser(taskId, userId));
 	}
