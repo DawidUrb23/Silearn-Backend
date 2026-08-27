@@ -1,6 +1,7 @@
 package com.itsilesia.si_learn.entities.courses;
 
 import com.itsilesia.si_learn.entities.BaseEntity;
+import com.itsilesia.si_learn.entities.TranslationDictionary;
 import com.itsilesia.si_learn.entities.abstractions.CourseAccessNode;
 import com.itsilesia.si_learn.entities.abstractions.IndexedEntity;
 import com.itsilesia.si_learn.entities.user_progress.UserCodeExecution;
@@ -25,6 +26,11 @@ import java.util.List;
 public class Task extends BaseEntity implements IndexedEntity, CourseAccessNode {
 	@Column(nullable = false)
 	private int index;
+
+	//Dictionary is Unique for each instance
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn(name = "name_id", nullable = true)
+	private TranslationDictionary name;
 
 	/**
 	 * Value is [0, 1]
