@@ -67,6 +67,8 @@ public class TranslationService {
 		item.setTranslationDictionary(dictionary);
 
 		dictionary.getItems().add(item);
+		if (StringUtils.isBlank(value))
+			dictionary.setNeedsReTranslation(false);
 
 		return dictionary;
 	}
@@ -279,7 +281,13 @@ public class TranslationService {
 			));
 
 		originalItem.setValue(content);
-		this.dictionaryNeedsReTranslation(dictionary, true);
+
+		if (StringUtils.isBlank(content)) {
+			dictionary.getItems().stream()
+				.forEach(item -> item.setValue(content));
+			dictionary.setNeedsReTranslation(false);
+		} else
+			this.dictionaryNeedsReTranslation(dictionary, true);
 
 		return translationDictionaryRepository.save(dictionary);
 	}
