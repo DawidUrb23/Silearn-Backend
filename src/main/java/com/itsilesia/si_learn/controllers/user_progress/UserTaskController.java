@@ -4,6 +4,7 @@ package com.itsilesia.si_learn.controllers.user_progress;
 import com.itsilesia.si_learn.dtos.request.compiler.SubmitExecuteTaskRequest;
 import com.itsilesia.si_learn.dtos.response.CompilationResponse;
 import com.itsilesia.si_learn.dtos.response.user_progress.SubmitTestTaskRequest;
+import com.itsilesia.si_learn.dtos.response.user_progress.TaskSubmitResponse;
 import com.itsilesia.si_learn.dtos.response.user_progress.TaskUserWithContentsResponse;
 import com.itsilesia.si_learn.services.user_progress.UserTaskService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -53,11 +54,11 @@ public class UserTaskController {
 	@PostMapping("{taskId}/submit")
 	@ResponseStatus(HttpStatus.ACCEPTED)
 	@Operation(summary = "Sends user code to api to test it (automatically or submit it for manual grading)")
-	public void onlineCompilerTests(
+	public TaskSubmitResponse onlineCompilerTests(
 		@Parameter(hidden = true) @AuthenticationPrincipal UUID userId,
 		@PathVariable UUID taskId,
 		@RequestBody SubmitTestTaskRequest submitTestTaskRequest) {
-		userTaskService.testStudentCodeWithTestScenario(taskId, userId, submitTestTaskRequest);
+		return userTaskService.testStudentCodeWithTestScenario(taskId, userId, submitTestTaskRequest);
 	}
 
 	@GetMapping("compilation/{compilationId}")
