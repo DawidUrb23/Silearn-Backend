@@ -1,93 +1,83 @@
-# SiLearn Backend
+# 🎓 SiLearn Backend - E-learning Platform
+Project completed as a part of an internship in an ItSilesia.
 
+#### An E-learning platform which allows to create your own courses, learn from them as a student, in different spoken language. Main feature is an automatic code check, teacher can give various correct answers with different input which, check the student solution(code).
 
+![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=java&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-F2F4F9?style=for-the-badge&logo=spring-boot)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white)
+![GitLab](https://img.shields.io/badge/GitLab-330F63?style=for-the-badge&logo=gitlab&logoColor=white)
 
-## Getting started
+## ✨ Key Features
+- **Role-Based Access Control :**
+- **👨‍🏫 Teachers:** Can create, edit, and delete courses, manage test scenarios, and manually review student submissions.
+- **👨‍🎓 Students:** Can browse courses, learn from the provided materials, solve programming tasks, and track their progress.
+- **Course & Task Management:** Full CRUD operations for educational content, allowing instructors to build their own course with structured learning paths and specific tasks.
+- **Code Execution Engine :** Remote compilation of sent code, automated task verification of submitted code in various programming languages.
+  - **Progress Tracking :** Real-time tracking of student results, task statuses, and manual grading integrations.
+  - **Webhooks :** Asynchronous communication and event handling.
+  - **Automated cleaning :** Scheduled tasks to secretly remove temporary files and free up resources after code compilation.
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+## 🏗️ Tech Stack
+- **FrameWork :** Java, Spring Boot(backend), TypeScript, React(frontend)
+- **DataBase :** PostgreSql
+- **DataBase Migrations :** LiquiBase
+- **Infrastructure :** Docker, Docker Compose
+- **Tools :** Postman, DBeaver, Swagger UI
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+## 🚀 Getting Started
 
-## Add your files
+Follow these steps to set up the backend environment local.
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+1. **Clone the repository**
+- git clone https://gitlab.gliwice.itsilesia.com/itsilesia-www/Trainings/2026/silearn/silearn-backend.git
+- cd silearn-backend
+2. **Set up Environment Variables :**
+The project requires specific environment variables to run properly. 
+You will find a template file named .env_template in the root directory.
+Create your own .env file by copying the template:
 
-```
-cd existing_repo
-git remote add origin https://gitlab.gliwice.itsilesia.com/itsilesia-www/Trainings/2026/silearn/silearn-backend.git
-git branch -M main
-git push -uf origin main
-```
+\# Database Connection Components
+- DB_HOST=localhost
+- DB_PORT=5432
+- DB_NAME=example
 
-## Integrate with your tools
+\# Database Credentials
+- DB_USERNAME=user
+- DB_PASSWORD=pass
 
-- [ ] [Set up project integrations](https://gitlab.gliwice.itsilesia.com/itsilesia-www/Trainings/2026/silearn/silearn-backend/-/settings/integrations)
+\# liquibase
+- LIQUIBASE_ENABLED=false
 
-## Collaborate with your team
+\# JWT (32+ characters long)
+- JWT_SECRET=
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+\# JWT time = days + hours + minutes
+- JWT_EXPIRATION_DAYS=1
+- JWT_EXPIRATION_HOURS=0
+- JWT_EXPIRATION_MINUTES=0
 
-## Test and Deploy
+\# Online compiler
+- ONLINE_COMPILER_KEY=
+- ONLINE_COMPILER_URL=https://api.onlinecompiler.io
+- CLEANUP_INTERVAL_MINUTES=20
 
-Use the built-in continuous integration in GitLab.
+**Bash :**
+- cp .env_template .env
+- ⚠️ Important open the newly created .env file in your text editor and fill the missing values. Pay special attention to the empty fields:
+- **- JWT_SECRET :** Must be a secure, random string (at least 32 characters long).
+- **- ONLINE_COMPILER_KEY :** You need to provide a valid API key for the online compiler service to enable code execution features.
+- **- DB_ :** Default database credentials (user/pass) are provided, but ensure they match your local PostgreSql or Docker configuration.
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+**Start the Infrastructure (Docker) :**
+- Run the PostgreSQL database and other required services using Docker Compose
+- docker-compose up -d
 
-***
+**Run the application :**
+Start the Spring Boot backend using Maven:
+- ./mvnw spring-boot:run
 
-# Editing this README
+3. **Make a LiquiBase migration :**
+- initialize liquibase:diff -f pom.xml
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
