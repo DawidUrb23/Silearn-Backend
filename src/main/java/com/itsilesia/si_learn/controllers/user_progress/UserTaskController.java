@@ -24,7 +24,7 @@ import java.util.UUID;
 @RequestMapping("api/my/tasks")
 @RequiredArgsConstructor
 @Validated
-@Tag(name = "My Tasks", description = "manage tasks that user sent and teacher can check")
+@Tag(name = "My Tasks", description = "manage tasks that user sent and teacher can check (Enrolled Student)")
 public class UserTaskController {
 
 	private final UserTaskService userTaskService;

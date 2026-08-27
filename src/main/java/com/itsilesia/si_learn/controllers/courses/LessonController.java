@@ -53,7 +53,7 @@ public class LessonController {
 
 	@PutMapping("/{id}/tasks")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@Operation(summary = "Update task order in lesson (Owner)")
+	@Operation(summary = "Update task order in lesson")
 	@ApiResponse(responseCode = "400", description = "Invalid input",
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
 	@ApiResponse(responseCode = "404",
@@ -67,6 +67,10 @@ public class LessonController {
 	}
 
 	@GetMapping("/{id}")
+	@ResponseStatus(HttpStatus.OK)
+	@Operation(summary = "Get lesson by id")
+	@ApiResponse(responseCode = "404",
+		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
 	public LessonWithTasksResponse getLessonWithContent(
 		@PathVariable UUID id,
 		@RequestHeader(value = HttpHeaders.ACCEPT_LANGUAGE, required = false) String languageCode,  //exposes the header for LocaleContextHolder
@@ -79,7 +83,7 @@ public class LessonController {
 
 	@DeleteMapping("/{lessonId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@Operation(summary = "Delete lesson (Teacher)")
+	@Operation(summary = "Delete lesson")
 	@ApiResponse(responseCode = "404", description = "Lesson not found",
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
 	public ResponseEntity<Void> deleteLesson(@PathVariable UUID lessonId) {
@@ -89,7 +93,7 @@ public class LessonController {
 
 	@PatchMapping({"/{lessonId}"})
 	@ResponseStatus(HttpStatus.OK)
-	@Operation(summary = "Change lesson description (Teacher)")
+	@Operation(summary = "Change lesson description")
 	@ApiResponse(responseCode = "404", description = "Lesson not found",
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
 	public ResponseEntity<IdOnlyDto> updateLesson(

@@ -28,7 +28,7 @@ import java.util.UUID;
 @RequestMapping("/api/auth")
 @Validated
 @RequiredArgsConstructor
-@Tag(name = "Authentication", description = "Endpoints for user registration and login")
+@Tag(name = "Authentication", description = "Endpoints for user registration and login (Public)")
 public class AuthController {
 	private final UserService userService;
 	private final JwtAuthService jwtAuthService;

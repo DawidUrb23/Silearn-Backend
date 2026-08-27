@@ -28,7 +28,7 @@ public class TaskContentController {
 
 	@PatchMapping("{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@Operation(summary = "Update TaskContent (Owner)")
+	@Operation(summary = "Update TaskContent")
 	@ApiResponse(responseCode = "403", description = "Not the owner!",
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
 	@ApiResponse(responseCode = "404",
@@ -43,7 +43,7 @@ public class TaskContentController {
 
 	@DeleteMapping("{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@Operation(summary = "Delete TaskContent (Owner)")
+	@Operation(summary = "Delete TaskContent")
 	@ApiResponse(responseCode = "403", description = "Not the owner!",
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
 	@ApiResponse(responseCode = "404",

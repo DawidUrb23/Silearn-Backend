@@ -114,7 +114,7 @@ public class CourseController {
 
 	@GetMapping("/{courseId}")
 	@ResponseStatus(HttpStatus.OK)
-	@Operation(summary = "Get specific course details with enrolment status")
+	@Operation(summary = "Get specific course details with enrolment status (Public)")
 	@ApiResponse(responseCode = "404",
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
 	public CourseWithModulesResponse getCourse(

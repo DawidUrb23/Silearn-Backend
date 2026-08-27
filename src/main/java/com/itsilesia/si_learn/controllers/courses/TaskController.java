@@ -39,7 +39,7 @@ public class TaskController {
 
 	@GetMapping("/{taskId}")
 	@ResponseStatus(HttpStatus.OK)
-	@Operation(summary = "Get task by id (Owner)")
+	@Operation(summary = "Get task by id")
 	@ApiResponse(responseCode = "403", description = "Not the owner!",
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
 	@ApiResponse(responseCode = "404",
@@ -56,7 +56,7 @@ public class TaskController {
 
 	@GetMapping("/{taskId}/test-scenarios")
 	@ResponseStatus(HttpStatus.OK)
-	@Operation(summary = "Get test scenarios by task id (Owner)")
+	@Operation(summary = "Get test scenarios by task id")
 	@ApiResponse(responseCode = "403", description = "Not the owner!",
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
 	@ApiResponse(responseCode = "404",
@@ -72,7 +72,7 @@ public class TaskController {
 
 	@DeleteMapping("/{taskId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@Operation(summary = "Delete task by id (Owner)")
+	@Operation(summary = "Delete task by id")
 	@ApiResponse(responseCode = "403", description = "Not the owner!",
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
 	@ApiResponse(responseCode = "404",
@@ -86,7 +86,7 @@ public class TaskController {
 
 	@PatchMapping("/{taskId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@Operation(summary = "Update task by id (Owner).")
+	@Operation(summary = "Update task by id")
 	@ApiResponse(responseCode = "400", description = "Invalid input",
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
 	@ApiResponse(responseCode = "403", description = "Not the owner!",
@@ -103,7 +103,7 @@ public class TaskController {
 
 	@PostMapping("/{taskId}/contents")
 	@ResponseStatus(HttpStatus.CREATED)
-	@Operation(summary = "Add content to task (Owner)")
+	@Operation(summary = "Add content to task")
 	@ApiResponse(responseCode = "201", description = "returns id of created TaskContent")
 	@ApiResponse(responseCode = "400", description = "Invalid input",
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
@@ -122,7 +122,7 @@ public class TaskController {
 
 	@PutMapping("/{taskId}/contents")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@Operation(summary = "Update task content order in task (Owner)")
+	@Operation(summary = "Update task content order in task")
 	@ApiResponse(responseCode = "400", description = "Invalid input, contents size mismatch",
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
 	@ApiResponse(responseCode = "403", description = "Not the owner!",
@@ -139,7 +139,7 @@ public class TaskController {
 
 	@PostMapping("/{taskId}/test-scenarios")
 	@ResponseStatus(HttpStatus.CREATED)
-	@Operation(summary = "Add test scenario to task (Owner)")
+	@Operation(summary = "Add test scenario to task")
 	@ApiResponse(responseCode = "201", description = "returns id of created TestScenario")
 	@ApiResponse(responseCode = "400", description = "Invalid input",
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))

@@ -22,7 +22,7 @@ import java.util.UUID;
 @RequestMapping("/api/my/modules")
 @RequiredArgsConstructor
 @Validated
-@Tag(name = "My modules", description = "Endpoints for interacting with enrolled modules (User)")
+@Tag(name = "My modules", description = "Endpoints for interacting with enrolled modules (Enrolled Student)")
 public class StudentModuleController {
 	private final UserModuleService userModuleService;
 

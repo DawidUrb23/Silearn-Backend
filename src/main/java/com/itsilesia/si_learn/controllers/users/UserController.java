@@ -31,7 +31,7 @@ public class UserController {
 
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
-	@Operation(summary = "Get all users with matching role (Admin)")
+	@Operation(summary = "Get all users with matching role")
 	public ResponseEntity<List<UserWithPersonalDataDto>> getAllUsers(
 		@RequestParam(required = false) Role role
 	) {
@@ -43,7 +43,7 @@ public class UserController {
 
 	@GetMapping("{id}")
 	@ResponseStatus(HttpStatus.OK)
-	@Operation(summary = "Get user by id (Admin)")
+	@Operation(summary = "Get user by id")
 	@ApiResponse(responseCode = "404", description = "User not found", content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
 	public ResponseEntity<UserWithPersonalDataDto> getUser(@PathVariable UUID id) {
 		return ResponseEntity.ok(
@@ -55,7 +55,7 @@ public class UserController {
 
 	@DeleteMapping("{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@Operation(summary = "Delete user by id (Admin)")
+	@Operation(summary = "Delete user by id")
 	@ApiResponse(responseCode = "404", description = "User not found", content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
 	public ResponseEntity<Void> deleteUser(@PathVariable UUID id) {
 		userService.deleteUser(id);
@@ -64,7 +64,7 @@ public class UserController {
 
 	@PatchMapping("{id}/password")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@Operation(summary = "Force set user's password (Admin)")
+	@Operation(summary = "Force set user's password")
 	@ApiResponse(responseCode = "400", description = "Invalid request body",
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
 	@ApiResponse(responseCode = "404", description = "User not found", content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
