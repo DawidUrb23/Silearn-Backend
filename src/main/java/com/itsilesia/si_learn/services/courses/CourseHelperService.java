@@ -72,6 +72,9 @@ public class CourseHelperService {
 		return lesson.getTopic().getOriginalLanguage();
 	}
 
+	/**
+	 * This method forwards to getOriginalLanguage(lesson) as its own name dictionary is nullable
+	 */
 	public Language getOriginalLanguage(Task task) {
 		return getOriginalLanguage(task.getLesson());
 	}

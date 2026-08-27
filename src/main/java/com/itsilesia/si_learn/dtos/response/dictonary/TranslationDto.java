@@ -27,6 +27,7 @@ public class TranslationDto {
 	}
 
 	static public TranslationDto fromEntity(TranslationDictionary item) {
+		if (item == null) return null;
 		var origLang = item.getOriginalLanguage().getCode();
 		return new TranslationDto(
 			origLang,

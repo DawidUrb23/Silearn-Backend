@@ -1,0 +1,33 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1787158450492-1
+      author: fafik (generated)
+      changes:
+        - addColumn:
+            columns:
+              - column:
+                  name: name_id
+                  type: UUID
+            tableName: tasks
+  - changeSet:
+      id: 1787158450492-2
+      author: fafik (generated)
+      changes:
+        - addUniqueConstraint:
+            columnNames: name_id
+            constraintName: UC_TASKSNAME_ID_COL
+            tableName: tasks
+  - changeSet:
+      id: 1787158450492-3
+      author: fafik (generated)
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: name_id
+            baseTableName: tasks
+            constraintName: FKbdwdv3mwn1p8my0f9pr8npmo6
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: translation_dictionary
+            validate: true
+

@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -41,15 +42,19 @@ public class TaskService {
 
 	@Transactional
 	public Task createTask(CreateTaskRequest createTaskRequest, UUID lessonId, UUID userId) {
-		Lesson lessonReference = lessonRepository.findById(lessonId).
+		Lesson lesson = lessonRepository.findById(lessonId).
 			orElseThrow(() -> new ItemNotFoundException(Lesson.class, lessonId));
-		courseHelperService.isAuthorOrThrow(lessonReference, userId);
+		courseHelperService.isAuthorOrThrow(lesson, userId);
+		var courseLanguage = courseHelperService.getOriginalLanguage(lesson);
 
 		Task newTask = new Task();
-		newTask.setIndex(EntityWithOrderedChildren.getNextIndex(lessonReference.getTasks()));
+		newTask.setIndex(EntityWithOrderedChildren.getNextIndex(lesson.getTasks()));
 		newTask.setStartingCode(createTaskRequest.getStartingCode());
 		newTask.setPassingScore(createTaskRequest.getPassingScore());
-		newTask.setLesson(lessonReference);
+		newTask.setName(translationService.createDictionary(
+			Optional.ofNullable(createTaskRequest.getName()).orElse(""),
+			courseLanguage));
+		newTask.setLesson(lesson);
 		return taskRepository.save(newTask);
 	}
 
@@ -72,6 +77,16 @@ public class TaskService {
 
 		if (taskRequest.getPassingScore() != null)
 			taskToUpdate.setPassingScore(taskRequest.getPassingScore());
+
+		if (taskRequest.getName() != null) {
+			var courseLanguage = courseHelperService.getOriginalLanguage(taskToUpdate);
+			if (taskToUpdate.getName() == null) {
+				taskToUpdate.setName(translationService.createDictionary(
+					taskRequest.getName(), courseLanguage));
+			} else {
+				translationService.updateOriginalTranslation(taskToUpdate.getName(), taskRequest.getName());
+			}
+		}
 
 		return taskRepository.save(taskToUpdate);
 	}

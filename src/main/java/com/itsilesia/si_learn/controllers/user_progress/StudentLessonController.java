@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -32,7 +33,8 @@ public class StudentLessonController {
 		content = @Content(schema = @Schema(implementation = ErrorDetailsDto.class)))
 	public MyLessonWithTasksDto getLessonTaskResults(
 		@PathVariable UUID id,
-		@Parameter(hidden = true) @AuthenticationPrincipal UUID userId
+		@Parameter(hidden = true) @AuthenticationPrincipal UUID userId,
+		@RequestHeader(value = HttpHeaders.ACCEPT_LANGUAGE, required = false) String languageCode   //exposes the header for LocaleContextHolder
 	) {
 		return MyLessonWithTasksDto.fromEntity(
 			userLessonService.getByIdAndStart(userId, id)

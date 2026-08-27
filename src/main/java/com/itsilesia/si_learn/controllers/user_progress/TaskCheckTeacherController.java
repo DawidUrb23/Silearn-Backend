@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -31,7 +32,8 @@ public class TaskCheckTeacherController {
 	@Operation(summary = "Gets all user solutions to specific task")
 	public TaskSubmissionsResponse getAllSolutions(
 		@PathVariable UUID taskId,
-		@Parameter(hidden = true) @AuthenticationPrincipal UUID teacherId
+		@Parameter(hidden = true) @AuthenticationPrincipal UUID teacherId,
+		@RequestHeader(value = HttpHeaders.ACCEPT_LANGUAGE, required = false) String languageCode   //exposes the header for LocaleContextHolder
 	) {
 		return TaskSubmissionsResponse.fromEntity(
 			taskService.getTaskById(taskId),
@@ -44,7 +46,8 @@ public class TaskCheckTeacherController {
 	@Operation(summary = "Gets all task ids that need manual grading")
 	public List<UUID> getAllTasks(
 		@PathVariable UUID courseId,
-		@Parameter(hidden = true) @AuthenticationPrincipal UUID teacherId
+		@Parameter(hidden = true) @AuthenticationPrincipal UUID teacherId,
+		@RequestHeader(value = HttpHeaders.ACCEPT_LANGUAGE, required = false) String languageCode   //exposes the header for LocaleContextHolder
 	) {
 		return taskCheckService.getAllTasksInCourseToGrade(courseId, teacherId);
 	}
@@ -57,7 +60,8 @@ public class TaskCheckTeacherController {
 		@PathVariable UUID taskId,
 		@PathVariable UUID studentId,
 		@RequestBody @Valid GradeTaskRequest request,
-		@Parameter(hidden = true) @AuthenticationPrincipal UUID teacherId
+		@Parameter(hidden = true) @AuthenticationPrincipal UUID teacherId,
+		@RequestHeader(value = HttpHeaders.ACCEPT_LANGUAGE, required = false) String languageCode   //exposes the header for LocaleContextHolder
 	) {
 		taskCheckService.gradeStudentSolution(taskId, studentId, request, teacherId);
 	}
